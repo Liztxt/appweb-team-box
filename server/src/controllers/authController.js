@@ -49,9 +49,16 @@ const login = async (req, res) => {
 
 const me = async (req, res) => {
   try {
-    const empleado = await Empleado.findById(req.user.id).select('-passwordHash').populate('equipos')
+    const empleado = await Empleado.findById(req.user.id)
+      .select('-passwordHash')
+    
+    if (!empleado) {
+      return res.status(404).json({ error: 'Empleado no encontrado' })
+    }
+    
     res.json(empleado)
   } catch (err) {
+    console.log('Error en /me:', err)
     res.status(500).json({ error: 'Error al obtener usuario' })
   }
 }

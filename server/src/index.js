@@ -14,6 +14,8 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => console.log('Error de conexión:', err))
 
 app.use('/auth', require('./routes/auth'))
+app.use('/teams', require('./routes/equipos'))
+app.use('/teams/:teamId/docs', require('./routes/documentos'))
 
 app.get('/', (req, res) => {
   res.json({ message: 'Team Box API corriendo' })
