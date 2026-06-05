@@ -16,6 +16,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/auth', require('./routes/auth'))
 app.use('/teams', require('./routes/equipos'))
 app.use('/teams/:teamId/docs', require('./routes/documentos'))
+app.use('/admin', require('./routes/admin'))
 
 app.get('/', (req, res) => {
   res.json({ message: 'Team Box API corriendo' })
