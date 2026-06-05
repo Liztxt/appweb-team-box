@@ -69,5 +69,15 @@ const verEquipo = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener equipo' })
   }
 }
-
-module.exports = { crearEquipo, asignarEmpleado, misEquipos, verEquipo }
+const eliminarEquipo = async (req, res) => {
+  try {
+    if (req.user.rol !== 'admin') {
+      return res.status(403).json({ error: 'Solo administradores pueden eliminar equipos' })
+    }
+    await Equipo.findByIdAndDelete(req.params.equipoId)
+    res.json({ message: 'Equipo eliminado' })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al eliminar equipo' })
+  }
+}
+module.exports = { crearEquipo, asignarEmpleado, misEquipos, verEquipo, eliminarEquipo }

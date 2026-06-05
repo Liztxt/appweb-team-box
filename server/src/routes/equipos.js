@@ -6,7 +6,8 @@ const {
   crearEquipo,
   asignarEmpleado,
   misEquipos,
-  verEquipo
+  verEquipo,
+  eliminarEquipo
 } = require('../controllers/equipoController')
 
 // Todas requieren estar logueado
@@ -16,5 +17,6 @@ router.post('/', crearEquipo)
 router.post('/asignar', asignarEmpleado)
 router.get('/mine', misEquipos)
 router.get('/:teamId', teamGuard, verEquipo)
+router.delete('/:equipoId', eliminarEquipo)
 
 module.exports = router
