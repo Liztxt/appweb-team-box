@@ -8,6 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/admin/Dashboard'
 import Empleados from './pages/admin/Empleados'
 import Equipos from './pages/admin/Equipos'
+import Perfil from './pages/Perfil'
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path='/admin' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path='/admin/empleados' element={<ProtectedRoute><Empleados /></ProtectedRoute>} />
         <Route path='/admin/equipos' element={<ProtectedRoute><Equipos /></ProtectedRoute>} />
+        <Route path='/perfil' element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
         <Route path='*' element={<Navigate to='/login' />} />
       </Routes>
     </BrowserRouter>

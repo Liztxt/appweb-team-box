@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import AvisoPrivacidad from '../components/AvisoPrivacidad'
 import api from '../api/axios'
 
 export default function Login() {
@@ -8,6 +9,9 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [mostrarAviso, setMostrarAviso] = useState(
+  !localStorage.getItem('avisoAceptado')
+)
 
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -32,13 +36,15 @@ export default function Login() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#F0F4F8',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
+  <div style={{ minHeight: '100vh', background: '#F0F4F8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    
+    {mostrarAviso && (
+      <AvisoPrivacidad onAceptar={() => {
+        localStorage.setItem('avisoAceptado', 'true')
+        setMostrarAviso(false)
+      }} />
+    )}
+
       <div style={{
         background: '#fff',
         border: '0.5px solid #E2E8F0',

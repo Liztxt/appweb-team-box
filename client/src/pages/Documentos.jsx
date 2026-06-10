@@ -70,7 +70,12 @@ export default function Documentos() {
         <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>
           Team Box
         </span>
-        <span style={{ fontSize: '12px', color: '#64748B' }}>#{usuario?.numeroEmpleado}</span>
+<span
+  onClick={() => navigate('/perfil')}
+  style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}
+>
+  #{usuario?.numeroEmpleado}
+</span>
         <button
           onClick={handleLogout}
           style={{
