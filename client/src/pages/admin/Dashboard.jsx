@@ -7,6 +7,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState({ equipos: 0, empleados: 0, documentos: 0 })
   const [loading, setLoading] = useState(true)
   const { usuario, logout } = useAuth()
+  const [logs, setLogs] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -16,15 +17,17 @@ export default function Dashboard() {
     }
     const fetchStats = async () => {
       try {
-        const [equiposRes, empleadosRes] = await Promise.all([
+        const [equiposRes, empleadosRes, logsRes] = await Promise.all([
           api.get('/admin/stats/equipos'),
-          api.get('/admin/stats/empleados')
+          api.get('/admin/stats/empleados'),
+          api.get('/admin/logs')
         ])
         setStats({
           equipos: equiposRes.data.total,
           empleados: empleadosRes.data.total,
           documentos: equiposRes.data.totalDocs
         })
+        setLogs(logsRes.data)
       } catch (err) {
         console.log('Error al cargar stats:', err)
       } finally {
@@ -65,12 +68,12 @@ export default function Dashboard() {
         <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>
           Team Box — Admin
         </span>
-<span
-  onClick={() => navigate('/perfil')}
-  style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}
->
-  #{usuario?.numeroEmpleado}
-</span>
+        <span
+          onClick={() => navigate('/perfil')}
+          style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}
+        >
+          #{usuario?.numeroEmpleado}
+        </span>
         <button
           onClick={() => navigate('/equipos')}
           style={{
@@ -126,7 +129,7 @@ export default function Dashboard() {
         <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '12px' }}>
           Acciones rápidas
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '0' }}>
           <div
             onClick={() => navigate('/admin/empleados')}
             style={{
@@ -161,6 +164,47 @@ export default function Dashboard() {
               Crear equipos y asignar miembros
             </div>
           </div>
+        </div>
+
+        {/* Actividad reciente */}
+        <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', margin: '28px 0 12px' }}>
+          Actividad reciente
+        </h2>
+        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
+          {logs.length === 0 ? (
+            <p style={{ padding: '20px', fontSize: '13px', color: '#64748B' }}>Sin actividad registrada</p>
+          ) : (
+            logs.slice(0, 8).map((log, i) => (
+              <div key={log._id} style={{
+                display: 'flex', alignItems: 'center', gap: '12px',
+                padding: '12px 16px',
+                borderBottom: i < 7 ? '0.5px solid #F0F4F8' : 'none'
+              }}>
+                <div style={{
+                  width: '32px', height: '32px', borderRadius: '8px', flexShrink: 0,
+                  background: log.exitoso ? '#F0FDF4' : '#FEF2F2',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px'
+                }}>
+                  {log.accion === 'LOGIN' ? '🔑' : log.accion === 'REGISTRO' ? '👤' : log.accion === 'SUBIR_DOCUMENTO' ? '📄' : '🗑'}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '1px' }}>
+                    #{log.numeroEmpleado} — {log.detalle}
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8' }}>
+                    {new Date(log.fecha).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+                <span style={{
+                  fontSize: '10px', fontWeight: '500', borderRadius: '20px', padding: '2px 8px',
+                  background: log.exitoso ? '#F0FDF4' : '#FEF2F2',
+                  color: log.exitoso ? '#15803D' : '#EF4444'
+                }}>
+                  {log.exitoso ? 'exitoso' : 'fallido'}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

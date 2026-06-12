@@ -4,6 +4,18 @@ const authMiddleware = require('../middleware/auth')
 const Empleado = require('../models/Empleado')
 const Equipo = require('../models/Equipo')
 const Documento = require('../models/Documento')
+const Log = require('../models/Log')
+
+router.get('/logs', async (req, res) => {
+  try {
+    const logs = await Log.find()
+      .sort({ fecha: -1 })
+      .limit(50)
+    res.json(logs)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener logs' })
+  }
+})
 
 router.use(authMiddleware)
 

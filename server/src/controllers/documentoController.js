@@ -1,4 +1,5 @@
 const Documento = require('../models/Documento')
+const registrarLog = require('../middleware/logger')
 
 // Subir documento o plantilla
 const subirDocumento = async (req, res) => {
@@ -29,6 +30,15 @@ const subirDocumento = async (req, res) => {
     })
 
     await documento.save()
+
+    await registrarLog({
+  empleadoId: req.user.id,
+  numeroEmpleado: req.user.numeroEmpleado,
+  accion: 'SUBIR_DOCUMENTO',
+  detalle: `Subió el documento "${titulo}" de tipo ${tipo}`,
+  ip: req.ip,
+  exitoso: true
+})
 
     res.status(201).json({
       message: 'Archivo subido correctamente',
@@ -102,6 +112,15 @@ const eliminarDocumento = async (req, res) => {
     if (!documento) {
       return res.status(404).json({ error: 'Documento no encontrado' })
     }
+
+    await registrarLog({
+  empleadoId: req.user.id,
+  numeroEmpleado: req.user.numeroEmpleado,
+  accion: 'ELIMINAR_DOCUMENTO',
+  detalle: `Eliminó el documento "${documento.titulo}"`,
+  ip: req.ip,
+  exitoso: true
+})
 
     res.json({ message: 'Documento eliminado correctamente' })
   } catch (err) {
