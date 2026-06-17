@@ -6,18 +6,16 @@ const Equipo = require('../models/Equipo')
 const Documento = require('../models/Documento')
 const Log = require('../models/Log')
 
+router.use(authMiddleware)
+
 router.get('/logs', async (req, res) => {
   try {
-    const logs = await Log.find()
-      .sort({ fecha: -1 })
-      .limit(50)
+    const logs = await Log.find().sort({ fecha: -1 }).limit(50)
     res.json(logs)
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener logs' })
   }
 })
-
-router.use(authMiddleware)
 
 router.get('/empleados', async (req, res) => {
   try {
@@ -53,6 +51,15 @@ router.get('/equipos', async (req, res) => {
     res.json(equipos)
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener equipos' })
+  }
+})
+
+router.get('/documentos', async (req, res) => {
+  try {
+    const documentos = await Documento.find().select('-archivo').sort({ creadoEn: -1 })
+    res.json(documentos)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener documentos' })
   }
 })
 

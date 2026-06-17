@@ -105,10 +105,16 @@ export default function Dashboard() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '32px' }}>
           {cards.map(card => (
-            <div key={card.label} style={{
-              background: '#fff', border: '0.5px solid #E2E8F0',
-              borderRadius: '10px', padding: '20px'
-            }}>
+  <div
+    key={card.label}
+    onClick={() => navigate(`/admin/ver/${card.label.toLowerCase()}`)}
+    style={{
+      background: '#fff', border: '0.5px solid #E2E8F0',
+      borderRadius: '10px', padding: '20px', cursor: 'pointer'
+    }}
+    onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
+    onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+  >
               <div style={{
                 width: '36px', height: '36px', background: card.color,
                 borderRadius: '8px', display: 'flex',

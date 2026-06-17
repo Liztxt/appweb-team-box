@@ -9,6 +9,10 @@ import Dashboard from './pages/admin/Dashboard'
 import Empleados from './pages/admin/Empleados'
 import Equipos from './pages/admin/Equipos'
 import Perfil from './pages/Perfil'
+import VerEquipos from './pages/admin/VerEquipos'
+import VerEmpleados from './pages/admin/VerEmpleados'
+import VerDocumentos from './pages/admin/VerDocumentos'
+
 
 
 export default function App() {
@@ -24,6 +28,10 @@ export default function App() {
         <Route path='/admin/empleados' element={<ProtectedRoute><Empleados /></ProtectedRoute>} />
         <Route path='/admin/equipos' element={<ProtectedRoute><Equipos /></ProtectedRoute>} />
         <Route path='/perfil' element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
+        <Route path='/admin/ver/equipos' element={<ProtectedRoute><VerEquipos /></ProtectedRoute>} />
+<Route path='/admin/ver/empleados' element={<ProtectedRoute><VerEmpleados /></ProtectedRoute>} />
+<Route path='/admin/ver/documentos' element={<ProtectedRoute><VerDocumentos /></ProtectedRoute>} />
+
         <Route path='*' element={<Navigate to='/login' />} />
       </Routes>
     </BrowserRouter>
