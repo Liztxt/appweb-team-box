@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../api/axios'
+import Toast from '../../components/Toast'
 
 export default function Equipos() {
   const [equipos, setEquipos] = useState([])
@@ -10,8 +11,10 @@ export default function Equipos() {
   const [descripcion, setDescripcion] = useState('')
   const [equipoSeleccionado, setEquipoSeleccionado] = useState('')
   const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState('')
-  const [error, setError] = useState('')
-  const [exito, setExito] = useState('')
+  const [toast, setToast] = useState(null)
+  const [editando, setEditando] = useState(null)
+  const [nombreEditando, setNombreEditando] = useState('')
+  const [descEditando, setDescEditando] = useState('')
   const navigate = useNavigate()
 
   const fetchData = async () => {
@@ -32,33 +35,65 @@ export default function Equipos() {
   useEffect(() => { fetchData() }, [])
 
   const handleCrearEquipo = async () => {
-    if (!nombre) { setError('El nombre es obligatorio'); return }
-    setError(''); setExito('')
+    if (!nombre) { setToast({ mensaje: 'El nombre es obligatorio', tipo: 'error' }); return }
     try {
       await api.post('/teams', { nombre, descripcion })
-      setExito('Equipo creado correctamente')
+      setToast({ mensaje: 'Equipo creado correctamente', tipo: 'exito' })
       setNombre(''); setDescripcion('')
       fetchData()
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al crear equipo')
+      setToast({ mensaje: err.response?.data?.error || 'Error al crear equipo', tipo: 'error' })
     }
   }
 
   const handleAsignar = async () => {
     if (!equipoSeleccionado || !empleadoSeleccionado) {
-      setError('Selecciona un equipo y un empleado'); return
+      setToast({ mensaje: 'Selecciona un equipo y un empleado', tipo: 'error' }); return
     }
-    setError(''); setExito('')
     try {
       await api.post('/teams/asignar', {
         equipoId: equipoSeleccionado,
         numeroEmpleado: empleadoSeleccionado
       })
-      setExito('Empleado asignado correctamente')
+      setToast({ mensaje: 'Empleado asignado correctamente', tipo: 'exito' })
       setEquipoSeleccionado(''); setEmpleadoSeleccionado('')
       fetchData()
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al asignar')
+      setToast({ mensaje: err.response?.data?.error || 'Error al asignar', tipo: 'error' })
+    }
+  }
+
+  const handleEliminarEquipo = async (id, nombre) => {
+    if (!confirm(`¿Seguro que quieres eliminar el equipo "${nombre}"? Se removerá de todos los empleados.`)) return
+    try {
+      await api.delete(`/admin/equipos/${id}`)
+      setToast({ mensaje: 'Equipo eliminado correctamente', tipo: 'exito' })
+      fetchData()
+    } catch (err) {
+      setToast({ mensaje: err.response?.data?.error || 'Error al eliminar', tipo: 'error' })
+    }
+  }
+
+  const handleGuardarEquipo = async (id) => {
+    if (!nombreEditando) { setToast({ mensaje: 'El nombre es obligatorio', tipo: 'error' }); return }
+    try {
+      await api.put(`/admin/equipos/${id}`, { nombre: nombreEditando, descripcion: descEditando })
+      setToast({ mensaje: 'Equipo actualizado correctamente', tipo: 'exito' })
+      setEditando(null)
+      fetchData()
+    } catch (err) {
+      setToast({ mensaje: err.response?.data?.error || 'Error al actualizar', tipo: 'error' })
+    }
+  }
+
+  const handleQuitarMiembro = async (equipoId, empleadoId) => {
+    if (!confirm('¿Quitar este miembro del equipo?')) return
+    try {
+      await api.delete(`/admin/equipos/${equipoId}/miembro/${empleadoId}`)
+      setToast({ mensaje: 'Miembro removido correctamente', tipo: 'exito' })
+      fetchData()
+    } catch (err) {
+      setToast({ mensaje: 'Error al remover miembro', tipo: 'error' })
     }
   }
 
@@ -69,8 +104,13 @@ export default function Equipos() {
     background: '#F0F4F8', outline: 'none', boxSizing: 'border-box'
   }
 
+  const miembrosDeEquipo = (equipoId) =>
+    empleados.filter(emp => emp.equipos.includes(equipoId))
+
   return (
     <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+
+      {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
 
       {/* Topbar */}
       <div style={{
@@ -79,65 +119,49 @@ export default function Equipos() {
         display: 'flex', alignItems: 'center',
         padding: '0 24px', gap: '12px'
       }}>
-        <button
-          onClick={() => navigate('/admin')}
-          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}
-        >←</button>
+        <button onClick={() => navigate('/admin')}
+          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
         <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>
           Gestión de equipos
         </span>
       </div>
 
-      <div style={{ padding: '28px 24px', maxWidth: '900px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignItems: 'start' }}>
+      <div style={{ padding: '28px 24px', maxWidth: '900px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '20px', alignItems: 'start' }}>
 
-        {/* Crear equipo */}
-        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>
-            Crear equipo
-          </h2>
+        {/* Panel izquierdo */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-          <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Nombre *</label>
-            <input value={nombre} onChange={e => setNombre(e.target.value)} placeholder='Ej. Diseño UX' style={inputStyle} />
+          {/* Crear equipo */}
+          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
+            <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>Crear equipo</h2>
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Nombre *</label>
+              <input value={nombre} onChange={e => setNombre(e.target.value)} placeholder='Ej. Diseño UX' style={inputStyle} />
+            </div>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Descripción</label>
+              <input value={descripcion} onChange={e => setDescripcion(e.target.value)} placeholder='Descripción opcional' style={inputStyle} />
+            </div>
+            <button onClick={handleCrearEquipo} style={{ width: '100%', padding: '10px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+              Crear equipo
+            </button>
           </div>
-
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Descripción</label>
-            <input value={descripcion} onChange={e => setDescripcion(e.target.value)} placeholder='Descripción opcional' style={inputStyle} />
-          </div>
-
-          {error && (
-            <div style={{ background: '#FEF2F2', border: '0.5px solid #FECACA', borderRadius: '8px', padding: '9px 12px', fontSize: '12px', color: '#EF4444', marginBottom: '12px' }}>{error}</div>
-          )}
-          {exito && (
-            <div style={{ background: '#F0FDF4', border: '0.5px solid #BBF7D0', borderRadius: '8px', padding: '9px 12px', fontSize: '12px', color: '#15803D', marginBottom: '12px' }}>{exito}</div>
-          )}
-
-          <button onClick={handleCrearEquipo} style={{ width: '100%', padding: '10px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
-            Crear equipo
-          </button>
 
           {/* Asignar miembro */}
-          <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '0.5px solid #E2E8F0' }}>
-            <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>
-              Asignar miembro
-            </h2>
+          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
+            <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>Asignar miembro</h2>
             <div style={{ marginBottom: '12px' }}>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Equipo</label>
               <select value={equipoSeleccionado} onChange={e => setEquipoSeleccionado(e.target.value)} style={inputStyle}>
                 <option value=''>Selecciona un equipo</option>
-                {equipos.map(eq => (
-                  <option key={eq._id} value={eq._id}>{eq.nombre}</option>
-                ))}
+                {equipos.map(eq => <option key={eq._id} value={eq._id}>{eq.nombre}</option>)}
               </select>
             </div>
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Empleado</label>
               <select value={empleadoSeleccionado} onChange={e => setEmpleadoSeleccionado(e.target.value)} style={inputStyle}>
                 <option value=''>Selecciona un empleado</option>
-                {empleados.map(emp => (
-                  <option key={emp._id} value={emp.numeroEmpleado}>#{emp.numeroEmpleado} — {emp.rol}</option>
-                ))}
+                {empleados.map(emp => <option key={emp._id} value={emp.numeroEmpleado}>#{emp.numeroEmpleado} — {emp.rol}</option>)}
               </select>
             </div>
             <button onClick={handleAsignar} style={{ width: '100%', padding: '10px', background: '#1E293B', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
@@ -148,19 +172,70 @@ export default function Equipos() {
 
         {/* Lista equipos */}
         <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>
-            Equipos existentes
-          </h2>
+          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>Equipos existentes</h2>
           {loading ? (
             <p style={{ fontSize: '13px', color: '#64748B' }}>Cargando...</p>
           ) : equipos.length === 0 ? (
             <p style={{ fontSize: '13px', color: '#64748B' }}>No hay equipos creados</p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {equipos.map(eq => (
-                <div key={eq._id} style={{ padding: '12px', background: '#F0F4F8', borderRadius: '8px' }}>
-                  <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '2px' }}>{eq.nombre}</div>
-                  <div style={{ fontSize: '11px', color: '#64748B' }}>{eq.descripcion || 'Sin descripción'}</div>
+                <div key={eq._id} style={{ background: '#F0F4F8', borderRadius: '10px', padding: '12px' }}>
+                  {editando === eq._id ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <input value={nombreEditando} onChange={e => setNombreEditando(e.target.value)}
+                        style={{ ...inputStyle, background: '#fff' }} placeholder='Nombre del equipo' />
+                      <input value={descEditando} onChange={e => setDescEditando(e.target.value)}
+                        style={{ ...inputStyle, background: '#fff' }} placeholder='Descripción' />
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => handleGuardarEquipo(eq._id)}
+                          style={{ flex: 1, padding: '7px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
+                          Guardar
+                        </button>
+                        <button onClick={() => setEditando(null)}
+                          style={{ flex: 1, padding: '7px', background: '#fff', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <div style={{ width: '32px', height: '32px', background: '#EEF2FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>👥</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>{eq.nombre}</div>
+                          <div style={{ fontSize: '11px', color: '#64748B' }}>{eq.descripcion || 'Sin descripción'}</div>
+                        </div>
+                        <button onClick={() => { setEditando(eq._id); setNombreEditando(eq.nombre); setDescEditando(eq.descripcion || '') }}
+                          style={{ padding: '4px 8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
+                          ✏️
+                        </button>
+                        <button onClick={() => handleEliminarEquipo(eq._id, eq.nombre)}
+                          style={{ padding: '4px 8px', background: '#FEF2F2', color: '#EF4444', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
+                          🗑
+                        </button>
+                      </div>
+
+                      {/* Miembros */}
+                      {miembrosDeEquipo(eq._id).length > 0 && (
+                        <div style={{ borderTop: '0.5px solid #E2E8F0', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <div style={{ fontSize: '10px', color: '#94A3B8', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Miembros</div>
+                          {miembrosDeEquipo(eq._id).map(emp => (
+                            <div key={emp._id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: emp.rol === 'admin' ? '#6366F1' : '#CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '600', color: '#fff', flexShrink: 0 }}>
+                                {emp.numeroEmpleado.slice(-2)}
+                              </div>
+                              <span style={{ fontSize: '12px', color: '#475569', flex: 1 }}>#{emp.numeroEmpleado}</span>
+                              <button onClick={() => handleQuitarMiembro(eq._id, emp._id)}
+                                style={{ padding: '2px 6px', background: 'transparent', color: '#94A3B8', border: 'none', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               ))}
             </div>

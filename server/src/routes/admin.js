@@ -5,6 +5,7 @@ const Empleado = require('../models/Empleado')
 const Equipo = require('../models/Equipo')
 const Documento = require('../models/Documento')
 const Log = require('../models/Log')
+const registrarLog = require('../middleware/logger')
 
 router.use(authMiddleware)
 
@@ -60,6 +61,99 @@ router.get('/documentos', async (req, res) => {
     res.json(documentos)
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener documentos' })
+  }
+})
+
+// Eliminar empleado
+router.delete('/empleados/:id', async (req, res) => {
+  try {
+    const empleado = await Empleado.findByIdAndDelete(req.params.id)
+    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })
+    await registrarLog({
+      empleadoId: req.user.id,
+      numeroEmpleado: req.user.numeroEmpleado,
+      accion: 'ELIMINAR_EMPLEADO',
+      detalle: `Eliminó al empleado #${empleado.numeroEmpleado}`,
+      ip: req.ip,
+      exitoso: true
+    })
+    res.json({ message: 'Empleado eliminado correctamente' })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al eliminar empleado' })
+  }
+})
+
+// Modificar rol de empleado
+router.put('/empleados/:id', async (req, res) => {
+  try {
+    const { rol } = req.body
+    if (!['empleado', 'admin'].includes(rol)) {
+      return res.status(400).json({ error: 'Rol inválido' })
+    }
+    const empleado = await Empleado.findByIdAndUpdate(
+      req.params.id,
+      { rol },
+      { new: true }
+    ).select('-passwordHash')
+    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })
+    res.json(empleado)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al modificar empleado' })
+  }
+})
+
+// Eliminar equipo
+router.delete('/equipos/:id', async (req, res) => {
+  try {
+    const equipo = await Equipo.findByIdAndDelete(req.params.id)
+    if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado' })
+    await Empleado.updateMany(
+      { equipos: req.params.id },
+      { $pull: { equipos: req.params.id } }
+    )
+    await registrarLog({
+      empleadoId: req.user.id,
+      numeroEmpleado: req.user.numeroEmpleado,
+      accion: 'ELIMINAR_EQUIPO',
+      detalle: `Eliminó el equipo "${equipo.nombre}"`,
+      ip: req.ip,
+      exitoso: true
+    })
+    res.json({ message: 'Equipo eliminado correctamente' })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al eliminar equipo' })
+  }
+})
+
+// Modificar equipo
+router.put('/equipos/:id', async (req, res) => {
+  try {
+    const { nombre, descripcion } = req.body
+    if (!nombre) return res.status(400).json({ error: 'El nombre es obligatorio' })
+    const equipo = await Equipo.findByIdAndUpdate(
+      req.params.id,
+      { nombre, descripcion },
+      { new: true }
+    )
+    if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado' })
+    res.json(equipo)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al modificar equipo' })
+  }
+})
+
+// Quitar miembro de equipo
+router.delete('/equipos/:equipoId/miembro/:empleadoId', async (req, res) => {
+  try {
+    const empleado = await Empleado.findByIdAndUpdate(
+      req.params.empleadoId,
+      { $pull: { equipos: req.params.equipoId } },
+      { new: true }
+    )
+    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })
+    res.json({ message: 'Miembro removido correctamente' })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al remover miembro' })
   }
 })
 
