@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../api/axios'
 import Toast from '../../components/Toast'
+import ConfirmModal from '../../components/ConfirmModal'
 
 export default function Empleados() {
   const [empleados, setEmpleados] = useState([])
@@ -12,6 +13,8 @@ export default function Empleados() {
   const [toast, setToast] = useState(null)
   const [editando, setEditando] = useState(null)
   const [rolEditando, setRolEditando] = useState('')
+  const [passwordEditando, setPasswordEditando] = useState('')
+  const [confirmacion, setConfirmacion] = useState(null)
   const navigate = useNavigate()
 
   const fetchEmpleados = async () => {
@@ -42,22 +45,39 @@ export default function Empleados() {
     }
   }
 
-  const handleEliminar = async (id, numero) => {
-    if (!confirm(`¿Seguro que quieres eliminar al empleado #${numero}?`)) return
+  const pedirConfirmacionEliminar = (id, numero) => {
+    setConfirmacion({
+      titulo: 'Eliminar empleado',
+      mensaje: `¿Seguro que quieres eliminar al empleado #${numero}? Esta acción no se puede deshacer.`,
+      accion: () => ejecutarEliminar(id)
+    })
+  }
+
+  const ejecutarEliminar = async (id) => {
     try {
       await api.delete(`/admin/empleados/${id}`)
       setToast({ mensaje: 'Empleado eliminado correctamente', tipo: 'exito' })
       fetchEmpleados()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al eliminar', tipo: 'error' })
+    } finally {
+      setConfirmacion(null)
     }
   }
 
   const handleGuardarRol = async (id) => {
     try {
       await api.put(`/admin/empleados/${id}`, { rol: rolEditando })
-      setToast({ mensaje: 'Rol actualizado correctamente', tipo: 'exito' })
+      if (passwordEditando) {
+        if (passwordEditando.length < 8) {
+          setToast({ mensaje: 'La contraseña debe tener al menos 8 caracteres', tipo: 'error' })
+          return
+        }
+        await api.put(`/admin/empleados/${id}/password`, { passwordNueva: passwordEditando })
+      }
+      setToast({ mensaje: 'Empleado actualizado correctamente', tipo: 'exito' })
       setEditando(null)
+      setPasswordEditando('')
       fetchEmpleados()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al actualizar', tipo: 'error' })
@@ -75,6 +95,14 @@ export default function Empleados() {
     <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
 
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
+      {confirmacion && (
+        <ConfirmModal
+          titulo={confirmacion.titulo}
+          mensaje={confirmacion.mensaje}
+          onConfirmar={confirmacion.accion}
+          onCancelar={() => setConfirmacion(null)}
+        />
+      )}
 
       {/* Topbar */}
       <div style={{
@@ -139,34 +167,43 @@ export default function Empleados() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {empleados.map(emp => (
-                <div key={emp._id} style={{ background: '#F0F4F8', borderRadius: '8px', padding: '10px 12px' }}>
+                <div key={emp._id} style={{ background: '#F0F4F8', borderRadius: '8px', padding: '12px' }}>
                   {editando === emp._id ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ flex: 1, fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
                       <select value={rolEditando} onChange={e => setRolEditando(e.target.value)}
-                        style={{ padding: '5px 8px', borderRadius: '6px', border: '0.5px solid #E2E8F0', fontSize: '12px', color: '#1E293B', background: '#fff' }}>
+                        style={{ ...inputStyle, background: '#fff' }}>
                         <option value='empleado'>Empleado</option>
                         <option value='admin'>Admin</option>
                       </select>
-                      <button onClick={() => handleGuardarRol(emp._id)}
-                        style={{ padding: '5px 10px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
-                        Guardar
-                      </button>
-                      <button onClick={() => setEditando(null)}
-                        style={{ padding: '5px 10px', background: '#F0F4F8', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
-                        Cancelar
-                      </button>
+                      <input
+                        type='password'
+                        value={passwordEditando}
+                        onChange={e => setPasswordEditando(e.target.value)}
+                        placeholder='Nueva contraseña (opcional)'
+                        style={{ ...inputStyle, background: '#fff' }}
+                      />
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => handleGuardarRol(emp._id)}
+                          style={{ flex: 1, padding: '7px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
+                          Guardar
+                        </button>
+                        <button onClick={() => { setEditando(null); setPasswordEditando('') }}
+                          style={{ flex: 1, padding: '7px', background: '#fff', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
+                          Cancelar
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{
-                        width: '32px', height: '32px', borderRadius: '50%',
-                        background: emp.rol === 'admin' ? '#6366F1' : '#CBD5E1',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '13px', fontWeight: '600', color: '#fff', flexShrink: 0
-                      }}>
-                        {emp.numeroEmpleado.slice(-2)}
-                      </div>
+                      <img
+                        src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`}
+                        alt={`Avatar ${emp.numeroEmpleado}`}
+                        style={{
+                          width: '32px', height: '32px', borderRadius: '50%',
+                          flexShrink: 0, background: '#F0F4F8'
+                        }}
+                      />
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
                         <div style={{ fontSize: '11px', color: '#64748B' }}>{emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
@@ -182,7 +219,7 @@ export default function Empleados() {
                         style={{ padding: '5px 8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
                         ✏️ Editar
                       </button>
-                      <button onClick={() => handleEliminar(emp._id, emp.numeroEmpleado)}
+                      <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)}
                         style={{ padding: '5px 8px', background: '#FEF2F2', color: '#EF4444', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
                         🗑
                       </button>

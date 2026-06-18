@@ -38,14 +38,14 @@ export default function VerEmpleados() {
                 borderRadius: '10px', padding: '16px 20px',
                 display: 'flex', alignItems: 'center', gap: '12px'
               }}>
-                <div style={{
-                  width: '36px', height: '36px', borderRadius: '50%',
-                  background: emp.rol === 'admin' ? '#6366F1' : '#CBD5E1',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '13px', fontWeight: '600', color: '#fff', flexShrink: 0
-                }}>
-                  {emp.numeroEmpleado.slice(-2)}
-                </div>
+                <img
+                  src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`}
+                  alt={`Avatar ${emp.numeroEmpleado}`}
+                  style={{
+                    width: '36px', height: '36px', borderRadius: '50%',
+                    flexShrink: 0, background: '#F0F4F8'
+                  }}
+                />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B' }}>
                     #{emp.numeroEmpleado}

@@ -6,9 +6,24 @@ const Equipo = require('../models/Equipo')
 const Documento = require('../models/Documento')
 const Log = require('../models/Log')
 const registrarLog = require('../middleware/logger')
+const bcrypt = require('bcrypt')
 
 router.use(authMiddleware)
 
+router.put('/empleados/:id/password', async (req, res) => {
+  try {
+    const { passwordNueva } = req.body
+    if (!passwordNueva || passwordNueva.length < 8) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' })
+    }
+    const passwordHash = await bcrypt.hash(passwordNueva, 10)
+    const empleado = await Empleado.findByIdAndUpdate(req.params.id, { passwordHash })
+    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })
+    res.json({ message: 'Contraseña actualizada correctamente' })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al cambiar contraseña' })
+  }
+})
 router.get('/logs', async (req, res) => {
   try {
     const logs = await Log.find().sort({ fecha: -1 }).limit(50)

@@ -88,14 +88,11 @@ export default function Perfil() {
         {/* Card datos */}
         <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
-            <div style={{
-              width: '52px', height: '52px', borderRadius: '50%',
-              background: '#6366F1', display: 'flex',
-              alignItems: 'center', justifyContent: 'center',
-              fontSize: '18px', fontWeight: '700', color: '#fff'
-            }}>
-              {usuario?.numeroEmpleado?.slice(-2)}
-            </div>
+            <img
+              src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${usuario?.numeroEmpleado}`}
+              alt='Avatar'
+              style={{ width: '52px', height: '52px', borderRadius: '50%', background: '#F0F4F8' }}
+            />
             <div>
               <div style={{ fontSize: '16px', fontWeight: '600', color: '#1E293B' }}>
                 Empleado #{usuario?.numeroEmpleado}
