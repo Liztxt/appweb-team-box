@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import ClimaWidget from '../components/ClimaWidget'
 import api from '../api/axios'
 
 export default function MisEquipos() {
@@ -51,6 +52,7 @@ export default function MisEquipos() {
         <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>
           Team Box
         </span>
+        <ClimaWidget />
         <span
   onClick={() => navigate('/perfil')}
   style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}

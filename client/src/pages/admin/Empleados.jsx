@@ -32,8 +32,7 @@ export default function Empleados() {
 
   const handleCrear = async () => {
     if (!numeroEmpleado || !password) {
-      setToast({ mensaje: 'Número de empleado y contraseña son obligatorios', tipo: 'error' })
-      return
+      setToast({ mensaje: 'Número de empleado y contraseña son obligatorios', tipo: 'error' }); return
     }
     try {
       await api.post('/auth/register', { numeroEmpleado, password, rol })
@@ -70,14 +69,12 @@ export default function Empleados() {
       await api.put(`/admin/empleados/${id}`, { rol: rolEditando })
       if (passwordEditando) {
         if (passwordEditando.length < 8) {
-          setToast({ mensaje: 'La contraseña debe tener al menos 8 caracteres', tipo: 'error' })
-          return
+          setToast({ mensaje: 'La contraseña debe tener al menos 8 caracteres', tipo: 'error' }); return
         }
         await api.put(`/admin/empleados/${id}/password`, { passwordNueva: passwordEditando })
       }
       setToast({ mensaje: 'Empleado actualizado correctamente', tipo: 'exito' })
-      setEditando(null)
-      setPasswordEditando('')
+      setEditando(null); setPasswordEditando('')
       fetchEmpleados()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al actualizar', tipo: 'error' })
@@ -93,38 +90,27 @@ export default function Empleados() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+      <style>{`
+        .emp-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; align-items: start; }
+        @media (max-width: 640px) {
+          .emp-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
 
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
-      {confirmacion && (
-        <ConfirmModal
-          titulo={confirmacion.titulo}
-          mensaje={confirmacion.mensaje}
-          onConfirmar={confirmacion.accion}
-          onCancelar={() => setConfirmacion(null)}
-        />
-      )}
+      {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
       {/* Topbar */}
-      <div style={{
-        height: '56px', background: '#fff',
-        borderBottom: '0.5px solid #E2E8F0',
-        display: 'flex', alignItems: 'center',
-        padding: '0 24px', gap: '12px'
-      }}>
-        <button onClick={() => navigate('/admin')}
-          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>
-          Gestión de empleados
-        </span>
+      <div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px' }}>
+        <button onClick={() => navigate('/admin')} style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
+        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>Gestión de empleados</span>
       </div>
 
-      <div style={{ padding: '28px 24px', maxWidth: '900px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '20px', alignItems: 'start' }}>
+      <div className='emp-grid' style={{ padding: '20px 16px', maxWidth: '900px', margin: '0 auto' }}>
 
         {/* Formulario crear */}
-        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>
-            Registrar empleado
-          </h2>
+        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>Registrar empleado</h2>
           <div style={{ marginBottom: '12px' }}>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Número de empleado</label>
             <input value={numeroEmpleado} onChange={e => setNumeroEmpleado(e.target.value)} placeholder='Ej. 12345' style={inputStyle} />
@@ -138,10 +124,9 @@ export default function Empleados() {
             <div style={{ display: 'flex', gap: '8px' }}>
               {['empleado', 'admin'].map(r => (
                 <button key={r} onClick={() => setRol(r)} style={{
-                  flex: 1, padding: '7px',
+                  flex: 1, padding: '10px 7px',
                   border: rol === r ? '1.5px solid #6366F1' : '0.5px solid #E2E8F0',
-                  borderRadius: '8px', fontSize: '12px', fontWeight: '500',
-                  cursor: 'pointer',
+                  borderRadius: '8px', fontSize: '12px', fontWeight: '500', cursor: 'pointer',
                   background: rol === r ? '#EEF2FF' : '#fff',
                   color: rol === r ? '#4F46E5' : '#64748B'
                 }}>
@@ -150,16 +135,14 @@ export default function Empleados() {
               ))}
             </div>
           </div>
-          <button onClick={handleCrear} style={{ width: '100%', padding: '10px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+          <button onClick={handleCrear} style={{ width: '100%', padding: '12px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
             Crear empleado
           </button>
         </div>
 
         {/* Lista empleados */}
-        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>
-            Empleados registrados
-          </h2>
+        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>Empleados registrados</h2>
           {loading ? (
             <p style={{ fontSize: '13px', color: '#64748B' }}>Cargando...</p>
           ) : empleados.length === 0 ? (
@@ -171,58 +154,28 @@ export default function Empleados() {
                   {editando === emp._id ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
-                      <select value={rolEditando} onChange={e => setRolEditando(e.target.value)}
-                        style={{ ...inputStyle, background: '#fff' }}>
+                      <select value={rolEditando} onChange={e => setRolEditando(e.target.value)} style={{ ...inputStyle, background: '#fff' }}>
                         <option value='empleado'>Empleado</option>
                         <option value='admin'>Admin</option>
                       </select>
-                      <input
-                        type='password'
-                        value={passwordEditando}
-                        onChange={e => setPasswordEditando(e.target.value)}
-                        placeholder='Nueva contraseña (opcional)'
-                        style={{ ...inputStyle, background: '#fff' }}
-                      />
+                      <input type='password' value={passwordEditando} onChange={e => setPasswordEditando(e.target.value)} placeholder='Nueva contraseña (opcional)' style={{ ...inputStyle, background: '#fff' }} />
                       <div style={{ display: 'flex', gap: '8px' }}>
-                        <button onClick={() => handleGuardarRol(emp._id)}
-                          style={{ flex: 1, padding: '7px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
-                          Guardar
-                        </button>
-                        <button onClick={() => { setEditando(null); setPasswordEditando('') }}
-                          style={{ flex: 1, padding: '7px', background: '#fff', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
-                          Cancelar
-                        </button>
+                        <button onClick={() => handleGuardarRol(emp._id)} style={{ flex: 1, padding: '10px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>Guardar</button>
+                        <button onClick={() => { setEditando(null); setPasswordEditando('') }} style={{ flex: 1, padding: '10px', background: '#fff', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>Cancelar</button>
                       </div>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <img
-                        src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`}
-                        alt={`Avatar ${emp.numeroEmpleado}`}
-                        style={{
-                          width: '32px', height: '32px', borderRadius: '50%',
-                          flexShrink: 0, background: '#F0F4F8'
-                        }}
-                      />
-                      <div style={{ flex: 1 }}>
+                      <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} alt={`Avatar ${emp.numeroEmpleado}`} style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: '#F0F4F8' }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
                         <div style={{ fontSize: '11px', color: '#64748B' }}>{emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
                       </div>
-                      <span style={{
-                        background: emp.rol === 'admin' ? '#EEF2FF' : '#F0F4F8',
-                        color: emp.rol === 'admin' ? '#3730A3' : '#475569',
-                        borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500'
-                      }}>
+                      <span style={{ background: emp.rol === 'admin' ? '#EEF2FF' : '#F0F4F8', color: emp.rol === 'admin' ? '#3730A3' : '#475569', borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500', flexShrink: 0 }}>
                         {emp.rol}
                       </span>
-                      <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol) }}
-                        style={{ padding: '5px 8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
-                        ✏️ Editar
-                      </button>
-                      <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)}
-                        style={{ padding: '5px 8px', background: '#FEF2F2', color: '#EF4444', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
-                        🗑
-                      </button>
+                      <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol) }} style={{ padding: '8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>✏️</button>
+                      <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)} style={{ padding: '8px', background: '#FEF2F2', color: '#EF4444', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>🗑</button>
                     </div>
                   )}
                 </div>
