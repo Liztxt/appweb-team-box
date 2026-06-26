@@ -2,32 +2,38 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import ClimaWidget from '../../components/ClimaWidget'
+import Skeleton from '../../components/Skeleton'
 import api from '../../api/axios'
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ equipos: 0, empleados: 0, documentos: 0 })
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const { usuario, logout } = useAuth()
   const [logs, setLogs] = useState([])
   const navigate = useNavigate()
 
+  const fetchStats = async () => {
+    setError(false)
+    setLoading(true)
+    try {
+      const [equiposRes, empleadosRes, logsRes] = await Promise.all([
+        api.get('/admin/stats/equipos'),
+        api.get('/admin/stats/empleados'),
+        api.get('/admin/logs')
+      ])
+      setStats({ equipos: equiposRes.data.total, empleados: empleadosRes.data.total, documentos: equiposRes.data.totalDocs })
+      setLogs(logsRes.data)
+    } catch (err) {
+      console.log('Error al cargar stats:', err)
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (usuario?.rol !== 'admin') { navigate('/equipos'); return }
-    const fetchStats = async () => {
-      try {
-        const [equiposRes, empleadosRes, logsRes] = await Promise.all([
-          api.get('/admin/stats/equipos'),
-          api.get('/admin/stats/empleados'),
-          api.get('/admin/logs')
-        ])
-        setStats({ equipos: equiposRes.data.total, empleados: empleadosRes.data.total, documentos: equiposRes.data.totalDocs })
-        setLogs(logsRes.data)
-      } catch (err) {
-        console.log('Error al cargar stats:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
     fetchStats()
   }, [])
 
@@ -51,7 +57,6 @@ export default function Dashboard() {
           .dash-grid-3 { grid-template-columns: repeat(3, 1fr); gap: 8px; }
           .dash-grid-2 { grid-template-columns: 1fr; }
           .dash-topbar { height: auto; padding: 10px 16px; }
-          .dash-topbar-actions button span { display: none; }
           .clima-hide { display: none; }
           .log-detalle { font-size: 12px; }
         }
@@ -69,7 +74,7 @@ export default function Dashboard() {
             #{usuario?.numeroEmpleado}
           </span>
           <button onClick={() => navigate('/equipos')} style={{ background: 'transparent', border: '0.5px solid #E2E8F0', borderRadius: '7px', padding: '6px 10px', fontSize: '12px', color: '#64748B', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-            <span>Ver mis equipos</span>
+            Ver mis equipos
           </button>
           <button onClick={handleLogout} style={{ background: 'transparent', border: '0.5px solid #E2E8F0', borderRadius: '7px', padding: '6px 10px', fontSize: '12px', color: '#64748B', cursor: 'pointer' }}>
             Salir
@@ -82,70 +87,98 @@ export default function Dashboard() {
         <h1 style={{ fontSize: '16px', fontWeight: '600', color: '#1E293B', marginBottom: '4px' }}>Panel de administración</h1>
         <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>Gestiona empleados, equipos y documentos</p>
 
-        {/* Stats */}
-        <div className='dash-grid-3'>
-          {cards.map(card => (
-            <div key={card.label} onClick={() => navigate(`/admin/ver/${card.label.toLowerCase()}`)}
-              style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '16px', cursor: 'pointer' }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
-              onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
-            >
-              <div style={{ width: '32px', height: '32px', background: card.color, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px', fontSize: '16px' }}>
-                {card.emoji}
-              </div>
-              <div style={{ fontSize: '24px', fontWeight: '700', color: card.text, marginBottom: '2px' }}>{loading ? '—' : card.value}</div>
-              <div style={{ fontSize: '12px', color: '#64748B' }}>{card.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Acciones rápidas */}
-        <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '12px' }}>Acciones rápidas</h2>
-        <div className='dash-grid-2' style={{ marginBottom: '0' }}>
-          <div onClick={() => navigate('/admin/empleados')}
-            style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '20px', cursor: 'pointer' }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
-            onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
-          >
-            <div style={{ fontSize: '24px', marginBottom: '8px' }}>👤</div>
-            <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '4px' }}>Gestionar empleados</div>
-            <div style={{ fontSize: '12px', color: '#64748B' }}>Registrar nuevos empleados y ver los existentes</div>
+        {error ? (
+          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '40px', textAlign: 'center', marginBottom: '20px' }}>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>⚠️</div>
+            <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>No se pudo cargar el panel</div>
+            <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>Verifica tu conexión e intenta de nuevo.</p>
+            <button onClick={fetchStats} style={{ padding: '10px 20px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+              🔄 Reintentar
+            </button>
           </div>
-          <div onClick={() => navigate('/admin/equipos')}
-            style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '20px', cursor: 'pointer' }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
-            onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
-          >
-            <div style={{ fontSize: '24px', marginBottom: '8px' }}>👥</div>
-            <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '4px' }}>Gestionar equipos</div>
-            <div style={{ fontSize: '12px', color: '#64748B' }}>Crear equipos y asignar miembros</div>
-          </div>
-        </div>
-
-        {/* Actividad reciente */}
-        <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', margin: '28px 0 12px' }}>Actividad reciente</h2>
-        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
-          {logs.length === 0 ? (
-            <p style={{ padding: '20px', fontSize: '13px', color: '#64748B' }}>Sin actividad registrada</p>
-          ) : (
-            logs.slice(0, 8).map((log, i) => (
-              <div key={log._id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', borderBottom: i < 7 ? '0.5px solid #F0F4F8' : 'none' }}>
-                <div style={{ width: '30px', height: '30px', borderRadius: '8px', flexShrink: 0, background: log.exitoso ? '#F0FDF4' : '#FEF2F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px' }}>
-                  {log.accion === 'LOGIN' ? '🔑' : log.accion === 'REGISTRO' ? '👤' : log.accion === 'SUBIR_DOCUMENTO' ? '📄' : '🗑'}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div className='log-detalle'>#{log.numeroEmpleado} — {log.detalle}</div>
-                  <div style={{ fontSize: '11px', color: '#94A3B8' }}>
-                    {new Date(log.fecha).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+        ) : (
+          <>
+            {/* Stats */}
+            <div className='dash-grid-3'>
+              {cards.map(card => (
+                <div key={card.label} onClick={() => navigate(`/admin/ver/${card.label.toLowerCase()}`)}
+                  style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '16px', cursor: 'pointer' }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+                >
+                  <div style={{ width: '32px', height: '32px', background: card.color, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px', fontSize: '16px' }}>
+                    {card.emoji}
                   </div>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: card.text, marginBottom: '2px' }}>
+                    {loading ? <Skeleton width='40px' height='28px' borderRadius='6px' /> : card.value}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#64748B' }}>{card.label}</div>
                 </div>
-                <span style={{ fontSize: '10px', fontWeight: '500', borderRadius: '20px', padding: '2px 8px', background: log.exitoso ? '#F0FDF4' : '#FEF2F2', color: log.exitoso ? '#15803D' : '#EF4444', flexShrink: 0 }}>
-                  {log.exitoso ? 'ok' : 'err'}
-                </span>
+              ))}
+            </div>
+
+            {/* Acciones rápidas */}
+            <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '12px' }}>Acciones rápidas</h2>
+            <div className='dash-grid-2' style={{ marginBottom: '0' }}>
+              <div onClick={() => navigate('/admin/empleados')}
+                style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '20px', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+              >
+                <div style={{ fontSize: '24px', marginBottom: '8px' }}>👤</div>
+                <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '4px' }}>Gestionar empleados</div>
+                <div style={{ fontSize: '12px', color: '#64748B' }}>Registrar nuevos empleados y ver los existentes</div>
               </div>
-            ))
-          )}
-        </div>
+              <div onClick={() => navigate('/admin/equipos')}
+                style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '20px', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+              >
+                <div style={{ fontSize: '24px', marginBottom: '8px' }}>👥</div>
+                <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '4px' }}>Gestionar equipos</div>
+                <div style={{ fontSize: '12px', color: '#64748B' }}>Crear equipos y asignar miembros</div>
+              </div>
+            </div>
+
+            {/* Actividad reciente */}
+            <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', margin: '28px 0 12px' }}>Actividad reciente</h2>
+            <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
+              {loading ? (
+                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <Skeleton width='30px' height='30px' borderRadius='8px' />
+                      <div style={{ flex: 1 }}>
+                        <Skeleton width='70%' height='13px' style={{ marginBottom: '6px' }} />
+                        <Skeleton width='40%' height='11px' />
+                      </div>
+                      <Skeleton width='40px' height='20px' borderRadius='20px' />
+                    </div>
+                  ))}
+                </div>
+              ) : logs.length === 0 ? (
+                <p style={{ padding: '20px', fontSize: '13px', color: '#64748B' }}>Sin actividad registrada</p>
+              ) : (
+                logs.slice(0, 8).map((log, i) => (
+                  <div key={log._id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', borderBottom: i < 7 ? '0.5px solid #F0F4F8' : 'none' }}>
+                    <div style={{ width: '30px', height: '30px', borderRadius: '8px', flexShrink: 0, background: log.exitoso ? '#F0FDF4' : '#FEF2F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px' }}>
+                      {log.accion === 'LOGIN' ? '🔑' : log.accion === 'REGISTRO' ? '👤' : log.accion === 'SUBIR_DOCUMENTO' ? '📄' : '🗑'}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className='log-detalle'>#{log.numeroEmpleado} — {log.detalle}</div>
+                      <div style={{ fontSize: '11px', color: '#94A3B8' }}>
+                        {new Date(log.fecha).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </div>
+                    <span style={{ fontSize: '10px', fontWeight: '500', borderRadius: '20px', padding: '2px 8px', background: log.exitoso ? '#F0FDF4' : '#FEF2F2', color: log.exitoso ? '#15803D' : '#EF4444', flexShrink: 0 }}>
+                      {log.exitoso ? 'ok' : 'err'}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
