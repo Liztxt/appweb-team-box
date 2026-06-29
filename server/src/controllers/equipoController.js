@@ -9,7 +9,14 @@ const crearEquipo = async (req, res) => {
     }
 
     const { nombre, descripcion } = req.body
-    const equipo = new Equipo({ nombre, descripcion })
+
+    // Verificar si ya existe un equipo con ese nombre
+    const equipoExistente = await Equipo.findOne({ nombre: nombre.trim() })
+    if (equipoExistente) {
+      return res.status(400).json({ error: 'Ya existe un equipo con ese nombre' })
+    }
+
+    const equipo = new Equipo({ nombre: nombre.trim(), descripcion })
     await equipo.save()
 
     res.status(201).json(equipo)
@@ -69,6 +76,7 @@ const verEquipo = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener equipo' })
   }
 }
+
 const eliminarEquipo = async (req, res) => {
   try {
     if (req.user.rol !== 'admin') {
@@ -80,4 +88,5 @@ const eliminarEquipo = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar equipo' })
   }
 }
+
 module.exports = { crearEquipo, asignarEmpleado, misEquipos, verEquipo, eliminarEquipo }
