@@ -110,8 +110,7 @@ export default function DetalleDocumento() {
         padding: '0 24px', gap: '12px'
       }}>
         <button
-          onClick={() => navigate(`/equipos/${teamId}/docs`)}
-          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}
+onClick={() => navigate(-1)}          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}
         >←</button>
         <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>
           Detalle del archivo

@@ -39,6 +39,12 @@ export default function MisEquipos() {
           <span style={{ fontSize: '14px' }}>📦</span>
         </div>
         <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>Team Box</span>
+{usuario?.rol === 'admin' && (
+  <button onClick={() => navigate('/admin')}
+    style={{ background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}>
+    ⚙️ Dashboard
+  </button>
+)}
         <ClimaWidget />
         <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}>
           #{usuario?.numeroEmpleado}

@@ -2,6 +2,8 @@ const Empleado = require('../models/Empleado')
 
 const teamGuard = async (req, res, next) => {
   try {
+    if (req.user.rol === 'admin') return next()
+
     const teamId = req.params.teamId
     const empleado = await Empleado.findById(req.user.id).select('equipos')
 
