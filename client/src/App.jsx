@@ -15,12 +15,23 @@ import VerEmpleados from './pages/admin/VerEmpleados'
 import PerfilEmpleado from './pages/admin/PerfilEmpleado'
 import VerDocumentos from './pages/admin/VerDocumentos'
 import DetalleEquipoAdmin from './pages/admin/DetalleEquipoAdmin'
+import { useState, useEffect } from 'react'
+import LoadingSpinner from './components/LoadingSpinner'
+import { subscribeToLoading, unsubscribeFromLoading } from './api/axios'
 
 
 
 export default function App() {
+  const [cargando, setCargando] = useState(false)
+
+useEffect(() => {
+  subscribeToLoading(setCargando)
+  return () => unsubscribeFromLoading(setCargando)
+}, [])
   return (
+    
     <BrowserRouter>
+    {cargando && <LoadingSpinner />}
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/equipos' element={<ProtectedRoute><MisEquipos /></ProtectedRoute>} />

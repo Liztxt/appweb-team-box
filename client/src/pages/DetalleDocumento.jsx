@@ -117,9 +117,11 @@ export default function DetalleDocumento() {
                 {doc.tipo === 'plantilla' ? 'Plantilla' : 'Documento'}
               </span>
               <span style={{ fontSize: '11px', color: '#94A3B8' }}>
-                {new Date(doc.creadoEn).toLocaleDateString('es-MX', {
-                  year: 'numeric', month: 'long', day: 'numeric'
-                })}
+               {new Date(doc.creadoEn).toLocaleDateString('es-MX', {
+  year: 'numeric', month: 'long', day: 'numeric'
+})} · {new Date(doc.creadoEn).toLocaleTimeString('es-MX', {
+  hour: '2-digit', minute: '2-digit'
+})}
               </span>
             </div>
 

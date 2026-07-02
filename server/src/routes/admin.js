@@ -54,6 +54,24 @@ router.get('/empleados/:id', async (req, res) => {
   }
 })
 
+// Último acceso del empleado
+router.get('/empleados/:id/ultimo-acceso', async (req, res) => {
+  try {
+    const empleado = await Empleado.findById(req.params.id).select('numeroEmpleado')
+    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })
+
+    const ultimoLog = await Log.findOne({
+      numeroEmpleado: empleado.numeroEmpleado,
+      accion: 'LOGIN',
+      exitoso: true
+    }).sort({ fecha: -1 })
+
+    res.json({ ultimoAcceso: ultimoLog ? ultimoLog.fecha : null })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener último acceso' })
+  }
+})
+
 router.get('/stats/equipos', async (req, res) => {
   try {
     const total = await Equipo.countDocuments()
@@ -76,7 +94,13 @@ router.get('/stats/empleados', async (req, res) => {
 router.get('/equipos', async (req, res) => {
   try {
     const equipos = await Equipo.find()
-    res.json(equipos)
+    const equiposConConteo = await Promise.all(
+      equipos.map(async eq => {
+        const totalDocs = await Documento.countDocuments({ equipoId: eq._id })
+        return { ...eq.toObject(), totalDocs }
+      })
+    )
+    res.json(equiposConConteo)
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener equipos' })
   }

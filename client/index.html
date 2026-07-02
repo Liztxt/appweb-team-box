@@ -5,6 +5,29 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>client</title>
+    <style>
+  button {
+    transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
+  }
+  button:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+  button:active:not(:disabled) {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  input, select {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  input:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    border-color: #6366F1 !important;
+  }
+  * {
+    transition: background-color 0.1s ease;
+  }
+</style>
   </head>
   <body>
     <div id="root"></div>

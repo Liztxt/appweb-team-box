@@ -51,9 +51,14 @@ onClick={() => navigate(`/admin/ver/equipos/${eq._id}`)}              >
                   <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B' }}>{eq.nombre}</div>
                   <div style={{ fontSize: '12px', color: '#64748B' }}>{eq.descripcion || 'Sin descripción'}</div>
                 </div>
-                <div style={{ fontSize: '12px', color: '#94A3B8' }}>
-                  {new Date(eq.creadoEn).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', year: 'numeric' })}
-                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+  <span style={{ background: '#EEF2FF', color: '#3730A3', borderRadius: '20px', padding: '2px 10px', fontSize: '11px', fontWeight: '500' }}>
+    {eq.totalDocs} doc{eq.totalDocs !== 1 ? 's' : ''}
+  </span>
+  <span style={{ fontSize: '11px', color: '#94A3B8' }}>
+    {new Date(eq.creadoEn).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', year: 'numeric' })}
+  </span>
+</div>
               </div>
             ))}
           </div>

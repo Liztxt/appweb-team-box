@@ -6,13 +6,20 @@ import Toast from '../../components/Toast'
 export default function PerfilEmpleado() {
   const { id } = useParams()
   const [empleado, setEmpleado] = useState(null)
+  const [ultimoAcceso, setUltimoAcceso] = useState(null)
   const [loading, setLoading] = useState(true)
   const [toast, setToast] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    api.get(`/admin/empleados/${id}`)
-      .then(res => setEmpleado(res.data))
+    Promise.all([
+      api.get(`/admin/empleados/${id}`),
+      api.get(`/admin/empleados/${id}/ultimo-acceso`)
+    ])
+      .then(([empRes, accesoRes]) => {
+        setEmpleado(empRes.data)
+        setUltimoAcceso(accesoRes.data.ultimoAcceso)
+      })
       .catch(() => setToast({ mensaje: 'Error al cargar empleado', tipo: 'error' }))
       .finally(() => setLoading(false))
   }, [id])
@@ -51,7 +58,7 @@ export default function PerfilEmpleado() {
                 alt={`Avatar ${empleado.numeroEmpleado}`}
                 style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#F0F4F8' }}
               />
-              <div>
+              <div style={{ flex: 1 }}>
                 <div style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B' }}>
                   #{empleado.numeroEmpleado}
                 </div>
@@ -64,6 +71,24 @@ export default function PerfilEmpleado() {
                   {empleado.rol}
                 </span>
               </div>
+            </div>
+
+            {/* Último acceso */}
+            <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
+              <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '8px' }}>
+                Último acceso
+              </h2>
+              <p style={{ fontSize: '13px', color: '#64748B', margin: 0 }}>
+                {ultimoAcceso ? (
+                  <>
+                    {new Date(ultimoAcceso).toLocaleDateString('es-MX', {
+                      year: 'numeric', month: 'long', day: 'numeric'
+                    })} · {new Date(ultimoAcceso).toLocaleTimeString('es-MX', {
+                      hour: '2-digit', minute: '2-digit'
+                    })}
+                  </>
+                ) : 'Sin accesos registrados'}
+              </p>
             </div>
 
             {/* Equipos */}
@@ -88,6 +113,7 @@ export default function PerfilEmpleado() {
                 </div>
               )}
             </div>
+
           </div>
         )}
       </div>
