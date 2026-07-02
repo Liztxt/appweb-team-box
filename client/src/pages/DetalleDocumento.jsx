@@ -6,8 +6,13 @@ export default function DetalleDocumento() {
   const [doc, setDoc] = useState(null)
   const [loading, setLoading] = useState(true)
   const [descargando, setDescargando] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState(null)
   const { teamId, docId } = useParams()
   const navigate = useNavigate()
+
+  const esImagen = (tipo) => tipo?.startsWith('image/')
+  const esPDF = (tipo) => tipo === 'application/pdf'
+  const puedePrevisualizar = (tipo) => esImagen(tipo) || esPDF(tipo)
 
   useEffect(() => {
     const fetchDoc = async () => {
@@ -15,6 +20,14 @@ export default function DetalleDocumento() {
         const res = await api.get(`/teams/${teamId}/docs`)
         const encontrado = res.data.find(d => d._id === docId)
         setDoc(encontrado)
+
+        if (encontrado && puedePrevisualizar(encontrado.archivoTipo)) {
+          const previewRes = await api.get(`/teams/${teamId}/docs/${docId}/preview`, {
+            responseType: 'blob'
+          })
+          const url = window.URL.createObjectURL(new Blob([previewRes.data], { type: encontrado.archivoTipo }))
+          setPreviewUrl(url)
+        }
       } catch (err) {
         console.log('Error:', err)
       } finally {
@@ -22,6 +35,10 @@ export default function DetalleDocumento() {
       }
     }
     fetchDoc()
+
+    return () => {
+      if (previewUrl) window.URL.revokeObjectURL(previewUrl)
+    }
   }, [teamId, docId])
 
   const handleDescargar = async () => {
@@ -55,37 +72,18 @@ export default function DetalleDocumento() {
     }
   }
 
-  // Determina si se puede previsualizar
-  const puedePrevisualizar = (tipo) => {
-    const previewTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp']
-    return previewTypes.includes(tipo)
-  }
-
-  const esImagen = (tipo) => tipo?.startsWith('image/')
-  const esPDF = (tipo) => tipo === 'application/pdf'
-
-  const previewUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/teams/${teamId}/docs/${docId}/preview`
-
-  // Skeleton de documento
   const DocumentSkeleton = () => (
     <div style={{
-      background: '#F8FAFC', border: '0.5px solid #E2E8F0',
-      borderRadius: '8px', padding: '24px',
+      background: '#F8FAFC', borderRadius: '8px', padding: '24px',
       display: 'flex', flexDirection: 'column', gap: '10px'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
         <div style={{ width: '32px', height: '32px', background: '#E2E8F0', borderRadius: '4px' }} />
         <div style={{ flex: 1, height: '14px', background: '#E2E8F0', borderRadius: '4px' }} />
       </div>
-      {[100, 90, 95, 80, 85, 70, 90, 75].map((w, i) => (
+      {[100, 90, 95, 80, 85, 70, 90, 75, 100, 88, 92, 78].map((w, i) => (
         <div key={i} style={{ height: '10px', background: '#E2E8F0', borderRadius: '4px', width: `${w}%` }} />
       ))}
-      <div style={{ height: '10px', background: '#E2E8F0', borderRadius: '4px', width: '60%' }} />
-      <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {[100, 88, 92, 78].map((w, i) => (
-          <div key={i} style={{ height: '10px', background: '#E2E8F0', borderRadius: '4px', width: `${w}%` }} />
-        ))}
-      </div>
     </div>
   )
 
@@ -127,29 +125,26 @@ export default function DetalleDocumento() {
         }}>
 
           {/* Vista previa */}
-          <div style={{
-            borderBottom: '0.5px solid #E2E8F0',
-            background: doc.tipo === 'plantilla' ? '#EEF2FF' : '#F0F4F8'
-          }}>
-            {puedePrevisualizar(doc.archivoTipo) ? (
+          <div style={{ borderBottom: '0.5px solid #E2E8F0' }}>
+            {puedePrevisualizar(doc.archivoTipo) && previewUrl ? (
               esImagen(doc.archivoTipo) ? (
                 <img
                   src={previewUrl}
                   alt={doc.titulo}
                   style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', display: 'block' }}
                 />
-              ) : esPDF(doc.archivoTipo) ? (
+              ) : (
                 <iframe
                   src={previewUrl}
                   title={doc.titulo}
                   style={{ width: '100%', height: '300px', border: 'none', display: 'block' }}
                 />
-              ) : null
+              )
             ) : (
-              <div style={{ padding: '20px' }}>
+              <div style={{ padding: '20px', background: '#F8FAFC' }}>
                 <DocumentSkeleton />
-                <p style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'center', marginTop: '12px' }}>
-                  Vista previa no disponible para este tipo de archivo
+                <p style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'center', marginTop: '12px', marginBottom: '0' }}>
+                  Vista previa no disponible — descarga el archivo para verlo
                 </p>
               </div>
             )}
@@ -192,7 +187,6 @@ export default function DetalleDocumento() {
               </span>
             </div>
 
-            {/* Botones */}
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
                 onClick={handleDescargar}
