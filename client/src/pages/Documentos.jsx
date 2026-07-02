@@ -8,6 +8,7 @@ export default function Documentos() {
   const [documentos, setDocumentos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [accesoDenegado, setAccesoDenegado] = useState(false)
   const [tabActivo, setTabActivo] = useState('todos')
   const [busqueda, setBusqueda] = useState('')
   const { teamId } = useParams()
@@ -16,18 +17,22 @@ export default function Documentos() {
 
   const fetchDocs = async () => {
     setError(false)
+    setAccesoDenegado(false)
     setLoading(true)
     try {
       const res = await api.get(`/teams/${teamId}/docs`)
       setDocumentos(res.data)
     } catch (err) {
       console.log('Error al cargar documentos:', err)
-      setError(true)
+      if (err.response?.status === 403) {
+        setAccesoDenegado(true)
+      } else {
+        setError(true)
+      }
     } finally {
       setLoading(false)
     }
   }
-
   useEffect(() => { fetchDocs() }, [teamId])
 
   const handleLogout = () => { logout(); navigate('/login') }
@@ -107,6 +112,16 @@ export default function Documentos() {
                 </div>
               </div>
             ))}
+          </div>
+
+          ) : accesoDenegado ? (
+          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>🔒</div>
+            <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>No tienes acceso a este equipo</div>
+            <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>Solo los miembros de este equipo pueden ver su contenido.</p>
+            <button onClick={() => navigate('/equipos')} style={{ padding: '10px 20px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+              Volver a mis equipos
+            </button>
           </div>
         ) : error ? (
           <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>

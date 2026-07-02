@@ -33,11 +33,12 @@ export default function VerEmpleados() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {empleados.map(emp => (
-              <div key={emp._id} style={{
-                background: '#fff', border: '0.5px solid #E2E8F0',
-                borderRadius: '10px', padding: '16px 20px',
-                display: 'flex', alignItems: 'center', gap: '12px'
-              }}>
+  <div key={emp._id} onClick={() => navigate(`/admin/ver/empleados/${emp._id}`)} style={{
+    background: '#fff', border: '0.5px solid #E2E8F0',
+    borderRadius: '10px', padding: '16px 20px',
+    display: 'flex', alignItems: 'center', gap: '12px',
+    cursor: 'pointer'
+  }}>
                 <img
                   src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`}
                   alt={`Avatar ${emp.numeroEmpleado}`}

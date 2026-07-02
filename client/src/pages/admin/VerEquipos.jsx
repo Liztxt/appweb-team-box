@@ -41,8 +41,7 @@ export default function VerEquipos() {
               }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
                 onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
-                onClick={() => navigate(`/equipos/${eq._id}/docs`)}
-              >
+onClick={() => navigate(`/admin/ver/equipos/${eq._id}`)}              >
                 <div style={{
                   width: '36px', height: '36px', background: '#EEF2FF',
                   borderRadius: '8px', display: 'flex', alignItems: 'center',

@@ -12,7 +12,9 @@ import Perfil from './pages/Perfil'
 import VerEquipos from './pages/admin/VerEquipos'
 import NotFound from './pages/NotFound'
 import VerEmpleados from './pages/admin/VerEmpleados'
+import PerfilEmpleado from './pages/admin/PerfilEmpleado'
 import VerDocumentos from './pages/admin/VerDocumentos'
+import DetalleEquipoAdmin from './pages/admin/DetalleEquipoAdmin'
 
 
 
@@ -31,7 +33,9 @@ export default function App() {
         <Route path='/perfil' element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
         <Route path='/admin/ver/equipos' element={<ProtectedRoute><VerEquipos /></ProtectedRoute>} />
 <Route path='/admin/ver/empleados' element={<ProtectedRoute><VerEmpleados /></ProtectedRoute>} />
+<Route path="/admin/ver/empleados/:id" element={<PerfilEmpleado />} />
 <Route path='/admin/ver/documentos' element={<ProtectedRoute><VerDocumentos /></ProtectedRoute>} />
+<Route path="/admin/ver/equipos/:id" element={<DetalleEquipoAdmin />} />
 
 <Route path='*' element={<NotFound />} />
       </Routes>

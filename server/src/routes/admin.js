@@ -42,6 +42,18 @@ router.get('/empleados', async (req, res) => {
   }
 })
 
+router.get('/empleados/:id', async (req, res) => {
+  try {
+    const empleado = await Empleado.findById(req.params.id)
+      .select('-passwordHash')
+      .populate('equipos')
+    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })
+    res.json(empleado)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener empleado' })
+  }
+})
+
 router.get('/stats/equipos', async (req, res) => {
   try {
     const total = await Equipo.countDocuments()
