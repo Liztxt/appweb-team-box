@@ -16,7 +16,8 @@ const {
   subirDocumento,
   listarDocumentos,
   descargarDocumento,
-  eliminarDocumento
+  eliminarDocumento,
+  previsualizarDocumento
 } = require('../controllers/documentoController')
 
 const storage = multer.memoryStorage()
@@ -27,6 +28,7 @@ router.use(teamGuard)
 
 router.get('/', listarDocumentos)
 router.get('/:docId/download', descargarDocumento)
+router.get('/:docId/preview', previsualizarDocumento)
 router.delete('/:docId', eliminarDocumento)
 router.post('/',
   upload.single('archivo'),

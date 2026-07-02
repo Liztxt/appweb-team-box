@@ -55,6 +55,40 @@ export default function DetalleDocumento() {
     }
   }
 
+  // Determina si se puede previsualizar
+  const puedePrevisualizar = (tipo) => {
+    const previewTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    return previewTypes.includes(tipo)
+  }
+
+  const esImagen = (tipo) => tipo?.startsWith('image/')
+  const esPDF = (tipo) => tipo === 'application/pdf'
+
+  const previewUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/teams/${teamId}/docs/${docId}/preview`
+
+  // Skeleton de documento
+  const DocumentSkeleton = () => (
+    <div style={{
+      background: '#F8FAFC', border: '0.5px solid #E2E8F0',
+      borderRadius: '8px', padding: '24px',
+      display: 'flex', flexDirection: 'column', gap: '10px'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+        <div style={{ width: '32px', height: '32px', background: '#E2E8F0', borderRadius: '4px' }} />
+        <div style={{ flex: 1, height: '14px', background: '#E2E8F0', borderRadius: '4px' }} />
+      </div>
+      {[100, 90, 95, 80, 85, 70, 90, 75].map((w, i) => (
+        <div key={i} style={{ height: '10px', background: '#E2E8F0', borderRadius: '4px', width: `${w}%` }} />
+      ))}
+      <div style={{ height: '10px', background: '#E2E8F0', borderRadius: '4px', width: '60%' }} />
+      <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        {[100, 88, 92, 78].map((w, i) => (
+          <div key={i} style={{ height: '10px', background: '#E2E8F0', borderRadius: '4px', width: `${w}%` }} />
+        ))}
+      </div>
+    </div>
+  )
+
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#F0F4F8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <p style={{ fontSize: '13px', color: '#64748B' }}>Cargando...</p>
@@ -86,23 +120,39 @@ export default function DetalleDocumento() {
         </span>
       </div>
 
-      {/* Card detalle */}
       <div style={{ padding: '32px 24px', maxWidth: '560px', margin: '0 auto' }}>
         <div style={{
           background: '#fff', border: '0.5px solid #E2E8F0',
           borderRadius: '12px', overflow: 'hidden'
         }}>
 
-          {/* Thumbnail */}
+          {/* Vista previa */}
           <div style={{
-            height: '140px', display: 'flex',
-            alignItems: 'center', justifyContent: 'center',
-            background: doc.tipo === 'plantilla' ? '#EEF2FF' : '#F0F4F8',
-            borderBottom: '0.5px solid #E2E8F0'
+            borderBottom: '0.5px solid #E2E8F0',
+            background: doc.tipo === 'plantilla' ? '#EEF2FF' : '#F0F4F8'
           }}>
-            <span style={{ fontSize: '52px' }}>
-              {doc.tipo === 'plantilla' ? '📋' : '📄'}
-            </span>
+            {puedePrevisualizar(doc.archivoTipo) ? (
+              esImagen(doc.archivoTipo) ? (
+                <img
+                  src={previewUrl}
+                  alt={doc.titulo}
+                  style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', display: 'block' }}
+                />
+              ) : esPDF(doc.archivoTipo) ? (
+                <iframe
+                  src={previewUrl}
+                  title={doc.titulo}
+                  style={{ width: '100%', height: '300px', border: 'none', display: 'block' }}
+                />
+              ) : null
+            ) : (
+              <div style={{ padding: '20px' }}>
+                <DocumentSkeleton />
+                <p style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'center', marginTop: '12px' }}>
+                  Vista previa no disponible para este tipo de archivo
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Info */}
@@ -117,11 +167,11 @@ export default function DetalleDocumento() {
                 {doc.tipo === 'plantilla' ? 'Plantilla' : 'Documento'}
               </span>
               <span style={{ fontSize: '11px', color: '#94A3B8' }}>
-               {new Date(doc.creadoEn).toLocaleDateString('es-MX', {
-  year: 'numeric', month: 'long', day: 'numeric'
-})} · {new Date(doc.creadoEn).toLocaleTimeString('es-MX', {
-  hour: '2-digit', minute: '2-digit'
-})}
+                {new Date(doc.creadoEn).toLocaleDateString('es-MX', {
+                  year: 'numeric', month: 'long', day: 'numeric'
+                })} · {new Date(doc.creadoEn).toLocaleTimeString('es-MX', {
+                  hour: '2-digit', minute: '2-digit'
+                })}
               </span>
             </div>
 

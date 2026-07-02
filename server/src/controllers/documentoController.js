@@ -128,4 +128,25 @@ const eliminarDocumento = async (req, res) => {
   }
 }
 
-module.exports = { subirDocumento, listarDocumentos, descargarDocumento, eliminarDocumento }
+const previsualizarDocumento = async (req, res) => {
+  try {
+    const documento = await Documento.findOne({
+      _id: req.params.docId,
+      equipoId: req.params.teamId
+    })
+
+    if (!documento) {
+      return res.status(404).json({ error: 'Documento no encontrado' })
+    }
+
+    res.set({
+      'Content-Type': documento.archivoTipo,
+      'Content-Disposition': `inline; filename="${documento.archivoNombre}"`
+    })
+
+    res.send(documento.archivo)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al previsualizar documento' })
+  }
+}
+module.exports = { subirDocumento, listarDocumentos, descargarDocumento, eliminarDocumento, previsualizarDocumento }
