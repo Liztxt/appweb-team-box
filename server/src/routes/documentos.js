@@ -17,7 +17,8 @@ const {
   listarDocumentos,
   descargarDocumento,
   eliminarDocumento,
-  previsualizarDocumento
+  previsualizarDocumento,
+  editarDocumento
 } = require('../controllers/documentoController')
 
 const storage = multer.memoryStorage()
@@ -30,6 +31,27 @@ router.get('/', listarDocumentos)
 router.get('/:docId/download', descargarDocumento)
 router.get('/:docId/preview', previsualizarDocumento)
 router.delete('/:docId', eliminarDocumento)
+router.put('/:docId',
+  upload.single('archivo'),
+  [
+    body('titulo')
+      .optional()
+      .trim()
+      .notEmpty().withMessage('El título no puede estar vacío')
+      .isLength({ max: 100 }).withMessage('El título no puede exceder 100 caracteres')
+      .escape(),
+    body('descripcion')
+      .optional()
+      .trim()
+      .isLength({ max: 300 }).withMessage('La descripción no puede exceder 300 caracteres')
+      .escape(),
+    body('tipo')
+      .optional()
+      .isIn(['documento', 'plantilla']).withMessage('Tipo inválido')
+  ],
+  validar,
+  editarDocumento
+)
 router.post('/',
   upload.single('archivo'),
   [
@@ -50,5 +72,42 @@ router.post('/',
   validar,
   subirDocumento
 )
+// Editar documento
+const editarDocumento = async (req, res) => {
+  try {
+    const { titulo, descripcion, tipo } = req.body
 
-module.exports = router
+    const actualizar = {}
+    if (titulo) actualizar.titulo = titulo
+    if (descripcion !== undefined) actualizar.descripcion = descripcion
+    if (tipo) actualizar.tipo = tipo
+
+    if (req.file) {
+      actualizar.archivo = req.file.buffer
+      actualizar.archivoNombre = req.file.originalname
+      actualizar.archivoTipo = req.file.mimetype
+    }
+
+    const documento = await Documento.findOneAndUpdate(
+      { _id: req.params.docId, equipoId: req.params.teamId },
+      actualizar,
+      { new: true }
+    ).select('-archivo')
+
+    if (!documento) return res.status(404).json({ error: 'Documento no encontrado' })
+
+    await registrarLog({
+      empleadoId: req.user.id,
+      numeroEmpleado: req.user.numeroEmpleado,
+      accion: 'EDITAR_DOCUMENTO',
+      detalle: `Editó el documento "${documento.titulo}"`,
+      ip: req.ip,
+      exitoso: true
+    })
+
+    res.json(documento)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al editar documento' })
+  }
+}
+module.exports = { subirDocumento, listarDocumentos, descargarDocumento, eliminarDocumento, previsualizarDocumento, editarDocumento }
