@@ -72,4 +72,4 @@ router.post('/',
   validar,
   subirDocumento
 )
-module.exports = { subirDocumento, listarDocumentos, descargarDocumento, eliminarDocumento, previsualizarDocumento, editarDocumento }
+module.exports = router
