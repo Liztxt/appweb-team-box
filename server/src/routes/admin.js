@@ -106,6 +106,19 @@ router.get('/equipos', async (req, res) => {
   }
 })
 
+// Ver un equipo específico con sus miembros
+router.get('/equipos/:id', async (req, res) => {
+  try {
+    const equipo = await Equipo.findById(req.params.id)
+    if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado' })
+
+    const miembros = await Empleado.find({ equipos: req.params.id }).select('-passwordHash')
+    res.json({ ...equipo.toObject(), miembros })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener equipo' })
+  }
+})
+
 router.get('/documentos', async (req, res) => {
   try {
     const documentos = await Documento.find().select('-archivo').sort({ creadoEn: -1 })
