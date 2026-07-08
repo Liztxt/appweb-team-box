@@ -86,6 +86,7 @@ export default function DetalleEquipoAdmin() {
                       <img
                         src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`}
                         alt={`Avatar ${emp.numeroEmpleado}`}
+                        loading="lazy"
                         style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#fff', flexShrink: 0 }}
                       />
                       <div style={{ flex: 1 }}>

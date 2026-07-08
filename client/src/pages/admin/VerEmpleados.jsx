@@ -63,6 +63,7 @@ export default function VerEmpleados() {
                 <img
                   src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`}
                   alt={`Avatar ${emp.numeroEmpleado}`}
+                  loading="lazy"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: '#F0F4F8' }}
                 />
                 <div style={{ flex: 1 }}>

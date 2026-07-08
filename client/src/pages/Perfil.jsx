@@ -91,6 +91,7 @@ export default function Perfil() {
             <img
               src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${usuario?.numeroEmpleado}`}
               alt='Avatar'
+              loading="lazy"
               style={{ width: '52px', height: '52px', borderRadius: '50%', background: '#F0F4F8' }}
             />
             <div>

@@ -56,6 +56,7 @@ export default function PerfilEmpleado() {
               <img
                 src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${empleado.numeroEmpleado}`}
                 alt={`Avatar ${empleado.numeroEmpleado}`}
+                loading="lazy"
                 style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#F0F4F8' }}
               />
               <div style={{ flex: 1 }}>

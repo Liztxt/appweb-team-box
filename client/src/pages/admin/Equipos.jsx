@@ -208,7 +208,7 @@ export default function Equipos() {
                           <div style={{ fontSize: '10px', color: '#94A3B8', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Miembros</div>
                           {miembrosDeEquipo(eq._id).map(emp => (
                             <div key={emp._id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} alt='' style={{ width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0 }} />
+                              <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} alt='' loading="lazy" style={{ width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0 }} />
                               <span style={{ fontSize: '12px', color: '#475569', flex: 1 }}>#{emp.numeroEmpleado}</span>
                               <button onClick={() => handleQuitarMiembro(eq._id, emp._id)} style={{ padding: '4px 8px', background: 'transparent', color: '#94A3B8', border: 'none', borderRadius: '4px', fontSize: '12px', cursor: 'pointer' }}>✕</button>
                             </div>
