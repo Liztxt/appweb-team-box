@@ -18,6 +18,8 @@ import DetalleEquipoAdmin from './pages/admin/DetalleEquipoAdmin'
 import { useState, useEffect } from 'react'
 import LoadingSpinner from './components/LoadingSpinner'
 import { subscribeToLoading, unsubscribeFromLoading } from './api/axios'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 
 
@@ -47,6 +49,8 @@ useEffect(() => {
 <Route path="/admin/ver/empleados/:id" element={<PerfilEmpleado />} />
 <Route path='/admin/ver/documentos' element={<ProtectedRoute><VerDocumentos /></ProtectedRoute>} />
 <Route path="/admin/ver/equipos/:id" element={<DetalleEquipoAdmin />} />
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password" element={<ResetPassword />} />
 
 <Route path='*' element={<NotFound />} />
       </Routes>

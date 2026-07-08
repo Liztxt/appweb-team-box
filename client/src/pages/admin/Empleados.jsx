@@ -9,11 +9,13 @@ export default function Empleados() {
   const [loading, setLoading] = useState(true)
   const [numeroEmpleado, setNumeroEmpleado] = useState('')
   const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
   const [rol, setRol] = useState('empleado')
   const [toast, setToast] = useState(null)
   const [editando, setEditando] = useState(null)
   const [rolEditando, setRolEditando] = useState('')
   const [passwordEditando, setPasswordEditando] = useState('')
+  const [emailEditando, setEmailEditando] = useState('')
   const [confirmacion, setConfirmacion] = useState(null)
   const navigate = useNavigate()
 
@@ -35,9 +37,9 @@ export default function Empleados() {
       setToast({ mensaje: 'Número de empleado y contraseña son obligatorios', tipo: 'error' }); return
     }
     try {
-      await api.post('/auth/register', { numeroEmpleado, password, rol })
+      await api.post('/auth/register', { numeroEmpleado, password, rol, email: email || undefined })
       setToast({ mensaje: 'Empleado creado correctamente', tipo: 'exito' })
-      setNumeroEmpleado(''); setPassword(''); setRol('empleado')
+      setNumeroEmpleado(''); setPassword(''); setRol('empleado'); setEmail('')
       fetchEmpleados()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al crear empleado', tipo: 'error' })
@@ -66,7 +68,7 @@ export default function Empleados() {
 
   const handleGuardarRol = async (id) => {
     try {
-      await api.put(`/admin/empleados/${id}`, { rol: rolEditando })
+      await api.put(`/admin/empleados/${id}`, { rol: rolEditando, email: emailEditando || undefined })
       if (passwordEditando) {
         if (passwordEditando.length < 8) {
           setToast({ mensaje: 'La contraseña debe tener al menos 8 caracteres', tipo: 'error' }); return
@@ -74,7 +76,7 @@ export default function Empleados() {
         await api.put(`/admin/empleados/${id}/password`, { passwordNueva: passwordEditando })
       }
       setToast({ mensaje: 'Empleado actualizado correctamente', tipo: 'exito' })
-      setEditando(null); setPasswordEditando('')
+      setEditando(null); setPasswordEditando(''); setEmailEditando('')
       fetchEmpleados()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al actualizar', tipo: 'error' })
@@ -116,6 +118,10 @@ export default function Empleados() {
             <input value={numeroEmpleado} onChange={e => setNumeroEmpleado(e.target.value)} placeholder='Ej. 12345' style={inputStyle} />
           </div>
           <div style={{ marginBottom: '12px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Email (opcional)</label>
+            <input type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='correo@empresa.com' style={inputStyle} />
+          </div>
+          <div style={{ marginBottom: '12px' }}>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Contraseña</label>
             <input type='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Mínimo 8 caracteres, 1 mayúscula y 1 número' style={inputStyle} />
           </div>
@@ -154,6 +160,7 @@ export default function Empleados() {
                   {editando === emp._id ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
+                      <input type='email' value={emailEditando} onChange={e => setEmailEditando(e.target.value)} placeholder={emp.email || 'Email (opcional)'} style={{ ...inputStyle, background: '#fff' }} />
                       <select value={rolEditando} onChange={e => setRolEditando(e.target.value)} style={{ ...inputStyle, background: '#fff' }}>
                         <option value='empleado'>Empleado</option>
                         <option value='admin'>Admin</option>
@@ -161,20 +168,20 @@ export default function Empleados() {
                       <input type='password' value={passwordEditando} onChange={e => setPasswordEditando(e.target.value)} placeholder='Nueva contraseña (opcional)' style={{ ...inputStyle, background: '#fff' }} />
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <button onClick={() => handleGuardarRol(emp._id)} style={{ flex: 1, padding: '10px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>Guardar</button>
-                        <button onClick={() => { setEditando(null); setPasswordEditando('') }} style={{ flex: 1, padding: '10px', background: '#fff', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>Cancelar</button>
+                        <button onClick={() => { setEditando(null); setPasswordEditando(''); setEmailEditando('') }} style={{ flex: 1, padding: '10px', background: '#fff', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>Cancelar</button>
                       </div>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} alt={`Avatar ${emp.numeroEmpleado}`} style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: '#F0F4F8' }} />
+                      <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} loading="lazy" alt={`Avatar ${emp.numeroEmpleado}`} style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: '#F0F4F8' }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
-                        <div style={{ fontSize: '11px', color: '#64748B' }}>{emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
+                        <div style={{ fontSize: '11px', color: '#64748B' }}>{emp.email || 'Sin email'} · {emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
                       </div>
                       <span style={{ background: emp.rol === 'admin' ? '#EEF2FF' : '#F0F4F8', color: emp.rol === 'admin' ? '#3730A3' : '#475569', borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500', flexShrink: 0 }}>
                         {emp.rol}
                       </span>
-                      <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol) }} style={{ padding: '8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>✏️</button>
+                      <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol); setEmailEditando(emp.email || '') }} style={{ padding: '8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>✏️</button>
                       <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)} style={{ padding: '8px', background: '#FEF2F2', color: '#EF4444', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>🗑</button>
                     </div>
                   )}
