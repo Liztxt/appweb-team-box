@@ -128,17 +128,21 @@ export default function Empleados() {
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Rol</label>
             <div style={{ display: 'flex', gap: '8px' }}>
-              {['empleado', 'admin'].map(r => (
-                <button key={r} onClick={() => setRol(r)} style={{
-                  flex: 1, padding: '10px 7px',
-                  border: rol === r ? '1.5px solid #6366F1' : '0.5px solid #E2E8F0',
-                  borderRadius: '8px', fontSize: '12px', fontWeight: '500', cursor: 'pointer',
-                  background: rol === r ? '#EEF2FF' : '#fff',
-                  color: rol === r ? '#4F46E5' : '#64748B'
-                }}>
-                  {r === 'empleado' ? '👤 Empleado' : '⚙️ Admin'}
-                </button>
-              ))}
+              {[
+  { value: 'empleado', label: '👤 Empleado' },
+  { value: 'manager', label: '🗂 Manager' },
+  { value: 'admin', label: '⚙️ Admin' }
+].map(r => (
+  <button key={r.value} onClick={() => setRol(r.value)} style={{
+    flex: 1, padding: '10px 7px',
+    border: rol === r.value ? '1.5px solid #6366F1' : '0.5px solid #E2E8F0',
+    borderRadius: '8px', fontSize: '12px', fontWeight: '500', cursor: 'pointer',
+    background: rol === r.value ? '#EEF2FF' : '#fff',
+    color: rol === r.value ? '#4F46E5' : '#64748B'
+  }}>
+    {r.label}
+  </button>
+))}
             </div>
           </div>
           <button onClick={handleCrear} style={{ width: '100%', padding: '12px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
@@ -178,9 +182,13 @@ export default function Empleados() {
                         <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
                         <div style={{ fontSize: '11px', color: '#64748B' }}>{emp.email || 'Sin email'} · {emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
                       </div>
-                      <span style={{ background: emp.rol === 'admin' ? '#EEF2FF' : '#F0F4F8', color: emp.rol === 'admin' ? '#3730A3' : '#475569', borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500', flexShrink: 0 }}>
-                        {emp.rol}
-                      </span>
+                      <span style={{
+  background: emp.rol === 'admin' ? '#EEF2FF' : emp.rol === 'manager' ? '#F0FDF4' : '#F0F4F8',
+  color: emp.rol === 'admin' ? '#3730A3' : emp.rol === 'manager' ? '#15803D' : '#475569',
+  borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500', flexShrink: 0
+}}>
+  {emp.rol}
+</span>
                       <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol); setEmailEditando(emp.email || '') }} style={{ padding: '8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>✏️</button>
                       <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)} style={{ padding: '8px', background: '#FEF2F2', color: '#EF4444', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>🗑</button>
                     </div>
