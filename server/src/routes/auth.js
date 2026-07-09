@@ -33,8 +33,8 @@ router.post('/register',
       .matches(/[A-Z]/).withMessage('La contraseña debe contener al menos una mayúscula')
       .matches(/[0-9]/).withMessage('La contraseña debe contener al menos un número'),
     body('rol')
-      .optional()
-      .isIn(['empleado', 'admin']).withMessage('Rol inválido')
+  .optional()
+  .isIn(['empleado', 'admin', 'manager']).withMessage('Rol inválido')
   ],
   validar,
   register

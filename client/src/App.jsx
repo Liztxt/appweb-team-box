@@ -20,7 +20,8 @@ import LoadingSpinner from './components/LoadingSpinner'
 import { subscribeToLoading, unsubscribeFromLoading } from './api/axios'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
-
+import ManagerDashboard from './pages/manager/Dashboard'
+import ManagerEquipos from './pages/manager/Equipos'
 
 
 export default function App() {
@@ -51,6 +52,10 @@ useEffect(() => {
 <Route path="/admin/ver/equipos/:id" element={<DetalleEquipoAdmin />} />
 <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/reset-password" element={<ResetPassword />} />
+<Route path="/manager" element={<ProtectedRoute allowedRoles={['manager', 'admin']} />}>
+  <Route index element={<ManagerDashboard />} />
+  <Route path="equipos" element={<ManagerEquipos />} />
+</Route>
 
 <Route path='*' element={<NotFound />} />
       </Routes>

@@ -147,19 +147,16 @@ router.delete('/empleados/:id', async (req, res) => {
   }
 })
 
-// Modificar rol y email de empleado
+// Modificar rol de empleado
 router.put('/empleados/:id', async (req, res) => {
   try {
-    const { rol, email } = req.body
-    if (!['empleado', 'admin'].includes(rol)) {
+    const { rol } = req.body
+    if (!['empleado', 'admin', 'manager'].includes(rol)) {
       return res.status(400).json({ error: 'Rol inválido' })
     }
-    const actualizar = { rol }
-    if (email !== undefined) actualizar.email = email || null
-
     const empleado = await Empleado.findByIdAndUpdate(
       req.params.id,
-      actualizar,
+      { rol },
       { new: true }
     ).select('-passwordHash')
     if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })

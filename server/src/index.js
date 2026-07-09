@@ -26,6 +26,7 @@ app.use('/auth', require('./routes/auth'))
 app.use('/teams', require('./routes/equipos'))
 app.use('/teams/:teamId/docs', require('./routes/documentos'))
 app.use('/admin', require('./routes/admin'))
+app.use('/manager', require('./routes/manager'))
 
 app.get('/', (req, res) => {
   res.json({ message: 'Team Box API corriendo' })

@@ -5,7 +5,7 @@ const empleadoSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   email: { type: String, required: false, unique: true, sparse: true },
   equipos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Equipo' }],
-  rol: { type: String, enum: ['empleado', 'admin'], default: 'empleado' }
+  rol: { type: String, enum: ['empleado', 'admin', 'manager'], default: 'empleado' }
 })
 
 module.exports = mongoose.model('Empleado', empleadoSchema)

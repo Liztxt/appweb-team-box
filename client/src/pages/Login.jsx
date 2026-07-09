@@ -27,7 +27,7 @@ export default function Login() {
         numeroEmpleado: res.data.numeroEmpleado,
         rol: res.data.rol
       })
-      navigate(res.data.rol === 'admin' ? '/admin' : '/equipos')
+      navigate(res.data.rol === 'admin' ? '/admin' : res.data.rol === 'manager' ? '/manager' : '/equipos')
     } catch (err) {
       setError('Número de empleado o contraseña incorrectos')
     } finally {
