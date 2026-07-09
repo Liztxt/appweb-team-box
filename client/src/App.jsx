@@ -22,6 +22,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import ManagerDashboard from './pages/manager/Dashboard'
 import ManagerEquipos from './pages/manager/Equipos'
+import DetalleEquipoManager from './pages/manager/DetalleEquipo'
 
 
 export default function App() {
@@ -50,6 +51,7 @@ useEffect(() => {
 <Route path="/admin/ver/empleados/:id" element={<PerfilEmpleado />} />
 <Route path='/admin/ver/documentos' element={<ProtectedRoute><VerDocumentos /></ProtectedRoute>} />
 <Route path="/admin/ver/equipos/:id" element={<DetalleEquipoAdmin />} />
+<Route path="equipos/:equipoId" element={<DetalleEquipoManager />} />
 <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/reset-password" element={<ResetPassword />} />
 <Route path="/manager" element={<ProtectedRoute allowedRoles={['manager', 'admin']} />}>

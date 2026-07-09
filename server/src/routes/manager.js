@@ -67,29 +67,31 @@ router.get('/empleados', async (req, res) => {
 })
 
 // Asignar empleado a uno de sus equipos
-router.post('/equipos/asignar', async (req, res) => {
+router.post('/equipos', async (req, res) => {
   try {
-    const { equipoId, numeroEmpleado } = req.body
+    const { nombre, descripcion } = req.body
+    if (!nombre) return res.status(400).json({ error: 'El nombre es obligatorio' })
 
-    // Verificar que el equipo le pertenece
-    const manager = await Empleado.findById(req.user.id)
-    if (!manager.equipos.some(e => e.toString() === equipoId)) {
-      return res.status(403).json({ error: 'No tienes acceso a este equipo' })
-    }
+    const equipoExistente = await Equipo.findOne({ nombre: nombre.trim() })
+    if (equipoExistente) return res.status(400).json({ error: 'Ya existe un equipo con ese nombre' })
 
-    const empleado = await Empleado.findOne({ numeroEmpleado })
-    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' })
+    const equipo = new Equipo({ nombre: nombre.trim(), descripcion, creadoPor: req.user.id })
+    await equipo.save()
 
-    if (empleado.equipos.includes(equipoId)) {
-      return res.status(400).json({ error: 'El empleado ya pertenece a este equipo' })
-    }
+    await Empleado.findByIdAndUpdate(req.user.id, { $push: { equipos: equipo._id } })
 
-    empleado.equipos.push(equipoId)
-    await empleado.save()
+    await registrarLog({
+      empleadoId: req.user.id,
+      numeroEmpleado: req.user.numeroEmpleado,
+      accion: 'CREAR_EQUIPO',
+      detalle: `Manager creó el equipo "${nombre}"`,
+      ip: req.ip,
+      exitoso: true
+    })
 
-    res.json({ message: 'Empleado asignado correctamente' })
+    res.status(201).json(equipo)
   } catch (err) {
-    res.status(500).json({ error: 'Error al asignar empleado' })
+    res.status(500).json({ error: 'Error al crear equipo' })
   }
 })
 
@@ -124,6 +126,41 @@ router.get('/stats', async (req, res) => {
     res.json({ totalEquipos, totalDocs, totalMiembros })
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener stats' })
+  }
+})
+
+// Ver detalle de equipo con miembros
+router.get('/equipos/:equipoId', async (req, res) => {
+  try {
+    const equipo = await Equipo.findOne({
+      _id: req.params.equipoId,
+      creadoPor: req.user.id
+    })
+    if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado o sin permisos' })
+
+    const miembros = await Empleado.find({ equipos: req.params.equipoId }).select('-passwordHash')
+    res.json({ ...equipo.toObject(), miembros })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener equipo' })
+  }
+})
+
+// Editar equipo (solo si lo creó)
+router.put('/equipos/:equipoId', async (req, res) => {
+  try {
+    const { nombre, descripcion } = req.body
+    if (!nombre) return res.status(400).json({ error: 'El nombre es obligatorio' })
+
+    const equipo = await Equipo.findOneAndUpdate(
+      { _id: req.params.equipoId, creadoPor: req.user.id },
+      { nombre: nombre.trim(), descripcion },
+      { new: true }
+    )
+    if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado o sin permisos' })
+
+    res.json(equipo)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al editar equipo' })
   }
 })
 

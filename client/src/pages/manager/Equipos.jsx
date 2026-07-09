@@ -153,8 +153,9 @@ export default function ManagerEquipos() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {equipos.map(eq => (
-                <div key={eq._id} style={{ background: '#F0F4F8', borderRadius: '10px', padding: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+<div key={eq._id} onClick={() => navigate(`/manager/equipos/${eq._id}`)} style={{ background: '#F0F4F8', borderRadius: '10px', padding: '12px', cursor: 'pointer' }}
+  onMouseEnter={e => e.currentTarget.style.background = '#E8EDFB'}
+  onMouseLeave={e => e.currentTarget.style.background = '#F0F4F8'}>                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                     <div style={{ width: '32px', height: '32px', background: '#EEF2FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>👥</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>{eq.nombre}</div>
