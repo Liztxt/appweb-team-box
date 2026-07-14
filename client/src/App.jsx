@@ -24,42 +24,45 @@ import ManagerDashboard from './pages/manager/Dashboard'
 import ManagerEquipos from './pages/manager/Equipos'
 import DetalleEquipoManager from './pages/manager/DetalleEquipo'
 
-
 export default function App() {
   const [cargando, setCargando] = useState(false)
 
-useEffect(() => {
-  subscribeToLoading(setCargando)
-  return () => unsubscribeFromLoading(setCargando)
-}, [])
-  return (
-    
-    <BrowserRouter>
-    {cargando && <LoadingSpinner />}
-      <Routes>
-        <Route path='/login' element={<Login />} />
-        <Route path='/equipos' element={<ProtectedRoute><MisEquipos /></ProtectedRoute>} />
-        <Route path='/equipos/:teamId/docs' element={<ProtectedRoute><Documentos /></ProtectedRoute>} />
-        <Route path='/equipos/:teamId/docs/:docId' element={<ProtectedRoute><DetalleDocumento /></ProtectedRoute>} />
-        <Route path='/equipos/:teamId/docs/subir' element={<ProtectedRoute><SubirDocumento /></ProtectedRoute>} />
-        <Route path='/admin' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path='/admin/empleados' element={<ProtectedRoute><Empleados /></ProtectedRoute>} />
-        <Route path='/admin/equipos' element={<ProtectedRoute><Equipos /></ProtectedRoute>} />
-        <Route path='/perfil' element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
-        <Route path='/admin/ver/equipos' element={<ProtectedRoute><VerEquipos /></ProtectedRoute>} />
-<Route path='/admin/ver/empleados' element={<ProtectedRoute><VerEmpleados /></ProtectedRoute>} />
-<Route path="/admin/ver/empleados/:id" element={<PerfilEmpleado />} />
-<Route path='/admin/ver/documentos' element={<ProtectedRoute><VerDocumentos /></ProtectedRoute>} />
-<Route path="/admin/ver/equipos/:id" element={<DetalleEquipoAdmin />} />
-<Route path="equipos/:equipoId" element={<DetalleEquipoManager />} />
-<Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/reset-password" element={<ResetPassword />} />
-<Route path="/manager" element={<ProtectedRoute allowedRoles={['manager', 'admin']} />}>
-  <Route index element={<ManagerDashboard />} />
-  <Route path="equipos" element={<ManagerEquipos />} />
-</Route>
+  useEffect(() => {
+    subscribeToLoading(setCargando)
+    return () => unsubscribeFromLoading(setCargando)
+  }, [])
 
-<Route path='*' element={<NotFound />} />
+  return (
+    <BrowserRouter>
+      {cargando && <LoadingSpinner />}
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        <Route path="/equipos" element={<ProtectedRoute><MisEquipos /></ProtectedRoute>} />
+        <Route path="/equipos/:teamId/docs" element={<ProtectedRoute><Documentos /></ProtectedRoute>} />
+        <Route path="/equipos/:teamId/docs/:docId" element={<ProtectedRoute><DetalleDocumento /></ProtectedRoute>} />
+        <Route path="/equipos/:teamId/docs/subir" element={<ProtectedRoute><SubirDocumento /></ProtectedRoute>} />
+        <Route path="/perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
+
+        <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin/empleados" element={<ProtectedRoute><Empleados /></ProtectedRoute>} />
+        <Route path="/admin/equipos" element={<ProtectedRoute><Equipos /></ProtectedRoute>} />
+        <Route path="/admin/ver/equipos" element={<ProtectedRoute><VerEquipos /></ProtectedRoute>} />
+        <Route path="/admin/ver/empleados" element={<ProtectedRoute><VerEmpleados /></ProtectedRoute>} />
+        <Route path="/admin/ver/documentos" element={<ProtectedRoute><VerDocumentos /></ProtectedRoute>} />
+        <Route path="/admin/ver/empleados/:id" element={<ProtectedRoute><PerfilEmpleado /></ProtectedRoute>} />
+        <Route path="/admin/ver/equipos/:id" element={<ProtectedRoute><DetalleEquipoAdmin /></ProtectedRoute>} />
+
+        <Route path="/manager" element={<ProtectedRoute allowedRoles={['manager', 'admin']} />}>
+          <Route index element={<ManagerDashboard />} />
+          <Route path="equipos" element={<ManagerEquipos />} />
+          <Route path="equipos/:equipoId" element={<DetalleEquipoManager />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
