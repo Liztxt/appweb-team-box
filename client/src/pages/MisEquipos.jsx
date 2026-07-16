@@ -34,25 +34,35 @@ export default function MisEquipos() {
     <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
 
       {/* Topbar */}
-      <div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px' }}>
-        <div style={{ width: '28px', height: '28px', background: '#6366F1', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: '14px' }}>📦</span>
-        </div>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>Team Box</span>
-{usuario?.rol === 'admin' && (
-  <button onClick={() => navigate('/admin')}
-    style={{ background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}>
-    ⚙️ Dashboard
+<div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px' }}>
+  <div onClick={() => navigate(usuario?.rol === 'admin' ? '/admin' : usuario?.rol === 'manager' ? '/manager' : '/equipos')}
+    style={{ width: '28px', height: '28px', background: '#6366F1', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+    <span style={{ fontSize: '14px' }}>📦</span>
+  </div>
+  <span onClick={() => navigate(usuario?.rol === 'admin' ? '/admin' : usuario?.rol === 'manager' ? '/manager' : '/equipos')}
+    style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1, cursor: 'pointer' }}>
+    Team Box
+  </span>
+  {usuario?.rol === 'admin' && (
+    <button onClick={() => navigate('/admin')}
+      style={{ background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}>
+      ⚙️ Dashboard
+    </button>
+  )}
+  {usuario?.rol === 'manager' && (
+    <button onClick={() => navigate('/manager')}
+      style={{ background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}>
+      🗂 Dashboard
+    </button>
+  )}
+  <ClimaWidget />
+  <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}>
+    #{usuario?.numeroEmpleado}
+  </span>
+  <button onClick={handleLogout} style={{ background: 'transparent', border: '0.5px solid #E2E8F0', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', color: '#64748B', cursor: 'pointer' }}>
+    Cerrar sesión
   </button>
-)}
-        <ClimaWidget />
-        <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}>
-          #{usuario?.numeroEmpleado}
-        </span>
-        <button onClick={handleLogout} style={{ background: 'transparent', border: '0.5px solid #E2E8F0', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', color: '#64748B', cursor: 'pointer' }}>
-          Cerrar sesión
-        </button>
-      </div>
+</div>
 
       {/* Contenido */}
       <div style={{ padding: '32px 24px', maxWidth: '900px', margin: '0 auto' }}>

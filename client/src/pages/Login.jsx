@@ -119,8 +119,9 @@ export default function Login() {
             </label>
             <input
               type='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}
               placeholder='••••••••'
               style={{
                 width: '100%',

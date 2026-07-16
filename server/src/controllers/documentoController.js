@@ -1,44 +1,58 @@
 const Documento = require('../models/Documento')
 const registrarLog = require('../middleware/logger')
 
-// Subir documento o plantilla
 const subirDocumento = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No se envió ningún archivo' })
-    }
-
-    const { titulo, descripcion, tipo } = req.body
+    const { titulo, descripcion, tipo, texto } = req.body
     const { teamId } = req.params
 
     if (!titulo || !tipo) {
       return res.status(400).json({ error: 'Título y tipo son requeridos' })
     }
 
-    if (!['documento', 'plantilla'].includes(tipo)) {
-      return res.status(400).json({ error: 'Tipo debe ser documento o plantilla' })
+    if (!['documento', 'reporte'].includes(tipo)) {
+      return res.status(400).json({ error: 'Tipo debe ser documento o reporte' })
     }
 
-    const documento = new Documento({
+    const nuevoDoc = {
       titulo,
       descripcion,
       tipo,
-      archivo: req.file.buffer,
-      archivoNombre: req.file.originalname,
-      archivoTipo: req.file.mimetype,
       equipoId: teamId
-    })
+    }
 
+    if (tipo === 'reporte') {
+      nuevoDoc.autor = req.user.numeroEmpleado
+      nuevoDoc.texto = texto || ''
+      nuevoDoc.fotos = []
+
+      if (req.files && req.files.length > 0) {
+        nuevoDoc.fotos = req.files.map(f => ({
+          data: f.buffer,
+          tipo: f.mimetype,
+          nombre: f.originalname
+        }))
+      }
+    } else {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No se envió ningún archivo' })
+      }
+      nuevoDoc.archivo = req.file.buffer
+      nuevoDoc.archivoNombre = req.file.originalname
+      nuevoDoc.archivoTipo = req.file.mimetype
+    }
+
+    const documento = new Documento(nuevoDoc)
     await documento.save()
 
     await registrarLog({
-  empleadoId: req.user.id,
-  numeroEmpleado: req.user.numeroEmpleado,
-  accion: 'SUBIR_DOCUMENTO',
-  detalle: `Subió el documento "${titulo}" de tipo ${tipo}`,
-  ip: req.ip,
-  exitoso: true
-})
+      empleadoId: req.user.id,
+      numeroEmpleado: req.user.numeroEmpleado,
+      accion: 'SUBIR_DOCUMENTO',
+      detalle: `Subió el ${tipo} "${titulo}"`,
+      ip: req.ip,
+      exitoso: true
+    })
 
     res.status(201).json({
       message: 'Archivo subido correctamente',
@@ -49,6 +63,7 @@ const subirDocumento = async (req, res) => {
         tipo: documento.tipo,
         archivoNombre: documento.archivoNombre,
         archivoTipo: documento.archivoTipo,
+        autor: documento.autor,
         equipoId: documento.equipoId,
         creadoEn: documento.creadoEn
       }
@@ -189,4 +204,27 @@ const editarDocumento = async (req, res) => {
   }
 }
 
-module.exports = { subirDocumento, listarDocumentos, descargarDocumento, eliminarDocumento, previsualizarDocumento, editarDocumento }
+// Ver foto de un reporte
+const verFotoReporte = async (req, res) => {
+  try {
+    const documento = await Documento.findOne({
+      _id: req.params.docId,
+      equipoId: req.params.teamId
+    })
+
+    if (!documento) return res.status(404).json({ error: 'Documento no encontrado' })
+
+    const indice = parseInt(req.params.indice)
+    if (!documento.fotos || !documento.fotos[indice]) {
+      return res.status(404).json({ error: 'Foto no encontrada' })
+    }
+
+    const foto = documento.fotos[indice]
+    res.set({ 'Content-Type': foto.tipo })
+    res.send(foto.data)
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener foto' })
+  }
+}
+
+module.exports = { subirDocumento, listarDocumentos, descargarDocumento, eliminarDocumento, previsualizarDocumento, editarDocumento, verFotoReporte }

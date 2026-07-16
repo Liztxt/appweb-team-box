@@ -168,6 +168,7 @@ export default function Empleados() {
                       <select value={rolEditando} onChange={e => setRolEditando(e.target.value)} style={{ ...inputStyle, background: '#fff' }}>
                         <option value='empleado'>Empleado</option>
                         <option value='admin'>Admin</option>
+                        <option value='manager'>Manager</option>
                       </select>
                       <input type='password' value={passwordEditando} onChange={e => setPasswordEditando(e.target.value)} placeholder='Nueva contraseña (opcional)' style={{ ...inputStyle, background: '#fff' }} />
                       <div style={{ display: 'flex', gap: '8px' }}>

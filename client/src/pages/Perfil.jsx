@@ -99,7 +99,7 @@ export default function Perfil() {
                 Empleado #{usuario?.numeroEmpleado}
               </div>
               <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
-                {usuario?.rol === 'admin' ? '⚙️ Administrador' : '👤 Empleado'}
+                {usuario?.rol === 'admin' ? '⚙️ Administrador' : usuario?.rol === 'manager' ? '🗂 Manager' : '👤 Empleado'}
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function Perfil() {
             <div style={{ background: '#F0F4F8', borderRadius: '8px', padding: '12px' }}>
               <div style={{ fontSize: '11px', color: '#94A3B8', marginBottom: '2px' }}>Rol en el sistema</div>
               <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B' }}>
-                {usuario?.rol === 'admin' ? 'Administrador' : 'Empleado'}
+                {usuario?.rol === 'admin' ? 'Administrador' : usuario?.rol === 'manager' ? 'Manager' : 'Empleado'}
               </div>
             </div>
             <div style={{ background: '#F0F4F8', borderRadius: '8px', padding: '12px' }}>
