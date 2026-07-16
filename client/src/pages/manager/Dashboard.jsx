@@ -117,15 +117,19 @@ export default function ManagerDashboard() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {equipos.map(eq => (
-                <div key={eq._id} onClick={() => navigate(`/equipos/${eq._id}/docs`)}
+                <div key={eq._id} onClick={() => navigate(`/manager/equipos/${eq._id}`)}
                   style={{ background: '#F0F4F8', borderRadius: '8px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#E8EDFB'}
                   onMouseLeave={e => e.currentTarget.style.background = '#F0F4F8'}>
                   <div style={{ width: '32px', height: '32px', background: '#EEF2FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>👥</div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>{eq.nombre}</div>
-                    <div style={{ fontSize: '11px', color: '#64748B' }}>{eq.descripcion || 'Sin descripción'}</div>
-                  </div>
+  <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>{eq.nombre}</div>
+  <div style={{ fontSize: '11px', color: '#64748B', marginBottom: '6px' }}>{eq.descripcion || 'Sin descripción'}</div>
+  <button onClick={e => { e.stopPropagation(); navigate(`/equipos/${eq._id}/docs`) }}
+    style={{ padding: '4px 10px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
+    Ir al equipo →
+  </button>
+</div>
                 </div>
               ))}
             </div>
