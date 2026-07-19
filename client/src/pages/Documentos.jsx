@@ -33,6 +33,7 @@ export default function Documentos() {
       setLoading(false)
     }
   }
+
   useEffect(() => { fetchDocs() }, [teamId])
 
   const handleLogout = () => { logout(); navigate('/login') }
@@ -46,7 +47,7 @@ export default function Documentos() {
   const conteo = {
     todos: documentos.length,
     documento: documentos.filter(d => d.tipo === 'documento').length,
-    plantilla: documentos.filter(d => d.tipo === 'plantilla').length
+    reporte: documentos.filter(d => d.tipo === 'reporte').length
   }
 
   return (
@@ -55,10 +56,10 @@ export default function Documentos() {
       {/* Topbar */}
       <div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px' }}>
         <button onClick={() => navigate('/equipos')} style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <div style={{ width: '28px', height: '28px', background: '#6366F1', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div onClick={() => navigate('/equipos')} style={{ width: '28px', height: '28px', background: '#6366F1', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
           <span style={{ fontSize: '14px' }}>📦</span>
         </div>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>Team Box</span>
+        <span onClick={() => navigate('/equipos')} style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1, cursor: 'pointer' }}>Team Box</span>
         <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}>
           #{usuario?.numeroEmpleado}
         </span>
@@ -67,14 +68,13 @@ export default function Documentos() {
         </button>
       </div>
 
-      {/* Contenido */}
       <div style={{ padding: '28px 24px', maxWidth: '960px', margin: '0 auto', width: '100%' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: '160px' }}>
             <h1 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', margin: 0 }}>Documentos</h1>
-            <p style={{ fontSize: '13px', color: '#64748B', margin: '2px 0 0' }}>Archivos y plantillas de tu equipo</p>
+            <p style={{ fontSize: '13px', color: '#64748B', margin: '2px 0 0' }}>Archivos y reportes de tu equipo</p>
           </div>
           <input placeholder='Buscar...' value={busqueda} onChange={e => setBusqueda(e.target.value)}
             style={{ padding: '8px 12px', border: '0.5px solid #E2E8F0', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none', width: '160px' }} />
@@ -86,7 +86,11 @@ export default function Documentos() {
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', flexWrap: 'wrap' }}>
-          {[{ key: 'todos', label: 'Todos' }, { key: 'documento', label: 'Documentos' }, { key: 'plantilla', label: 'Plantillas' }].map(tab => (
+          {[
+            { key: 'todos', label: 'Todos' },
+            { key: 'documento', label: 'Documentos' },
+            { key: 'reporte', label: 'Reportes' }
+          ].map(tab => (
             <button key={tab.key} onClick={() => setTabActivo(tab.key)}
               style={{ padding: '6px 14px', borderRadius: '6px', border: 'none', fontSize: '12px', fontWeight: '500', cursor: 'pointer', background: tabActivo === tab.key ? '#EEF2FF' : 'transparent', color: tabActivo === tab.key ? '#4F46E5' : '#64748B' }}>
               {tab.label}
@@ -113,8 +117,7 @@ export default function Documentos() {
               </div>
             ))}
           </div>
-
-          ) : accesoDenegado ? (
+        ) : accesoDenegado ? (
           <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
             <div style={{ fontSize: '32px', marginBottom: '12px' }}>🔒</div>
             <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>No tienes acceso a este equipo</div>
@@ -144,15 +147,17 @@ export default function Documentos() {
                 onMouseEnter={e => e.currentTarget.style.borderColor = '#C7D2FE'}
                 onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
               >
-                <div style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: doc.tipo === 'plantilla' ? '#EEF2FF' : '#F0F4F8', borderBottom: '0.5px solid #E2E8F0' }}>
-                  <span style={{ fontSize: '28px' }}>{doc.tipo === 'plantilla' ? '📋' : '📄'}</span>
+                <div style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: doc.tipo === 'reporte' ? '#EEF2FF' : '#F0F4F8', borderBottom: '0.5px solid #E2E8F0' }}>
+                  <span style={{ fontSize: '28px' }}>{doc.tipo === 'reporte' ? '📋' : '📄'}</span>
                 </div>
                 <div style={{ padding: '10px 12px' }}>
                   <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{doc.titulo}</div>
-                  <div style={{ fontSize: '11px', color: '#64748B', marginBottom: '8px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{doc.descripcion || 'Sin descripción'}</div>
+                  <div style={{ fontSize: '11px', color: '#64748B', marginBottom: '8px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {doc.tipo === 'reporte' ? `Por #${doc.autor}` : doc.descripcion || 'Sin descripción'}
+                  </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ background: doc.tipo === 'plantilla' ? '#EEF2FF' : '#F0F4F8', color: doc.tipo === 'plantilla' ? '#3730A3' : '#475569', borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500' }}>
-                      {doc.tipo === 'plantilla' ? 'Plantilla' : 'Documento'}
+                    <span style={{ background: doc.tipo === 'reporte' ? '#EEF2FF' : '#F0F4F8', color: doc.tipo === 'reporte' ? '#3730A3' : '#475569', borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500' }}>
+                      {doc.tipo === 'reporte' ? 'Reporte' : 'Documento'}
                     </span>
                     <span style={{ fontSize: '10px', color: '#94A3B8' }}>
                       {new Date(doc.creadoEn).toLocaleDateString('es-MX', { month: 'short', day: 'numeric' })}
