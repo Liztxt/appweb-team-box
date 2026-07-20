@@ -5,27 +5,61 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- SEO básico -->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <!-- SEO -->
     <title>Team Box — Gestión de documentos corporativos</title>
     <meta name="description" content="Plataforma corporativa para gestión de documentos y plantillas por equipos de trabajo." />
-    <meta name="author" content="Team Box" />
     <meta name="robots" content="noindex, nofollow" />
-
-    <!-- Open Graph -->
     <meta property="og:title" content="Team Box" />
     <meta property="og:description" content="Plataforma corporativa para gestión de documentos y plantillas por equipos de trabajo." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://team-box-client.onrender.com" />
-    <meta property="og:image" content="https://team-box-client.onrender.com/icons.svg" />
 
-    <!-- Twitter/X -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Team Box" />
-    <meta name="twitter:description" content="Plataforma corporativa para gestión de documentos y plantillas." />
-
-    <!-- Microinteracciones -->
     <style>
+      :root {
+        --color-primary: #A89BBE;
+        --color-primary-dark: #8B7DAA;
+        --color-primary-light: #EDE8F5;
+        --color-bg: #F0EDF5;
+        --color-surface: #FFFFFF;
+        --color-border: #D8D4E0;
+        --color-text: #111111;
+        --color-text-secondary: #5C5964;
+        --color-text-muted: #7E7D87;
+        --color-gray: #C4C3C8;
+        --color-error: #D32F2F;
+        --color-error-bg: #FFEBEE;
+        --color-success: #2E7D32;
+        --color-success-bg: #E8F5E9;
+        --font-body: 'Nunito', sans-serif;
+        --font-logo: 'Playfair Display', serif;
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--color-bg);
+        color: var(--color-text);
+        -webkit-font-smoothing: antialiased;
+      }
+
       button {
+        font-family: var(--font-body);
         transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
       }
       button:hover:not(:disabled) {
@@ -36,15 +70,14 @@
         transform: translateY(0px);
         opacity: 1;
       }
-      input, select {
+      input, select, textarea {
+        font-family: var(--font-body);
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
       }
-      input:focus, select:focus {
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        border-color: #6366F1 !important;
-      }
-      * {
-        transition: background-color 0.1s ease;
+      input:focus, select:focus, textarea:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(168, 155, 190, 0.2);
+        border-color: var(--color-primary) !important;
       }
     </style>
   </head>

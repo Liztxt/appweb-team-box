@@ -23,12 +23,8 @@ export default function Documentos() {
       const res = await api.get(`/teams/${teamId}/docs`)
       setDocumentos(res.data)
     } catch (err) {
-      console.log('Error al cargar documentos:', err)
-      if (err.response?.status === 403) {
-        setAccesoDenegado(true)
-      } else {
-        setError(true)
-      }
+      if (err.response?.status === 403) setAccesoDenegado(true)
+      else setError(true)
     } finally {
       setLoading(false)
     }
@@ -51,20 +47,26 @@ export default function Documentos() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', fontFamily: 'var(--font-body)' }}>
 
       {/* Topbar */}
-      <div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px' }}>
-        <button onClick={() => navigate('/equipos')} style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <div onClick={() => navigate('/equipos')} style={{ width: '28px', height: '28px', background: '#6366F1', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-          <span style={{ fontSize: '14px' }}>📦</span>
+      <div style={{ height: '56px', background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <button onClick={() => navigate('/equipos')}
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+        </button>
+        <div onClick={() => navigate('/equipos')} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
+          <div style={{ width: '30px', height: '30px', background: 'var(--color-primary)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="material-symbols-outlined" style={{ color: '#fff', fontSize: '18px' }}>inventory_2</span>
+          </div>
+          <span style={{ fontFamily: 'var(--font-logo)', fontSize: '16px', color: 'var(--color-text)' }}>Team Box</span>
         </div>
-        <span onClick={() => navigate('/equipos')} style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1, cursor: 'pointer' }}>Team Box</span>
-        <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}>
+        <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: 'var(--color-text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
           #{usuario?.numeroEmpleado}
         </span>
-        <button onClick={handleLogout} style={{ background: 'transparent', border: '0.5px solid #E2E8F0', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', color: '#64748B', cursor: 'pointer' }}>
-          Cerrar sesión
+        <button onClick={handleLogout}
+          style={{ background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
+          Salir
         </button>
       </div>
 
@@ -73,14 +75,15 @@ export default function Documentos() {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: '160px' }}>
-            <h1 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', margin: 0 }}>Documentos</h1>
-            <p style={{ fontSize: '13px', color: '#64748B', margin: '2px 0 0' }}>Archivos y reportes de tu equipo</p>
+            <h1 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--color-text)', margin: 0 }}>Documentos</h1>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: '2px 0 0' }}>Archivos y reportes de tu equipo</p>
           </div>
           <input placeholder='Buscar...' value={busqueda} onChange={e => setBusqueda(e.target.value)}
-            style={{ padding: '8px 12px', border: '0.5px solid #E2E8F0', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none', width: '160px' }} />
+            style={{ padding: '8px 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', fontSize: '13px', background: 'var(--color-surface)', color: 'var(--color-text)', width: '160px', fontFamily: 'var(--font-body)' }} />
           <button onClick={() => navigate(`/equipos/${teamId}/docs/subir`)}
-            style={{ background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
-            + Subir
+            style={{ background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', padding: '8px 16px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>upload</span>
+            Subir
           </button>
         </div>
 
@@ -92,21 +95,21 @@ export default function Documentos() {
             { key: 'reporte', label: 'Reportes' }
           ].map(tab => (
             <button key={tab.key} onClick={() => setTabActivo(tab.key)}
-              style={{ padding: '6px 14px', borderRadius: '6px', border: 'none', fontSize: '12px', fontWeight: '500', cursor: 'pointer', background: tabActivo === tab.key ? '#EEF2FF' : 'transparent', color: tabActivo === tab.key ? '#4F46E5' : '#64748B' }}>
+              style={{ padding: '6px 14px', borderRadius: 'var(--radius-sm)', border: 'none', fontSize: '12px', fontWeight: '600', cursor: 'pointer', background: tabActivo === tab.key ? 'var(--color-primary-light)' : 'transparent', color: tabActivo === tab.key ? 'var(--color-primary-dark)' : 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>
               {tab.label}
-              <span style={{ marginLeft: '6px', background: tabActivo === tab.key ? '#C7D2FE' : '#E2E8F0', color: tabActivo === tab.key ? '#3730A3' : '#64748B', borderRadius: '20px', padding: '1px 7px', fontSize: '10px' }}>
+              <span style={{ marginLeft: '6px', background: tabActivo === tab.key ? 'var(--color-primary)' : 'var(--color-border)', color: tabActivo === tab.key ? '#fff' : 'var(--color-text-muted)', borderRadius: '20px', padding: '1px 7px', fontSize: '10px' }}>
                 {conteo[tab.key]}
               </span>
             </button>
           ))}
         </div>
 
-        {/* Grid */}
+        {/* Contenido */}
         {loading ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', overflow: 'hidden' }}>
-                <div style={{ height: '80px', background: '#F0F4F8', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div key={i} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
+                <div style={{ height: '80px', background: 'var(--color-bg)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Skeleton width='40px' height='40px' borderRadius='8px' />
                 </div>
                 <div style={{ padding: '10px 12px' }}>
@@ -118,48 +121,53 @@ export default function Documentos() {
             ))}
           </div>
         ) : accesoDenegado ? (
-          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '32px', marginBottom: '12px' }}>🔒</div>
-            <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>No tienes acceso a este equipo</div>
-            <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>Solo los miembros de este equipo pueden ver su contenido.</p>
-            <button onClick={() => navigate('/equipos')} style={{ padding: '10px 20px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+          <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '40px', textAlign: 'center' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--color-gray)', marginBottom: '12px', display: 'block' }}>lock</span>
+            <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '6px' }}>No tienes acceso a este equipo</div>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginBottom: '20px' }}>Solo los miembros de este equipo pueden ver su contenido.</p>
+            <button onClick={() => navigate('/equipos')}
+              style={{ padding: '10px 20px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
               Volver a mis equipos
             </button>
           </div>
         ) : error ? (
-          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '32px', marginBottom: '12px' }}>⚠️</div>
-            <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>No se pudo cargar el contenido</div>
-            <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>Verifica tu conexión e intenta de nuevo.</p>
-            <button onClick={fetchDocs} style={{ padding: '10px 20px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
-              🔄 Reintentar
+          <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '40px', textAlign: 'center' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--color-gray)', marginBottom: '12px', display: 'block' }}>wifi_off</span>
+            <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '6px' }}>No se pudo cargar el contenido</div>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginBottom: '20px' }}>Verifica tu conexión e intenta de nuevo.</p>
+            <button onClick={fetchDocs}
+              style={{ padding: '10px 20px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+              Reintentar
             </button>
           </div>
         ) : docsFiltrados.length === 0 ? (
-          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '40px', textAlign: 'center' }}>
-            <p style={{ fontSize: '13px', color: '#64748B' }}>No hay archivos aquí todavía</p>
+          <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '40px', textAlign: 'center' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--color-gray)', marginBottom: '12px', display: 'block' }}>folder_open</span>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No hay archivos aquí todavía</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
             {docsFiltrados.map(doc => (
               <div key={doc._id} onClick={() => navigate(`/equipos/${teamId}/docs/${doc._id}`)}
-                style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer' }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = '#C7D2FE'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+                style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', overflow: 'hidden', cursor: 'pointer', transition: 'box-shadow 0.15s ease, border-color 0.15s ease' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-primary)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.boxShadow = 'none' }}
               >
-                <div style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: doc.tipo === 'reporte' ? '#EEF2FF' : '#F0F4F8', borderBottom: '0.5px solid #E2E8F0' }}>
-                  <span style={{ fontSize: '28px' }}>{doc.tipo === 'reporte' ? '📋' : '📄'}</span>
+                <div style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: doc.tipo === 'reporte' ? 'var(--color-primary-light)' : 'var(--color-bg)', borderBottom: '1px solid var(--color-border)' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '32px', color: doc.tipo === 'reporte' ? 'var(--color-primary-dark)' : 'var(--color-gray)' }}>
+                    {doc.tipo === 'reporte' ? 'assignment' : 'description'}
+                  </span>
                 </div>
                 <div style={{ padding: '10px 12px' }}>
-                  <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{doc.titulo}</div>
-                  <div style={{ fontSize: '11px', color: '#64748B', marginBottom: '8px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{doc.titulo}</div>
+                  <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '8px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {doc.tipo === 'reporte' ? `Por #${doc.autor}` : doc.descripcion || 'Sin descripción'}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ background: doc.tipo === 'reporte' ? '#EEF2FF' : '#F0F4F8', color: doc.tipo === 'reporte' ? '#3730A3' : '#475569', borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500' }}>
+                    <span style={{ background: doc.tipo === 'reporte' ? 'var(--color-primary-light)' : 'var(--color-bg)', color: doc.tipo === 'reporte' ? 'var(--color-primary-dark)' : 'var(--color-text-muted)', borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '600' }}>
                       {doc.tipo === 'reporte' ? 'Reporte' : 'Documento'}
                     </span>
-                    <span style={{ fontSize: '10px', color: '#94A3B8' }}>
+                    <span style={{ fontSize: '10px', color: 'var(--color-text-muted)' }}>
                       {new Date(doc.creadoEn).toLocaleDateString('es-MX', { month: 'short', day: 'numeric' })}
                     </span>
                   </div>

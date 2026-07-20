@@ -9,24 +9,17 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [mostrarAviso, setMostrarAviso] = useState(
-  !localStorage.getItem('avisoAceptado')
-)
-
+  const [mostrarAviso, setMostrarAviso] = useState(!localStorage.getItem('avisoAceptado'))
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    if (e) e.preventDefault()
     setError('')
     setLoading(true)
-
     try {
       const res = await api.post('/auth/login', { numeroEmpleado, password })
-      login(res.data.token, {
-        numeroEmpleado: res.data.numeroEmpleado,
-        rol: res.data.rol
-      })
+      login(res.data.token, { numeroEmpleado: res.data.numeroEmpleado, rol: res.data.rol })
       navigate(res.data.rol === 'admin' ? '/admin' : res.data.rol === 'manager' ? '/manager' : '/equipos')
     } catch (err) {
       setError('Número de empleado o contraseña incorrectos')
@@ -36,152 +29,77 @@ export default function Login() {
   }
 
   return (
-  <div style={{ minHeight: '100vh', background: '#F0F4F8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    
-    {mostrarAviso && (
-      <AvisoPrivacidad onAceptar={() => {
-        localStorage.setItem('avisoAceptado', 'true')
-        setMostrarAviso(false)
-      }} />
-    )}
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
 
-      <div style={{
-        background: '#fff',
-        border: '0.5px solid #E2E8F0',
-        borderRadius: '14px',
-        padding: '40px',
-        width: '100%',
-        maxWidth: '400px'
-      }}>
+      {mostrarAviso && (
+        <AvisoPrivacidad onAceptar={() => {
+          localStorage.setItem('avisoAceptado', 'true')
+          setMostrarAviso(false)
+        }} />
+      )}
+
+      <div style={{ width: '100%', maxWidth: '400px' }}>
 
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
-            width: '44px',
-            height: '44px',
-            background: '#6366F1',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 12px'
+            width: '52px', height: '52px',
+            background: 'var(--color-primary)',
+            borderRadius: 'var(--radius-md)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 14px',
+            boxShadow: 'var(--shadow-md)'
           }}>
-            <span style={{ color: '#fff', fontSize: '20px' }}>📦</span>
+            <span className="material-symbols-outlined" style={{ color: '#fff', fontSize: '26px' }}>inventory_2</span>
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1E293B', margin: 0 }}>
-            Team Box
-          </h1>
-          <p style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
-            Ingresa con tu número de empleado
-          </p>
+          <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '26px', color: 'var(--color-text)', marginBottom: '4px' }}>Team Box</h1>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Ingresa con tu número de empleado</p>
         </div>
 
-        {/* Form */}
-        <div onSubmit={handleSubmit}>
+        {/* Card */}
+        <div style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', padding: '32px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--color-border)' }}>
+
           <div style={{ marginBottom: '16px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: '500',
-              color: '#1E293B',
-              marginBottom: '6px'
-            }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>
               Número de empleado
             </label>
             <input
               type='text'
               value={numeroEmpleado}
-              onChange={(e) => setNumeroEmpleado(e.target.value)}
+              onChange={e => setNumeroEmpleado(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
               placeholder='Ej. 22789'
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                border: '0.5px solid #E2E8F0',
-                borderRadius: '8px',
-                fontSize: '13px',
-                color: '#1E293B',
-                background: '#F0F4F8',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
+              style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', fontSize: '14px', background: 'var(--color-bg)', color: 'var(--color-text)', boxSizing: 'border-box' }}
             />
           </div>
 
           <div style={{ marginBottom: '24px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: '500',
-              color: '#1E293B',
-              marginBottom: '6px'
-            }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>
               Contraseña
             </label>
             <input
               type='password'
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-  onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
               placeholder='••••••••'
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                border: '0.5px solid #E2E8F0',
-                borderRadius: '8px',
-                fontSize: '13px',
-                color: '#1E293B',
-                background: '#F0F4F8',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
+              style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', fontSize: '14px', background: 'var(--color-bg)', color: 'var(--color-text)', boxSizing: 'border-box' }}
             />
           </div>
 
           {error && (
-            <div style={{
-              background: '#FEF2F2',
-              border: '0.5px solid #FECACA',
-              borderRadius: '8px',
-              padding: '10px 12px',
-              fontSize: '13px',
-              color: '#EF4444',
-              marginBottom: '16px'
-            }}>
+            <div style={{ background: 'var(--color-error-bg)', border: '1px solid #FFCDD2', borderRadius: 'var(--radius-sm)', padding: '10px 12px', fontSize: '13px', color: 'var(--color-error)', marginBottom: '16px' }}>
               {error}
             </div>
           )}
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{
-              width: '100%',
-              padding: '11px',
-              background: loading ? '#A5B4FC' : '#6366F1',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }}
-          >
+          <button onClick={handleSubmit} disabled={loading}
+            style={{ width: '100%', padding: '12px', background: loading ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '14px', fontWeight: '600', cursor: loading ? 'not-allowed' : 'pointer', marginBottom: '10px' }}>
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
 
-          <button
-            onClick={() => navigate('/forgot-password')}
-            style={{
-              width: '100%',
-              padding: '10px',
-              background: 'transparent',
-              color: '#64748B',
-              border: 'none',
-              fontSize: '13px',
-              cursor: 'pointer',
-              marginTop: '8px'
-            }}
-          >
+          <button onClick={() => navigate('/forgot-password')}
+            style={{ width: '100%', padding: '10px', background: 'transparent', color: 'var(--color-text-muted)', border: 'none', fontSize: '13px', cursor: 'pointer' }}>
             ¿Olvidaste tu contraseña?
           </button>
         </div>

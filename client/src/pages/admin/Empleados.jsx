@@ -85,113 +85,139 @@ export default function Empleados() {
 
   const inputStyle = {
     width: '100%', padding: '9px 12px',
-    border: '0.5px solid #E2E8F0', borderRadius: '8px',
-    fontSize: '13px', color: '#1E293B',
-    background: '#F0F4F8', outline: 'none', boxSizing: 'border-box'
+    border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)',
+    fontSize: '13px', color: 'var(--color-text)',
+    background: 'var(--color-bg)', outline: 'none', boxSizing: 'border-box',
+    fontFamily: 'var(--font-body)'
+  }
+
+  const rolConfig = {
+    admin: { bg: 'var(--color-primary-light)', color: 'var(--color-primary-dark)' },
+    manager: { bg: '#E8F5E9', color: '#2E7D32' },
+    empleado: { bg: 'var(--color-bg)', color: 'var(--color-text-muted)' }
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       <style>{`
         .emp-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; align-items: start; }
-        @media (max-width: 640px) {
-          .emp-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 640px) { .emp-grid { grid-template-columns: 1fr; } }
       `}</style>
 
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
       {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
       {/* Topbar */}
-      <div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px' }}>
-        <button onClick={() => navigate('/admin')} style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>Gestión de empleados</span>
+      <div style={{ height: '56px', background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <button onClick={() => navigate('/admin')}
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+        </button>
+        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', flex: 1 }}>Gestión de empleados</span>
       </div>
 
-      <div className='emp-grid' style={{ padding: '20px 16px', maxWidth: '900px', margin: '0 auto' }}>
+      <div className='emp-grid' style={{ padding: '24px 16px', maxWidth: '900px', margin: '0 auto' }}>
 
         {/* Formulario crear */}
-        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>Registrar empleado</h2>
+        <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '20px' }}>Registrar empleado</h2>
+
           <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Número de empleado</label>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '5px' }}>Número de empleado</label>
             <input value={numeroEmpleado} onChange={e => setNumeroEmpleado(e.target.value)} placeholder='Ej. 12345' style={inputStyle} />
           </div>
           <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Email (opcional)</label>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '5px' }}>Email (opcional)</label>
             <input type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='correo@empresa.com' style={inputStyle} />
           </div>
           <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Contraseña</label>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '5px' }}>Contraseña</label>
             <input type='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Mínimo 8 caracteres, 1 mayúscula y 1 número' style={inputStyle} />
           </div>
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Rol</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '8px' }}>Rol</label>
+            <div style={{ display: 'flex', gap: '6px' }}>
               {[
-  { value: 'empleado', label: '👤 Empleado' },
-  { value: 'manager', label: '🗂 Manager' },
-  { value: 'admin', label: '⚙️ Admin' }
-].map(r => (
-  <button key={r.value} onClick={() => setRol(r.value)} style={{
-    flex: 1, padding: '10px 7px',
-    border: rol === r.value ? '1.5px solid #6366F1' : '0.5px solid #E2E8F0',
-    borderRadius: '8px', fontSize: '12px', fontWeight: '500', cursor: 'pointer',
-    background: rol === r.value ? '#EEF2FF' : '#fff',
-    color: rol === r.value ? '#4F46E5' : '#64748B'
-  }}>
-    {r.label}
-  </button>
-))}
+                { value: 'empleado', label: 'Empleado', icon: 'person' },
+                { value: 'manager', label: 'Manager', icon: 'manage_accounts' },
+                { value: 'admin', label: 'Admin', icon: 'shield' }
+              ].map(r => (
+                <button key={r.value} onClick={() => setRol(r.value)} style={{
+                  flex: 1, padding: '8px 4px',
+                  border: `1px solid ${rol === r.value ? 'var(--color-primary)' : 'var(--color-border)'}`,
+                  borderRadius: 'var(--radius-sm)', fontSize: '11px', fontWeight: '600', cursor: 'pointer',
+                  background: rol === r.value ? 'var(--color-primary-light)' : 'var(--color-surface)',
+                  color: rol === r.value ? 'var(--color-primary-dark)' : 'var(--color-text-muted)',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px',
+                  fontFamily: 'var(--font-body)'
+                }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{r.icon}</span>
+                  {r.label}
+                </button>
+              ))}
             </div>
           </div>
-          <button onClick={handleCrear} style={{ width: '100%', padding: '12px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+          <button onClick={handleCrear}
+            style={{ width: '100%', padding: '11px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
             Crear empleado
           </button>
         </div>
 
         {/* Lista empleados */}
-        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '16px' }}>Empleados registrados</h2>
+        <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '16px' }}>Empleados registrados</h2>
           {loading ? (
-            <p style={{ fontSize: '13px', color: '#64748B' }}>Cargando...</p>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
           ) : empleados.length === 0 ? (
-            <p style={{ fontSize: '13px', color: '#64748B' }}>No hay empleados registrados</p>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No hay empleados registrados</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {empleados.map(emp => (
-                <div key={emp._id} style={{ background: '#F0F4F8', borderRadius: '8px', padding: '12px' }}>
+                <div key={emp._id} style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--color-border)' }}>
                   {editando === emp._id ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
-                      <input type='email' value={emailEditando} onChange={e => setEmailEditando(e.target.value)} placeholder={emp.email || 'Email (opcional)'} style={{ ...inputStyle, background: '#fff' }} />
-                      <select value={rolEditando} onChange={e => setRolEditando(e.target.value)} style={{ ...inputStyle, background: '#fff' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>#{emp.numeroEmpleado}</div>
+                      <input type='email' value={emailEditando} onChange={e => setEmailEditando(e.target.value)} placeholder={emp.email || 'Email (opcional)'} style={{ ...inputStyle, background: 'var(--color-surface)' }} />
+                      <select value={rolEditando} onChange={e => setRolEditando(e.target.value)} style={{ ...inputStyle, background: 'var(--color-surface)' }}>
                         <option value='empleado'>Empleado</option>
-                        <option value='admin'>Admin</option>
                         <option value='manager'>Manager</option>
+                        <option value='admin'>Admin</option>
                       </select>
-                      <input type='password' value={passwordEditando} onChange={e => setPasswordEditando(e.target.value)} placeholder='Nueva contraseña (opcional)' style={{ ...inputStyle, background: '#fff' }} />
+                      <input type='password' value={passwordEditando} onChange={e => setPasswordEditando(e.target.value)} placeholder='Nueva contraseña (opcional)' style={{ ...inputStyle, background: 'var(--color-surface)' }} />
                       <div style={{ display: 'flex', gap: '8px' }}>
-                        <button onClick={() => handleGuardarRol(emp._id)} style={{ flex: 1, padding: '10px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>Guardar</button>
-                        <button onClick={() => { setEditando(null); setPasswordEditando(''); setEmailEditando('') }} style={{ flex: 1, padding: '10px', background: '#fff', color: '#64748B', border: '0.5px solid #E2E8F0', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>Cancelar</button>
+                        <button onClick={() => handleGuardarRol(emp._id)}
+                          style={{ flex: 1, padding: '10px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '12px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+                          Guardar
+                        </button>
+                        <button onClick={() => { setEditando(null); setPasswordEditando(''); setEmailEditando('') }}
+                          style={{ flex: 1, padding: '10px', background: 'var(--color-surface)', color: 'var(--color-text-muted)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+                          Cancelar
+                        </button>
                       </div>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} loading="lazy" alt={`Avatar ${emp.numeroEmpleado}`} style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: '#F0F4F8' }} />
+                      <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} loading="lazy" alt={`Avatar ${emp.numeroEmpleado}`}
+                        style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: 'var(--color-bg)' }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
-                        <div style={{ fontSize: '11px', color: '#64748B' }}>{emp.email || 'Sin email'} · {emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>#{emp.numeroEmpleado}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{emp.email || 'Sin email'} · {emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
                       </div>
                       <span style={{
-  background: emp.rol === 'admin' ? '#EEF2FF' : emp.rol === 'manager' ? '#F0FDF4' : '#F0F4F8',
-  color: emp.rol === 'admin' ? '#3730A3' : emp.rol === 'manager' ? '#15803D' : '#475569',
-  borderRadius: '20px', padding: '2px 8px', fontSize: '10px', fontWeight: '500', flexShrink: 0
-}}>
-  {emp.rol}
-</span>
-                      <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol); setEmailEditando(emp.email || '') }} style={{ padding: '8px', background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>✏️</button>
-                      <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)} style={{ padding: '8px', background: '#FEF2F2', color: '#EF4444', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', flexShrink: 0 }}>🗑</button>
+                        background: rolConfig[emp.rol]?.bg || 'var(--color-bg)',
+                        color: rolConfig[emp.rol]?.color || 'var(--color-text-muted)',
+                        borderRadius: '20px', padding: '2px 10px', fontSize: '10px', fontWeight: '600', flexShrink: 0
+                      }}>
+                        {emp.rol}
+                      </span>
+                      <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol); setEmailEditando(emp.email || '') }}
+                        style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
+                      </button>
+                      <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)}
+                        style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+                      </button>
                     </div>
                   )}
                 </div>

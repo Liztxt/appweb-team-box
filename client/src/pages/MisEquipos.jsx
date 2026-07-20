@@ -19,7 +19,6 @@ export default function MisEquipos() {
       const res = await api.get('/teams/mine')
       setEquipos(res.data)
     } catch (err) {
-      console.log('Error al cargar equipos:', err)
       setError(true)
     } finally {
       setLoading(false)
@@ -30,49 +29,55 @@ export default function MisEquipos() {
 
   const handleLogout = () => { logout(); navigate('/login') }
 
+  const dashboardRuta = usuario?.rol === 'admin' ? '/admin' : usuario?.rol === 'manager' ? '/manager' : '/equipos'
+
   return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
 
       {/* Topbar */}
-<div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px' }}>
-  <div onClick={() => navigate(usuario?.rol === 'admin' ? '/admin' : usuario?.rol === 'manager' ? '/manager' : '/equipos')}
-    style={{ width: '28px', height: '28px', background: '#6366F1', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-    <span style={{ fontSize: '14px' }}>📦</span>
-  </div>
-  <span onClick={() => navigate(usuario?.rol === 'admin' ? '/admin' : usuario?.rol === 'manager' ? '/manager' : '/equipos')}
-    style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1, cursor: 'pointer' }}>
-    Team Box
-  </span>
-  {usuario?.rol === 'admin' && (
-    <button onClick={() => navigate('/admin')}
-      style={{ background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}>
-      ⚙️ Dashboard
-    </button>
-  )}
-  {usuario?.rol === 'manager' && (
-    <button onClick={() => navigate('/manager')}
-      style={{ background: '#EEF2FF', color: '#4F46E5', border: 'none', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}>
-      🗂 Dashboard
-    </button>
-  )}
-  <ClimaWidget />
-  <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', textDecoration: 'underline' }}>
-    #{usuario?.numeroEmpleado}
-  </span>
-  <button onClick={handleLogout} style={{ background: 'transparent', border: '0.5px solid #E2E8F0', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', color: '#64748B', cursor: 'pointer' }}>
-    Cerrar sesión
-  </button>
-</div>
+      <div style={{ height: '56px', background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <div onClick={() => navigate(dashboardRuta)} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
+          <div style={{ width: '30px', height: '30px', background: 'var(--color-primary)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="material-symbols-outlined" style={{ color: '#fff', fontSize: '18px' }}>inventory_2</span>
+          </div>
+          <span style={{ fontFamily: 'var(--font-logo)', fontSize: '16px', color: 'var(--color-text)' }}>Team Box</span>
+        </div>
+
+        {usuario?.rol === 'admin' && (
+          <button onClick={() => navigate('/admin')}
+            style={{ background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>settings</span>
+            Dashboard
+          </button>
+        )}
+        {usuario?.rol === 'manager' && (
+          <button onClick={() => navigate('/manager')}
+            style={{ background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>dashboard</span>
+            Dashboard
+          </button>
+        )}
+
+        <ClimaWidget />
+
+        <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: 'var(--color-text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
+          #{usuario?.numeroEmpleado}
+        </span>
+        <button onClick={handleLogout}
+          style={{ background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
+          Salir
+        </button>
+      </div>
 
       {/* Contenido */}
       <div style={{ padding: '32px 24px', maxWidth: '900px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', marginBottom: '6px' }}>Mis equipos</h1>
-        <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '24px' }}>Selecciona un equipo para ver sus documentos</p>
+        <h1 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '4px' }}>Mis equipos</h1>
+        <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginBottom: '24px' }}>Selecciona un equipo para ver sus documentos</p>
 
         {loading ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '12px' }}>
             {[1, 2, 3].map(i => (
-              <div key={i} style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '20px' }}>
+              <div key={i} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '20px' }}>
                 <Skeleton width='36px' height='36px' borderRadius='8px' style={{ marginBottom: '12px' }} />
                 <Skeleton width='60%' height='16px' style={{ marginBottom: '8px' }} />
                 <Skeleton width='80%' height='12px' />
@@ -80,29 +85,33 @@ export default function MisEquipos() {
             ))}
           </div>
         ) : error ? (
-          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '32px', marginBottom: '12px' }}>⚠️</div>
-            <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>No se pudo cargar el contenido</div>
-            <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>Verifica tu conexión e intenta de nuevo.</p>
-            <button onClick={fetchEquipos} style={{ padding: '10px 20px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
-              🔄 Reintentar
+          <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '40px', textAlign: 'center' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--color-gray)', marginBottom: '12px', display: 'block' }}>wifi_off</span>
+            <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '6px' }}>No se pudo cargar el contenido</div>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginBottom: '20px' }}>Verifica tu conexión e intenta de nuevo.</p>
+            <button onClick={fetchEquipos}
+              style={{ padding: '10px 20px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+              Reintentar
             </button>
           </div>
         ) : equipos.length === 0 ? (
-          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '40px', textAlign: 'center' }}>
-            <p style={{ fontSize: '13px', color: '#64748B' }}>No tienes equipos asignados aún</p>
+          <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '40px', textAlign: 'center' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--color-gray)', marginBottom: '12px', display: 'block' }}>group_off</span>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No tienes equipos asignados aún</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '12px' }}>
             {equipos.map(equipo => (
               <div key={equipo._id} onClick={() => navigate(`/equipos/${equipo._id}/docs`)}
-                style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '10px', padding: '20px', cursor: 'pointer' }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = '#6366F1'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+                style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '20px', cursor: 'pointer', transition: 'box-shadow 0.15s ease, border-color 0.15s ease' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-primary)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.boxShadow = 'none' }}
               >
-                <div style={{ width: '36px', height: '36px', background: '#EEF2FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px', fontSize: '18px' }}>👥</div>
-                <div style={{ fontSize: '14px', fontWeight: '500', color: '#1E293B', marginBottom: '4px' }}>{equipo.nombre}</div>
-                <div style={{ fontSize: '12px', color: '#64748B' }}>{equipo.descripcion || 'Sin descripción'}</div>
+                <div style={{ width: '36px', height: '36px', background: 'var(--color-primary-light)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
+                  <span className="material-symbols-outlined" style={{ color: 'var(--color-primary-dark)', fontSize: '20px' }}>group</span>
+                </div>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '4px' }}>{equipo.nombre}</div>
+                <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{equipo.descripcion || 'Sin descripción'}</div>
               </div>
             ))}
           </div>
