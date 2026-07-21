@@ -69,10 +69,10 @@ export default function Perfil() {
 
       {/* Topbar */}
       <div style={{
-        height: '56px', background: 'var(--color-topbar-bg)',
+        height: '64px', background: 'var(--color-topbar-bg)',
         borderBottom: '1px solid var(--color-topbar-border)',
         display: 'flex', alignItems: 'center',
-        padding: '0 24px', gap: '12px', boxShadow: 'var(--shadow-sm)'
+        padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)'
       }}>
         <button
           onClick={() => navigate(-1)}

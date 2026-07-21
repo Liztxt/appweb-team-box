@@ -18,85 +18,90 @@ export default function DetalleEquipoAdmin() {
   }, [id])
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
 
       <div style={{
-        height: '56px', background: '#fff',
-        borderBottom: '0.5px solid #E2E8F0',
+        height: '64px', background: 'var(--color-topbar-bg)',
+        borderBottom: '1px solid var(--color-topbar-border)',
         display: 'flex', alignItems: 'center',
-        padding: '0 24px', gap: '12px'
+        padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)'
       }}>
         <button onClick={() => navigate(-1)}
-          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B' }}>Detalle del equipo</span>
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+        </button>
+        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)' }}>Detalle del equipo</span>
       </div>
 
       <div style={{ padding: '28px 24px', maxWidth: '600px', margin: '0 auto' }}>
         {loading ? (
-          <p style={{ fontSize: '13px', color: '#64748B' }}>Cargando...</p>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
         ) : !equipo ? (
-          <p style={{ fontSize: '13px', color: '#64748B' }}>Equipo no encontrado</p>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Equipo no encontrado</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             {/* Tarjeta principal */}
             <div style={{
-              background: '#fff', border: '0.5px solid #E2E8F0',
-              borderRadius: '12px', padding: '24px',
-              display: 'flex', alignItems: 'center', gap: '16px'
+              background: 'var(--color-surface)', border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-lg)', padding: '24px',
+              display: 'flex', alignItems: 'center', gap: '16px', boxShadow: 'var(--shadow-sm)'
             }}>
               <div style={{
-                width: '56px', height: '56px', background: '#EEF2FF',
-                borderRadius: '12px', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontSize: '28px', flexShrink: 0
-              }}>👥</div>
+                width: '56px', height: '56px', background: 'var(--color-primary-light)',
+                borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', flexShrink: 0
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '28px', color: 'var(--color-primary-dark)' }}>group</span>
+              </div>
               <div>
-                <div style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B' }}>
+                <div style={{ fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
                   {equipo.nombre}
                 </div>
-                <div style={{ fontSize: '13px', color: '#64748B', marginTop: '2px' }}>
+                <div style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
                   {equipo.descripcion || 'Sin descripción'}
                 </div>
-                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '4px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
                   Creado el {new Date(equipo.creadoEn).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </div>
               </div>
             </div>
 
             {/* Miembros */}
-            <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
-              <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '12px' }}>
+            <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
+              <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '12px' }}>
                 Miembros ({equipo.miembros.length})
               </h2>
               {equipo.miembros.length === 0 ? (
-                <p style={{ fontSize: '13px', color: '#64748B' }}>Este equipo no tiene miembros asignados</p>
+                <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Este equipo no tiene miembros asignados</p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {equipo.miembros.map(emp => (
                     <div key={emp._id}
                       onClick={() => navigate(`/admin/ver/empleados/${emp._id}`)}
                       style={{
-                        background: '#F0F4F8', borderRadius: '8px', padding: '12px 16px',
-                        display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer'
+                        background: 'var(--color-bg)', borderRadius: 'var(--radius-sm)', padding: '12px 16px',
+                        display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer',
+                        border: '1px solid var(--color-border)', transition: 'background 0.15s ease'
                       }}
-                      onMouseEnter={e => e.currentTarget.style.background = '#E8EDFB'}
-                      onMouseLeave={e => e.currentTarget.style.background = '#F0F4F8'}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--color-primary-light)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'var(--color-bg)'}
                     >
                       <img
                         src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`}
                         alt={`Avatar ${emp.numeroEmpleado}`}
                         loading="lazy"
-                        style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#fff', flexShrink: 0 }}
+                        style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--color-surface)', flexShrink: 0 }}
                       />
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>#{emp.numeroEmpleado}</div>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>#{emp.numeroEmpleado}</div>
                       </div>
                       <span style={{
-                        background: emp.rol === 'admin' ? '#EEF2FF' : '#F0F4F8',
-                        color: emp.rol === 'admin' ? '#3730A3' : '#475569',
+                        background: emp.rol === 'admin' ? 'var(--color-primary-light)' : 'var(--color-surface)',
+                        color: emp.rol === 'admin' ? 'var(--color-primary-dark)' : 'var(--color-text-secondary)',
                         borderRadius: '20px', padding: '2px 10px',
-                        fontSize: '11px', fontWeight: '500'
+                        fontSize: '11px', fontWeight: '600'
                       }}>
                         {emp.rol}
                       </span>

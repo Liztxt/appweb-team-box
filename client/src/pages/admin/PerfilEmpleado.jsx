@@ -25,49 +25,51 @@ export default function PerfilEmpleado() {
   }, [id])
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
 
       <div style={{
-        height: '56px', background: '#fff',
-        borderBottom: '0.5px solid #E2E8F0',
+        height: '64px', background: 'var(--color-topbar-bg)',
+        borderBottom: '1px solid var(--color-topbar-border)',
         display: 'flex', alignItems: 'center',
-        padding: '0 24px', gap: '12px'
+        padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)'
       }}>
         <button onClick={() => navigate(-1)}
-          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B' }}>Perfil del empleado</span>
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+        </button>
+        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)' }}>Perfil del empleado</span>
       </div>
 
       <div style={{ padding: '28px 24px', maxWidth: '600px', margin: '0 auto' }}>
         {loading ? (
-          <p style={{ fontSize: '13px', color: '#64748B' }}>Cargando...</p>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
         ) : !empleado ? (
-          <p style={{ fontSize: '13px', color: '#64748B' }}>Empleado no encontrado</p>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Empleado no encontrado</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             {/* Tarjeta principal */}
             <div style={{
-              background: '#fff', border: '0.5px solid #E2E8F0',
-              borderRadius: '12px', padding: '24px',
-              display: 'flex', alignItems: 'center', gap: '16px'
+              background: 'var(--color-surface)', border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-lg)', padding: '24px',
+              display: 'flex', alignItems: 'center', gap: '16px', boxShadow: 'var(--shadow-sm)'
             }}>
               <img
                 src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${empleado.numeroEmpleado}`}
                 alt={`Avatar ${empleado.numeroEmpleado}`}
                 loading="lazy"
-                style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#F0F4F8' }}
+                style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--color-bg)' }}
               />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B' }}>
+                <div style={{ fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
                   #{empleado.numeroEmpleado}
                 </div>
                 <span style={{
-                  background: empleado.rol === 'admin' ? '#EEF2FF' : '#F0F4F8',
-                  color: empleado.rol === 'admin' ? '#3730A3' : '#475569',
+                  background: empleado.rol === 'admin' ? 'var(--color-primary-light)' : 'var(--color-bg)',
+                  color: empleado.rol === 'admin' ? 'var(--color-primary-dark)' : 'var(--color-text-secondary)',
                   borderRadius: '20px', padding: '3px 12px',
-                  fontSize: '12px', fontWeight: '500'
+                  fontSize: '12px', fontWeight: '600'
                 }}>
                   {empleado.rol}
                 </span>
@@ -75,11 +77,11 @@ export default function PerfilEmpleado() {
             </div>
 
             {/* Último acceso */}
-            <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
-              <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '8px' }}>
+            <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
+              <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '8px' }}>
                 Último acceso
               </h2>
-              <p style={{ fontSize: '13px', color: '#64748B', margin: 0 }}>
+              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: 0 }}>
                 {ultimoAcceso ? (
                   <>
                     {new Date(ultimoAcceso).toLocaleDateString('es-MX', {
@@ -93,21 +95,22 @@ export default function PerfilEmpleado() {
             </div>
 
             {/* Equipos */}
-            <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
-              <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', marginBottom: '12px' }}>
+            <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
+              <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '12px' }}>
                 Equipos ({empleado.equipos.length})
               </h2>
               {empleado.equipos.length === 0 ? (
-                <p style={{ fontSize: '13px', color: '#64748B' }}>No pertenece a ningún equipo</p>
+                <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No pertenece a ningún equipo</p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {empleado.equipos.map(eq => (
                     <div key={eq._id} style={{
-                      background: '#F0F4F8', borderRadius: '8px', padding: '12px 16px'
+                      background: 'var(--color-bg)', borderRadius: 'var(--radius-sm)', padding: '12px 16px',
+                      border: '1px solid var(--color-border)'
                     }}>
-                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#1E293B' }}>{eq.nombre}</div>
+                      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>{eq.nombre}</div>
                       {eq.descripcion && (
-                        <div style={{ fontSize: '12px', color: '#64748B' }}>{eq.descripcion}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{eq.descripcion}</div>
                       )}
                     </div>
                   ))}

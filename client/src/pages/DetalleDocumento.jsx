@@ -143,47 +143,51 @@ export default function DetalleDocumento() {
 
   const inputStyle = {
     width: '100%', padding: '9px 12px',
-    border: '0.5px solid #E2E8F0', borderRadius: '8px',
-    fontSize: '13px', background: '#F0F4F8',
-    outline: 'none', boxSizing: 'border-box', color: '#1E293B'
+    border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)',
+    fontSize: '13px', background: 'var(--color-bg)',
+    outline: 'none', boxSizing: 'border-box', color: 'var(--color-text)',
+    fontFamily: 'var(--font-body)'
   }
 
   const DocumentSkeleton = () => (
-    <div style={{ background: '#F8FAFC', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-sm)', padding: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-        <div style={{ width: '32px', height: '32px', background: '#E2E8F0', borderRadius: '4px' }} />
-        <div style={{ flex: 1, height: '14px', background: '#E2E8F0', borderRadius: '4px' }} />
+        <div style={{ width: '32px', height: '32px', background: 'var(--color-border)', borderRadius: '4px' }} />
+        <div style={{ flex: 1, height: '14px', background: 'var(--color-border)', borderRadius: '4px' }} />
       </div>
       {[100, 90, 95, 80, 85, 70, 90, 75, 100, 88, 92, 78].map((w, i) => (
-        <div key={i} style={{ height: '10px', background: '#E2E8F0', borderRadius: '4px', width: `${w}%` }} />
+        <div key={i} style={{ height: '10px', background: 'var(--color-border)', borderRadius: '4px', width: `${w}%` }} />
       ))}
     </div>
   )
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ fontSize: '13px', color: '#64748B' }}>Cargando...</p>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
     </div>
   )
 
   if (!doc) return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ fontSize: '13px', color: '#64748B' }}>Documento no encontrado</p>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Documento no encontrado</p>
     </div>
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
       {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
-      <div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px' }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B', flex: 1 }}>Detalle del archivo</span>
+      <div style={{ height: '64px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+        </button>
+        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)', flex: 1 }}>Detalle del archivo</span>
         {doc.tipo !== 'reporte' && (
           <button onClick={() => setEditando(!editando)}
-            style={{ background: editando ? '#F0F4F8' : '#EEF2FF', color: editando ? '#64748B' : '#4F46E5', border: 'none', borderRadius: '7px', padding: '6px 12px', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}>
-            {editando ? 'Cancelar' : '✏️ Editar'}
+            style={{ background: editando ? 'rgba(255,255,255,0.12)' : 'var(--color-accent)', color: editando ? 'var(--color-topbar-text)' : 'var(--color-topbar-bg)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{editando ? 'close' : 'edit'}</span>
+            {editando ? 'Cancelar' : 'Editar'}
           </button>
         )}
       </div>
@@ -195,38 +199,41 @@ export default function DetalleDocumento() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             {/* Header reporte */}
-            <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
+            <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <span style={{ background: '#EEF2FF', color: '#3730A3', borderRadius: '20px', padding: '2px 10px', fontSize: '11px', fontWeight: '500' }}>📋 Reporte</span>
-                <span style={{ fontSize: '11px', color: '#94A3B8' }}>
+                <span style={{ background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', borderRadius: '20px', padding: '2px 10px', fontSize: '11px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>assignment</span>
+                  Reporte
+                </span>
+                <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
                   {new Date(doc.creadoEn).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })} · {new Date(doc.creadoEn).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', margin: '0 0 8px' }}>{doc.titulo}</h2>
-              {doc.descripcion && <p style={{ fontSize: '13px', color: '#64748B', margin: '0 0 12px' }}>{doc.descripcion}</p>}
+              <h2 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--color-text)', margin: '0 0 8px' }}>{doc.titulo}</h2>
+              {doc.descripcion && <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: '0 0 12px' }}>{doc.descripcion}</p>}
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${doc.autor}`} loading="lazy" alt=''
-                  style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#F0F4F8' }} />
-                <span style={{ fontSize: '12px', color: '#64748B' }}>Autor: #{doc.autor}</span>
+                  style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--color-bg)' }} />
+                <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Autor: #{doc.autor}</span>
               </div>
             </div>
 
             {/* Texto del reporte */}
             {doc.texto && (
-              <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
-                <h3 style={{ fontSize: '13px', fontWeight: '600', color: '#1E293B', marginBottom: '10px' }}>Notas</h3>
-                <p style={{ fontSize: '13px', color: '#475569', lineHeight: '1.6', margin: 0, whiteSpace: 'pre-wrap' }}>{doc.texto}</p>
+              <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '10px' }}>Notas</h3>
+                <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.6', margin: 0, whiteSpace: 'pre-wrap' }}>{doc.texto}</p>
               </div>
             )}
 
             {/* Fotos */}
             {fotoUrls.length > 0 && (
-              <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '20px' }}>
-                <h3 style={{ fontSize: '13px', fontWeight: '600', color: '#1E293B', marginBottom: '12px' }}>Fotos ({fotoUrls.length})</h3>
+              <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '12px' }}>Fotos ({fotoUrls.length})</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
                   {fotoUrls.map((url, i) => (
                     <img key={i} src={url} alt={`Foto ${i + 1}`} loading="lazy"
-                      style={{ width: '100%', borderRadius: '8px', objectFit: 'cover', aspectRatio: '1', cursor: 'pointer' }}
+                      style={{ width: '100%', borderRadius: 'var(--radius-sm)', objectFit: 'cover', aspectRatio: '1', cursor: 'pointer' }}
                       onClick={() => window.open(url, '_blank')} />
                   ))}
                 </div>
@@ -235,17 +242,18 @@ export default function DetalleDocumento() {
 
             {/* Botón eliminar */}
             <button onClick={handleEliminar}
-              style={{ width: '100%', padding: '10px 16px', background: '#FEF2F2', color: '#EF4444', border: '0.5px solid #FECACA', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
-              🗑 Eliminar reporte
+              style={{ width: '100%', padding: '10px 16px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+              Eliminar reporte
             </button>
           </div>
 
         ) : (
           /* Vista de Documento normal */
-          <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
 
             {!editando && (
-              <div style={{ borderBottom: '0.5px solid #E2E8F0' }}>
+              <div style={{ borderBottom: '1px solid var(--color-border)' }}>
                 {puedePrevisualizar(doc.archivoTipo) && previewUrl ? (
                   esImagen(doc.archivoTipo) ? (
                     <img src={previewUrl} alt={doc.titulo} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', display: 'block' }} />
@@ -253,9 +261,9 @@ export default function DetalleDocumento() {
                     <iframe src={previewUrl} title={doc.titulo} style={{ width: '100%', height: '300px', border: 'none', display: 'block' }} />
                   )
                 ) : (
-                  <div style={{ padding: '20px', background: '#F8FAFC' }}>
+                  <div style={{ padding: '20px', background: 'var(--color-bg)' }}>
                     <DocumentSkeleton />
-                    <p style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'center', marginTop: '12px', marginBottom: '0' }}>
+                    <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', textAlign: 'center', marginTop: '12px', marginBottom: '0' }}>
                       Vista previa no disponible — descarga el archivo para verlo
                     </p>
                   </div>
@@ -267,60 +275,64 @@ export default function DetalleDocumento() {
               {editando ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Título *</label>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '5px' }}>Título *</label>
                     <input value={titulo} onChange={e => setTitulo(e.target.value)} style={inputStyle} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Descripción</label>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '5px' }}>Descripción</label>
                     <textarea value={descripcion} onChange={e => setDescripcion(e.target.value)} rows={3} style={{ ...inputStyle, resize: 'none' }} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', color: '#1E293B', marginBottom: '5px' }}>Reemplazar archivo (opcional)</label>
-                    <div style={{ border: '1.5px dashed #CBD5E1', borderRadius: '8px', padding: '16px', textAlign: 'center', cursor: 'pointer', background: archivoNuevo ? '#F0FDF4' : '#F8FAFC' }}
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '5px' }}>Reemplazar archivo (opcional)</label>
+                    <div style={{ border: `1.5px dashed ${archivoNuevo ? 'var(--color-success)' : 'var(--color-border)'}`, borderRadius: 'var(--radius-sm)', padding: '16px', textAlign: 'center', cursor: 'pointer', background: archivoNuevo ? 'var(--color-success-bg)' : 'var(--color-bg)' }}
                       onClick={() => document.getElementById('fileInputEdit').click()}>
                       <input id='fileInputEdit' type='file' style={{ display: 'none' }} onChange={e => setArchivoNuevo(e.target.files[0])} />
                       {archivoNuevo ? (
                         <div>
-                          <div style={{ fontSize: '16px', marginBottom: '2px' }}>✅</div>
-                          <div style={{ fontSize: '12px', color: '#1E293B', fontWeight: '500' }}>{archivoNuevo.name}</div>
+                          <span className="material-symbols-outlined" style={{ fontSize: '20px', color: 'var(--color-success)', marginBottom: '2px' }}>check_circle</span>
+                          <div style={{ fontSize: '12px', color: 'var(--color-text)', fontWeight: '600' }}>{archivoNuevo.name}</div>
                         </div>
                       ) : (
                         <div>
-                          <div style={{ fontSize: '18px', marginBottom: '4px' }}>📎</div>
-                          <div style={{ fontSize: '12px', color: '#64748B' }}>{doc.archivoNombre}</div>
-                          <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>Clic para cambiar archivo</div>
+                          <span className="material-symbols-outlined" style={{ fontSize: '22px', color: 'var(--color-text-muted)', marginBottom: '4px' }}>attach_file</span>
+                          <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{doc.archivoNombre}</div>
+                          <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>Clic para cambiar archivo</div>
                         </div>
                       )}
                     </div>
                   </div>
                   <button onClick={handleGuardar} disabled={guardando}
-                    style={{ width: '100%', padding: '11px', background: guardando ? '#A5B4FC' : '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: guardando ? 'not-allowed' : 'pointer' }}>
-                    {guardando ? 'Guardando...' : '💾 Guardar cambios'}
+                    style={{ width: '100%', padding: '11px', background: guardando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: guardando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>save</span>
+                    {guardando ? 'Guardando...' : 'Guardar cambios'}
                   </button>
                 </div>
               ) : (
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <span style={{ background: '#F0F4F8', color: '#475569', borderRadius: '20px', padding: '2px 10px', fontSize: '11px', fontWeight: '500' }}>
+                    <span style={{ background: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderRadius: '20px', padding: '2px 10px', fontSize: '11px', fontWeight: '600' }}>
                       Documento
                     </span>
-                    <span style={{ fontSize: '11px', color: '#94A3B8' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
                       {new Date(doc.creadoEn).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })} · {new Date(doc.creadoEn).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
-                  <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', margin: '0 0 8px' }}>{doc.titulo}</h2>
-                  <p style={{ fontSize: '13px', color: '#64748B', margin: '0 0 16px', lineHeight: '1.5' }}>{doc.descripcion || 'Sin descripción'}</p>
-                  <div style={{ background: '#F0F4F8', borderRadius: '8px', padding: '10px 12px', marginBottom: '24px' }}>
-                    <span style={{ fontSize: '12px', color: '#64748B' }}>📎 {doc.archivoNombre}</span>
+                  <h2 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--color-text)', margin: '0 0 8px' }}>{doc.titulo}</h2>
+                  <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: '0 0 16px', lineHeight: '1.5' }}>{doc.descripcion || 'Sin descripción'}</p>
+                  <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>attach_file</span>
+                    <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{doc.archivoNombre}</span>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button onClick={handleDescargar} disabled={descargando}
-                      style={{ flex: 1, padding: '10px', background: descargando ? '#A5B4FC' : '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: descargando ? 'not-allowed' : 'pointer' }}>
-                      {descargando ? 'Descargando...' : '⬇ Descargar'}
+                      style={{ flex: 1, padding: '10px', background: descargando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: descargando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>download</span>
+                      {descargando ? 'Descargando...' : 'Descargar'}
                     </button>
                     <button onClick={handleEliminar}
-                      style={{ padding: '10px 16px', background: '#FEF2F2', color: '#EF4444', border: '0.5px solid #FECACA', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
-                      🗑 Eliminar
+                      style={{ padding: '10px 16px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+                      Eliminar
                     </button>
                   </div>
                 </>

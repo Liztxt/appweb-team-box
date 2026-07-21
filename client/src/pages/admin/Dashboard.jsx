@@ -72,12 +72,19 @@ export default function Dashboard() {
         }
       `}</style>
 
-      <div style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', padding: '0 24px', height: '56px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+      <div style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', padding: '0 32px', height: '64px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
   <div onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
-    <div style={{ width: '30px', height: '30px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <span className="material-symbols-outlined" style={{ color: 'var(--color-topbar-bg)', fontSize: '18px' }}>inventory_2</span>
-    </div>
-    <span style={{ fontFamily: 'var(--font-logo)', fontWeight: 700, fontSize: '16px', color: 'var(--color-topbar-text)' }}>Team Box</span>
+    <div style={{ width: '36px', height: '36px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <img src="/logo-pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
+</div>
+    <span style={{
+  fontFamily: 'var(--font-logo)',
+  fontStyle: 'italic',
+  fontWeight: 800,
+  fontSize: '17px',
+  letterSpacing: '-0.02em',
+  color: 'var(--color-topbar-text)'
+}}>Team Box</span>
     <span style={{ fontSize: '12px', color: 'var(--color-topbar-text)', background: 'rgba(255,255,255,0.12)', padding: '2px 8px', borderRadius: '20px' }}>Admin</span>
   </div>
   <span className='clima-hide'><ClimaWidget /></span>

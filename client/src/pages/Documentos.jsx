@@ -50,16 +50,23 @@ export default function Documentos() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', fontFamily: 'var(--font-body)' }}>
 
       {/* Topbar */}
-<div style={{ height: '56px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+<div style={{ height: '64px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
   <button onClick={() => navigate('/equipos')}
     style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
     <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
   </button>
   <div onClick={() => navigate('/equipos')} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
     <div style={{ width: '30px', height: '30px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <span className="material-symbols-outlined" style={{ color: 'var(--color-topbar-bg)', fontSize: '18px' }}>inventory_2</span>
-    </div>
-    <span style={{ fontFamily: 'var(--font-logo)', fontWeight: 700, fontSize: '16px', color: 'var(--color-topbar-text)' }}>Team Box</span>
+      <img src="/logo-pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
+</div>
+    <span style={{
+  fontFamily: 'var(--font-logo)',
+  fontStyle: 'italic',
+  fontWeight: 800,
+  fontSize: '17px',
+  letterSpacing: '-0.02em',
+  color: 'var(--color-topbar-text)'
+}}>Team Box</span>
   </div>
   <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: 'var(--color-topbar-text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
     #{usuario?.numeroEmpleado}
