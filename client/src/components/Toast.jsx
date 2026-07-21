@@ -48,26 +48,31 @@ export default function Toast({ mensaje, tipo = 'exito', onClose }) {
           bottom: '24px',
           right: '24px',
           zIndex: 9999,
-          background: esError ? '#FEF2F2' : '#F0FDF4',
-          border: `0.5px solid ${esError ? '#FECACA' : '#BBF7D0'}`,
-          borderRadius: '10px',
+          background: esError ? 'var(--color-error-bg)' : 'var(--color-success-bg)',
+          border: `1px solid ${esError ? 'var(--color-error-bg)' : 'var(--color-success-bg)'}`,
+          borderRadius: 'var(--radius-md)',
           padding: '12px 16px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          boxShadow: 'var(--shadow-md)',
           maxWidth: '320px',
-          minWidth: '220px'
+          minWidth: '220px',
+          fontFamily: 'var(--font-body)'
         }}
       >
-        <span style={{ fontSize: '16px' }}>{esError ? '❌' : '✅'}</span>
-        <span style={{ fontSize: '13px', fontWeight: '500', color: esError ? '#EF4444' : '#15803D', flex: 1 }}>
+        <span className="material-symbols-outlined" style={{ fontSize: '18px', color: esError ? 'var(--color-error)' : 'var(--color-success)' }}>
+          {esError ? 'error' : 'check_circle'}
+        </span>
+        <span style={{ fontSize: '13px', fontWeight: '600', color: esError ? 'var(--color-error)' : 'var(--color-success)', flex: 1 }}>
           {mensaje}
         </span>
         <button
           onClick={() => { setSaliendo(true); setTimeout(() => { setVisible(false); onClose?.() }, 300) }}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: '#94A3B8', padding: '0' }}
-        >✕</button>
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '0', display: 'flex' }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>close</span>
+        </button>
       </div>
     </>
   )

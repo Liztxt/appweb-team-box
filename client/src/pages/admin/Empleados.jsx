@@ -107,14 +107,13 @@ export default function Empleados() {
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
       {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
-      {/* Topbar */}
-      <div style={{ height: '56px', background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
-        <button onClick={() => navigate('/admin')}
-          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
-        </button>
-        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', flex: 1 }}>Gestión de empleados</span>
-      </div>
+      <div style={{ height: '56px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+  <button onClick={() => navigate('/admin')}
+    style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
+    <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+  </button>
+  <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de empleados</span>
+</div>
 
       <div className='emp-grid' style={{ padding: '24px 16px', maxWidth: '900px', margin: '0 auto' }}>
 

@@ -72,28 +72,27 @@ export default function Dashboard() {
         }
       `}</style>
 
-      {/* Topbar */}
-      <div style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', padding: '0 24px', height: '56px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
-        <div onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
-          <div style={{ width: '30px', height: '30px', background: 'var(--color-primary)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span className="material-symbols-outlined" style={{ color: '#fff', fontSize: '18px' }}>inventory_2</span>
-          </div>
-          <span style={{ fontFamily: 'var(--font-logo)', fontSize: '16px', color: 'var(--color-text)' }}>Team Box</span>
-          <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', background: 'var(--color-primary-light)', padding: '2px 8px', borderRadius: '20px' }}>Admin</span>
-        </div>
-        <span className='clima-hide'><ClimaWidget /></span>
-        <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: 'var(--color-text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
-          #{usuario?.numeroEmpleado}
-        </span>
-        <button onClick={() => navigate('/equipos')}
-          style={{ background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
-          Mis equipos
-        </button>
-        <button onClick={handleLogout}
-          style={{ background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
-          Salir
-        </button>
-      </div>
+      <div style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', padding: '0 24px', height: '56px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+  <div onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
+    <div style={{ width: '30px', height: '30px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span className="material-symbols-outlined" style={{ color: 'var(--color-topbar-bg)', fontSize: '18px' }}>inventory_2</span>
+    </div>
+    <span style={{ fontFamily: 'var(--font-logo)', fontWeight: 700, fontSize: '16px', color: 'var(--color-topbar-text)' }}>Team Box</span>
+    <span style={{ fontSize: '12px', color: 'var(--color-topbar-text)', background: 'rgba(255,255,255,0.12)', padding: '2px 8px', borderRadius: '20px' }}>Admin</span>
+  </div>
+  <span className='clima-hide'><ClimaWidget /></span>
+  <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: 'var(--color-topbar-text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
+    #{usuario?.numeroEmpleado}
+  </span>
+  <button onClick={() => navigate('/equipos')}
+    style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+    Mis equipos
+  </button>
+  <button onClick={handleLogout}
+    style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+    Salir
+  </button>
+</div>
 
       <div style={{ padding: '28px 24px', maxWidth: '900px', margin: '0 auto' }}>
         <h1 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '4px' }}>Panel de administración</h1>

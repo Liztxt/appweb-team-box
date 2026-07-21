@@ -38,8 +38,8 @@ export default function ClimaWidget() {
   if (loading) return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '6px',
-      padding: '6px 10px', background: '#F0F4F8',
-      borderRadius: '8px', fontSize: '12px', color: '#64748B'
+      padding: '6px 10px', background: 'rgba(255,255,255,0.1)',
+      borderRadius: 'var(--radius-sm)', fontSize: '12px', color: 'var(--color-topbar-text-muted)'
     }}>
       Cargando clima...
     </div>
@@ -50,15 +50,15 @@ export default function ClimaWidget() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '8px',
-      padding: '6px 12px', background: '#F0F4F8',
-      borderRadius: '8px', border: '0.5px solid #E2E8F0'
+      padding: '6px 12px', background: 'rgba(255,255,255,0.1)',
+      borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-topbar-border)'
     }}>
       <span style={{ fontSize: '18px' }}>{clima.icono}</span>
       <div>
-        <div style={{ fontSize: '13px', fontWeight: '600', color: '#1E293B' }}>
+        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-topbar-text)' }}>
           {clima.temp}°C
         </div>
-        <div style={{ fontSize: '10px', color: '#64748B' }}>
+        <div style={{ fontSize: '10px', color: 'var(--color-topbar-text-muted)' }}>
           {clima.desc} · Santa Catarina
         </div>
       </div>

@@ -7,7 +7,7 @@ export default function Skeleton({ width = '100%', height = '16px', borderRadius
           100% { background-position: 600px 0; }
         }
         .skeleton {
-          background: linear-gradient(90deg, #E2E8F0 25%, #F0F4F8 50%, #E2E8F0 75%);
+          background: linear-gradient(90deg, var(--color-border) 25%, var(--color-bg) 50%, var(--color-border) 75%);
           background-size: 600px 100%;
           animation: shimmer 1.4s infinite linear;
         }

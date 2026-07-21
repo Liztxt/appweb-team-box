@@ -7,23 +7,26 @@ export default function ConfirmModal({ titulo, mensaje, onConfirmar, onCancelar,
       zIndex: 1000, padding: '20px'
     }}>
       <div style={{
-        background: '#fff', borderRadius: '14px',
+        background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)',
         width: '100%', maxWidth: '380px',
-        padding: '24px', border: '0.5px solid #E2E8F0'
+        padding: '24px', border: '1px solid var(--color-border)',
+        fontFamily: 'var(--font-body)'
       }}>
         <div style={{
           width: '40px', height: '40px',
-          background: tipo === 'danger' ? '#FEF2F2' : '#EEF2FF',
-          borderRadius: '10px', display: 'flex',
+          background: tipo === 'danger' ? 'var(--color-error-bg)' : 'var(--color-primary-light)',
+          borderRadius: 'var(--radius-sm)', display: 'flex',
           alignItems: 'center', justifyContent: 'center',
-          fontSize: '18px', marginBottom: '14px'
+          marginBottom: '14px'
         }}>
-          {tipo === 'danger' ? '⚠️' : 'ℹ️'}
+          <span className="material-symbols-outlined" style={{ fontSize: '20px', color: tipo === 'danger' ? 'var(--color-error)' : 'var(--color-primary-dark)' }}>
+            {tipo === 'danger' ? 'warning' : 'info'}
+          </span>
         </div>
-        <h3 style={{ fontSize: '15px', fontWeight: '600', color: '#1E293B', margin: '0 0 6px' }}>
+        <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--color-text)', margin: '0 0 6px' }}>
           {titulo}
         </h3>
-        <p style={{ fontSize: '13px', color: '#64748B', margin: '0 0 20px', lineHeight: '1.5' }}>
+        <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: '0 0 20px', lineHeight: '1.5' }}>
           {mensaje}
         </p>
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -31,18 +34,20 @@ export default function ConfirmModal({ titulo, mensaje, onConfirmar, onCancelar,
             onClick={onCancelar}
             style={{
               flex: 1, padding: '10px',
-              background: '#F0F4F8', color: '#475569',
-              border: 'none', borderRadius: '8px',
-              fontSize: '13px', fontWeight: '500', cursor: 'pointer'
+              background: 'var(--color-bg)', color: 'var(--color-text-secondary)',
+              border: 'none', borderRadius: 'var(--radius-sm)',
+              fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+              fontFamily: 'var(--font-body)'
             }}
           >Cancelar</button>
           <button
             onClick={onConfirmar}
             style={{
               flex: 1, padding: '10px',
-              background: tipo === 'danger' ? '#EF4444' : '#6366F1',
-              color: '#fff', border: 'none', borderRadius: '8px',
-              fontSize: '13px', fontWeight: '500', cursor: 'pointer'
+              background: tipo === 'danger' ? 'var(--color-error)' : 'var(--color-primary)',
+              color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)',
+              fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+              fontFamily: 'var(--font-body)'
             }}
           >Confirmar</button>
         </div>
