@@ -75,7 +75,7 @@ export default function Dashboard() {
       <div style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', padding: '0 32px', height: '64px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
   <div onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
     <div style={{ width: '36px', height: '36px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <img src="/logo-pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
+      <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
 </div>
     <span style={{
   fontFamily: 'var(--font-logo)',

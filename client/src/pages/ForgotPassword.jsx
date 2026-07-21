@@ -29,7 +29,7 @@ export default function ForgotPassword() {
 
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{ width: '56px', height: '56px', background: 'var(--color-topbar-bg)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px', padding: '6px' }}>
-            <img src="/logo-pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
+            <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
           </div>
           <h1 style={{ fontSize: '20px', fontWeight: '700', color: 'var(--color-text)', margin: '0 0 6px' }}>Recuperar contraseña</h1>
           <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: 0 }}>Ingresa tu email y te enviaremos un enlace</p>
