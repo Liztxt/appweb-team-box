@@ -48,12 +48,10 @@ export default function ManagerDashboard() {
         </div>
         <span style={{ fontFamily: 'var(--font-logo)', fontStyle: 'italic', fontWeight: 800, fontSize: '15px', color: 'var(--color-topbar-text)', flex: 1 }}>Team Box — Manager</span>
         <ClimaWidget />
-        <span onClick={() => navigate('/perfil')} style={{
-          fontSize: '12px', fontWeight: 600, color: 'var(--color-topbar-bg)',
-          cursor: 'pointer', background: '#fff', padding: '6px 14px', borderRadius: '20px'
-        }}>
-          #{usuario?.numeroEmpleado}
-        </span>
+        <span onClick={() => navigate('/perfil')}
+  style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+  #{usuario?.numeroEmpleado}
+</span>
         <button onClick={handleLogout} style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
           Cerrar sesión
         </button>

@@ -50,7 +50,7 @@ export default function Documentos() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', fontFamily: 'var(--font-body)' }}>
 
       {/* Topbar */}
-<div style={{ height: '64px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+<div style={{ height: 'px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
   <button onClick={() => navigate('/equipos')}
     style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
     <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
@@ -68,16 +68,17 @@ export default function Documentos() {
   color: 'var(--color-topbar-text)'
 }}>Team Box</span>
   </div>
-  <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: 'var(--color-topbar-text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
-    #{usuario?.numeroEmpleado}
-  </span>
+  <span onClick={() => navigate('/perfil')}
+  style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+  #{usuario?.numeroEmpleado}
+</span>
   <button onClick={handleLogout}
     style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
     Salir
   </button>
 </div>
 
-      <div style={{ padding: '28px 24px', maxWidth: '960px', margin: '0 auto', width: '100%' }}>
+      <div style={{ padding: '28px 24px', maxWidth: '1100px', margin: '0 auto', width: '100%' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
