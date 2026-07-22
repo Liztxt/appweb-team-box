@@ -11,44 +11,47 @@ export default function AvisoPrivacidad({ onAceptar }) {
       zIndex: 1000, padding: '20px'
     }}>
       <div style={{
-        background: '#fff', borderRadius: '14px',
+        background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)',
         width: '100%', maxWidth: '480px',
         maxHeight: '90vh', overflow: 'hidden',
         display: 'flex', flexDirection: 'column',
-        border: '0.5px solid #E2E8F0'
+        border: '1px solid var(--color-border)',
+        fontFamily: 'var(--font-body)'
       }}>
 
         {/* Header */}
         <div style={{
           padding: '24px 24px 16px',
-          borderBottom: '0.5px solid #E2E8F0'
+          borderBottom: '1px solid var(--color-border)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
             <div style={{
-              width: '32px', height: '32px', background: '#EEF2FF',
-              borderRadius: '8px', display: 'flex',
-              alignItems: 'center', justifyContent: 'center', fontSize: '16px'
-            }}>🔒</div>
-            <h2 style={{ fontSize: '15px', fontWeight: '600', color: '#1E293B', margin: 0 }}>
+              width: '32px', height: '32px', background: 'var(--color-primary-light)',
+              borderRadius: 'var(--radius-sm)', display: 'flex',
+              alignItems: 'center', justifyContent: 'center'
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-primary-dark)' }}>lock</span>
+            </div>
+            <h2 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--color-text)', margin: 0 }}>
               Aviso de privacidad
             </h2>
           </div>
-          <p style={{ fontSize: '12px', color: '#64748B', margin: 0 }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: 0 }}>
             Antes de continuar, lee y acepta nuestras políticas de confidencialidad.
           </p>
         </div>
 
         {/* Contenido */}
         <div style={{ padding: '20px 24px', overflowY: 'auto', flex: 1 }}>
-          <p style={{ fontSize: '13px', color: '#1E293B', lineHeight: '1.6', marginBottom: '12px' }}>
+          <p style={{ fontSize: '13px', color: 'var(--color-text)', lineHeight: '1.6', marginBottom: '12px' }}>
             <strong>Team Box</strong> es una plataforma corporativa de gestión documental. 
             El acceso está restringido exclusivamente a empleados autorizados mediante número 
             de empleado válido.
           </p>
-          <p style={{ fontSize: '13px', color: '#1E293B', lineHeight: '1.6', marginBottom: '12px' }}>
+          <p style={{ fontSize: '13px', color: 'var(--color-text)', lineHeight: '1.6', marginBottom: '12px' }}>
             Al ingresar al sistema, reconoces que:
           </p>
-          <ul style={{ fontSize: '13px', color: '#475569', lineHeight: '1.8', paddingLeft: '18px', marginBottom: '12px' }}>
+          <ul style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.8', paddingLeft: '18px', marginBottom: '12px' }}>
             <li>Los documentos y plantillas aquí almacenados son <strong>confidenciales</strong>.</li>
             <li>El acceso no autorizado está <strong>estrictamente prohibido</strong>.</li>
             <li>Tus actividades dentro del sistema pueden ser <strong>registradas y auditadas</strong>.</li>
@@ -60,18 +63,20 @@ export default function AvisoPrivacidad({ onAceptar }) {
             onClick={() => setExpandido(!expandido)}
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: '12px', color: '#6366F1', fontWeight: '500',
-              padding: 0, marginBottom: '8px'
+              fontSize: '12px', color: 'var(--color-primary)', fontWeight: '600',
+              padding: 0, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px',
+              fontFamily: 'var(--font-body)'
             }}
           >
-            {expandido ? '▲ Ocultar información adicional' : '▼ Ver información adicional'}
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{expandido ? 'expand_less' : 'expand_more'}</span>
+            {expandido ? 'Ocultar información adicional' : 'Ver información adicional'}
           </button>
 
           {expandido && (
             <div style={{
-              background: '#F0F4F8', borderRadius: '8px',
+              background: 'var(--color-bg)', borderRadius: 'var(--radius-sm)',
               padding: '14px', fontSize: '12px',
-              color: '#475569', lineHeight: '1.7'
+              color: 'var(--color-text-secondary)', lineHeight: '1.7'
             }}>
               <p style={{ marginBottom: '8px' }}>
                 <strong>Protección de datos personales:</strong> La información personal 
@@ -96,16 +101,17 @@ export default function AvisoPrivacidad({ onAceptar }) {
         {/* Botones */}
         <div style={{
           padding: '16px 24px',
-          borderTop: '0.5px solid #E2E8F0',
+          borderTop: '1px solid var(--color-border)',
           display: 'flex', gap: '8px'
         }}>
           <button
             onClick={onAceptar}
             style={{
               flex: 1, padding: '11px',
-              background: '#6366F1', color: '#fff',
-              border: 'none', borderRadius: '8px',
-              fontSize: '13px', fontWeight: '500', cursor: 'pointer'
+              background: 'var(--color-primary)', color: '#fff',
+              border: 'none', borderRadius: 'var(--radius-sm)',
+              fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+              fontFamily: 'var(--font-body)'
             }}
           >
             Entendido, continuar

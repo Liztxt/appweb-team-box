@@ -60,32 +60,36 @@ export default function SubirDocumento() {
 
   const inputStyle = {
     width: '100%', padding: '10px 12px',
-    border: '0.5px solid #E2E8F0', borderRadius: '8px',
-    fontSize: '13px', background: '#F0F4F8',
-    outline: 'none', boxSizing: 'border-box', color: '#1E293B'
+    border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)',
+    fontSize: '13px', background: 'var(--color-bg)',
+    outline: 'none', boxSizing: 'border-box', color: 'var(--color-text)',
+    fontFamily: 'var(--font-body)'
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
-      <div style={{ height: '56px', background: '#fff', borderBottom: '0.5px solid #E2E8F0', display: 'flex', alignItems: 'center', padding: '0 24px', gap: '12px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
+      <div style={{ height: '64px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
         <button onClick={() => navigate(`/equipos/${teamId}/docs`)}
-          style={{ background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#64748B' }}>←</button>
-        <span style={{ fontSize: '14px', fontWeight: '600', color: '#1E293B' }}>Subir archivo</span>
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+        </button>
+        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)' }}>Subir archivo</span>
       </div>
 
       <div style={{ padding: '32px 24px', maxWidth: '520px', margin: '0 auto' }}>
-        <div style={{ background: '#fff', border: '0.5px solid #E2E8F0', borderRadius: '12px', padding: '28px' }}>
+        <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '28px', boxShadow: 'var(--shadow-sm)' }}>
 
           {/* Tipo */}
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>Tipo</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>Tipo</label>
             <div style={{ display: 'flex', gap: '8px' }}>
               {[
-                { value: 'documento', label: '📄 Documento' },
-                { value: 'reporte', label: '📋 Reporte' }
+                { value: 'documento', label: 'Documento', icon: 'description' },
+                { value: 'reporte', label: 'Reporte', icon: 'assignment' }
               ].map(t => (
                 <button key={t.value} onClick={() => setTipo(t.value)}
-                  style={{ flex: 1, padding: '8px', border: tipo === t.value ? '1.5px solid #6366F1' : '0.5px solid #E2E8F0', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', background: tipo === t.value ? '#EEF2FF' : '#fff', color: tipo === t.value ? '#4F46E5' : '#64748B' }}>
+                  style={{ flex: 1, padding: '8px', border: tipo === t.value ? '1.5px solid var(--color-primary)' : '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer', background: tipo === t.value ? 'var(--color-primary-light)' : 'var(--color-surface)', color: tipo === t.value ? 'var(--color-primary-dark)' : 'var(--color-text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontFamily: 'var(--font-body)' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{t.icon}</span>
                   {t.label}
                 </button>
               ))}
@@ -94,34 +98,34 @@ export default function SubirDocumento() {
 
           {/* Título */}
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>Título *</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>Título *</label>
             <input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder='Nombre del documento' style={inputStyle} />
           </div>
 
           {/* Descripción */}
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>Descripción</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>Descripción</label>
             <input value={descripcion} onChange={e => setDescripcion(e.target.value)} placeholder='Descripción opcional' style={inputStyle} />
           </div>
 
           {tipo === 'documento' ? (
             /* Archivo para documento normal */
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>Archivo *</label>
-              <div style={{ border: '1.5px dashed #CBD5E1', borderRadius: '8px', padding: '24px', textAlign: 'center', cursor: 'pointer', background: archivo ? '#F0FDF4' : '#F0F4F8' }}
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>Archivo *</label>
+              <div style={{ border: `1.5px dashed ${archivo ? 'var(--color-success)' : 'var(--color-border)'}`, borderRadius: 'var(--radius-sm)', padding: '24px', textAlign: 'center', cursor: 'pointer', background: archivo ? 'var(--color-success-bg)' : 'var(--color-bg)' }}
                 onClick={() => document.getElementById('fileInput').click()}>
                 <input id='fileInput' type='file' style={{ display: 'none' }} onChange={e => setArchivo(e.target.files[0])} />
                 {archivo ? (
                   <div>
-                    <div style={{ fontSize: '20px', marginBottom: '4px' }}>✅</div>
-                    <div style={{ fontSize: '13px', color: '#1E293B', fontWeight: '500' }}>{archivo.name}</div>
-                    <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>{(archivo.size / 1024).toFixed(0)} KB</div>
+                    <span className="material-symbols-outlined" style={{ fontSize: '24px', color: 'var(--color-success)', marginBottom: '4px' }}>check_circle</span>
+                    <div style={{ fontSize: '13px', color: 'var(--color-text)', fontWeight: '600' }}>{archivo.name}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>{(archivo.size / 1024).toFixed(0)} KB</div>
                   </div>
                 ) : (
                   <div>
-                    <div style={{ fontSize: '24px', marginBottom: '6px' }}>📎</div>
-                    <div style={{ fontSize: '13px', color: '#64748B' }}>Clic para seleccionar archivo</div>
-                    <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>PDF, Word, imágenes hasta 10MB</div>
+                    <span className="material-symbols-outlined" style={{ fontSize: '26px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>attach_file</span>
+                    <div style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Clic para seleccionar archivo</div>
+                    <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>PDF, Word, imágenes hasta 10MB</div>
                   </div>
                 )}
               </div>
@@ -131,38 +135,38 @@ export default function SubirDocumento() {
             <>
               {/* Autor automático */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>Autor</label>
-                <div style={{ ...inputStyle, background: '#E2E8F0', color: '#64748B' }}>#{usuario?.numeroEmpleado}</div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>Autor</label>
+                <div style={{ ...inputStyle, background: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>#{usuario?.numeroEmpleado}</div>
               </div>
 
               {/* Texto */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>Notas / Descripción</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>Notas / Descripción</label>
                 <textarea value={texto} onChange={e => setTexto(e.target.value)} placeholder='Escribe el contenido del reporte...' rows={5}
                   style={{ ...inputStyle, resize: 'vertical' }} />
               </div>
 
               {/* Fotos */}
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#1E293B', marginBottom: '6px' }}>Fotos (máx. 4, opcional)</label>
-                <div style={{ border: '1.5px dashed #CBD5E1', borderRadius: '8px', padding: '20px', textAlign: 'center', cursor: 'pointer', background: fotos.length > 0 ? '#F0FDF4' : '#F0F4F8' }}
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '6px' }}>Fotos (máx. 4, opcional)</label>
+                <div style={{ border: `1.5px dashed ${fotos.length > 0 ? 'var(--color-success)' : 'var(--color-border)'}`, borderRadius: 'var(--radius-sm)', padding: '20px', textAlign: 'center', cursor: 'pointer', background: fotos.length > 0 ? 'var(--color-success-bg)' : 'var(--color-bg)' }}
                   onClick={() => document.getElementById('fotosInput').click()}>
                   <input id='fotosInput' type='file' accept='image/*' multiple style={{ display: 'none' }} onChange={handleFotos} />
                   {fotos.length > 0 ? (
                     <div>
-                      <div style={{ fontSize: '20px', marginBottom: '4px' }}>✅</div>
-                      <div style={{ fontSize: '13px', color: '#1E293B', fontWeight: '500' }}>{fotos.length} foto{fotos.length !== 1 ? 's' : ''} seleccionada{fotos.length !== 1 ? 's' : ''}</div>
+                      <span className="material-symbols-outlined" style={{ fontSize: '24px', color: 'var(--color-success)', marginBottom: '4px' }}>check_circle</span>
+                      <div style={{ fontSize: '13px', color: 'var(--color-text)', fontWeight: '600' }}>{fotos.length} foto{fotos.length !== 1 ? 's' : ''} seleccionada{fotos.length !== 1 ? 's' : ''}</div>
                       <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginTop: '8px', flexWrap: 'wrap' }}>
                         {fotos.map((f, i) => (
-                          <div key={i} style={{ fontSize: '11px', color: '#64748B', background: '#E2E8F0', borderRadius: '4px', padding: '2px 6px' }}>{f.name}</div>
+                          <div key={i} style={{ fontSize: '11px', color: 'var(--color-text-secondary)', background: 'var(--color-border)', borderRadius: '4px', padding: '2px 6px' }}>{f.name}</div>
                         ))}
                       </div>
                     </div>
                   ) : (
                     <div>
-                      <div style={{ fontSize: '24px', marginBottom: '6px' }}>📷</div>
-                      <div style={{ fontSize: '13px', color: '#64748B' }}>Clic para agregar fotos</div>
-                      <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>JPG, PNG hasta 10MB cada una</div>
+                      <span className="material-symbols-outlined" style={{ fontSize: '26px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>add_a_photo</span>
+                      <div style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Clic para agregar fotos</div>
+                      <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>JPG, PNG hasta 10MB cada una</div>
                     </div>
                   )}
                 </div>
@@ -171,13 +175,13 @@ export default function SubirDocumento() {
           )}
 
           {error && (
-            <div style={{ background: '#FEF2F2', border: '0.5px solid #FECACA', borderRadius: '8px', padding: '10px 12px', fontSize: '13px', color: '#EF4444', marginBottom: '16px' }}>
+            <div style={{ background: 'var(--color-error-bg)', border: '1px solid var(--color-error-bg)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', fontSize: '13px', color: 'var(--color-error)', marginBottom: '16px' }}>
               {error}
             </div>
           )}
 
           <button onClick={handleSubmit} disabled={loading}
-            style={{ width: '100%', padding: '11px', background: loading ? '#A5B4FC' : '#6366F1', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '500', cursor: loading ? 'not-allowed' : 'pointer' }}>
+            style={{ width: '100%', padding: '11px', background: loading ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '14px', fontWeight: '600', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
             {loading ? 'Subiendo...' : 'Subir'}
           </button>
         </div>

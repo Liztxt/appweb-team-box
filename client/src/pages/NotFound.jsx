@@ -5,16 +5,16 @@ export default function NotFound() {
 
   return (
     <div style={{
-      minHeight: '100vh', background: '#F0F4F8',
+      minHeight: '100vh', background: 'var(--color-bg)',
       display: 'flex', alignItems: 'center',
-      justifyContent: 'center', padding: '24px'
+      justifyContent: 'center', padding: '24px', fontFamily: 'var(--font-body)'
     }}>
       <div style={{ textAlign: 'center', maxWidth: '400px' }}>
 
         {/* Número 404 */}
         <div style={{
           fontSize: '96px', fontWeight: '700',
-          color: '#E2E8F0', lineHeight: '1',
+          color: 'var(--color-border)', lineHeight: '1',
           marginBottom: '8px', letterSpacing: '-4px'
         }}>
           404
@@ -22,23 +22,23 @@ export default function NotFound() {
 
         {/* Ícono */}
         <div style={{
-          width: '64px', height: '64px', background: '#EEF2FF',
-          borderRadius: '16px', display: 'flex',
+          width: '64px', height: '64px', background: 'var(--color-primary-light)',
+          borderRadius: 'var(--radius-lg)', display: 'flex',
           alignItems: 'center', justifyContent: 'center',
-          fontSize: '28px', margin: '0 auto 20px'
+          margin: '0 auto 20px'
         }}>
-          📭
+          <span className="material-symbols-outlined" style={{ fontSize: '28px', color: 'var(--color-primary-dark)' }}>mail</span>
         </div>
 
         <h1 style={{
-          fontSize: '20px', fontWeight: '600',
-          color: '#1E293B', margin: '0 0 8px'
+          fontSize: '20px', fontWeight: '700',
+          color: 'var(--color-text)', margin: '0 0 8px'
         }}>
           Página no encontrada
         </h1>
 
         <p style={{
-          fontSize: '13px', color: '#64748B',
+          fontSize: '13px', color: 'var(--color-text-muted)',
           lineHeight: '1.6', margin: '0 0 28px'
         }}>
           La ruta que buscas no existe o no tienes acceso a ella.
@@ -50,20 +50,23 @@ export default function NotFound() {
             onClick={() => navigate(-1)}
             style={{
               padding: '10px 20px',
-              background: '#fff', color: '#475569',
-              border: '0.5px solid #E2E8F0', borderRadius: '8px',
-              fontSize: '13px', fontWeight: '500', cursor: 'pointer'
+              background: 'var(--color-surface)', color: 'var(--color-text-secondary)',
+              border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)',
+              fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+              fontFamily: 'var(--font-body)', display: 'flex', alignItems: 'center', gap: '6px'
             }}
           >
-            ← Volver
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_back</span>
+            Volver
           </button>
           <button
             onClick={() => navigate('/equipos')}
             style={{
               padding: '10px 20px',
-              background: '#6366F1', color: '#fff',
-              border: 'none', borderRadius: '8px',
-              fontSize: '13px', fontWeight: '500', cursor: 'pointer'
+              background: 'var(--color-primary)', color: '#fff',
+              border: 'none', borderRadius: 'var(--radius-sm)',
+              fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+              fontFamily: 'var(--font-body)'
             }}
           >
             Ir al inicio
@@ -76,11 +79,13 @@ export default function NotFound() {
           alignItems: 'center', justifyContent: 'center', gap: '8px'
         }}>
           <div style={{
-            width: '24px', height: '24px', background: '#6366F1',
+            width: '24px', height: '24px', background: 'var(--color-topbar-bg)',
             borderRadius: '6px', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', fontSize: '12px'
-          }}>📦</div>
-          <span style={{ fontSize: '12px', color: '#94A3B8', fontWeight: '500' }}>Team Box</span>
+            alignItems: 'center', justifyContent: 'center', padding: '3px'
+          }}>
+            <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '2px' }} />
+          </div>
+          <span style={{ fontFamily: 'var(--font-logo)', fontStyle: 'italic', fontWeight: 700, fontSize: '13px', color: 'var(--color-text-muted)' }}>Team Box</span>
         </div>
       </div>
     </div>

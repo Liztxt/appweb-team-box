@@ -41,20 +41,20 @@ export default function Login() {
       <div style={{ width: '100%', maxWidth: '400px' }}>
 
         {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{
-            width: '52px', height: '52px',
-            background: 'var(--color-primary)',
-            borderRadius: 'var(--radius-md)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 14px',
-            boxShadow: 'var(--shadow-md)'
-          }}>
-            <span className="material-symbols-outlined" style={{ color: '#fff', fontSize: '26px' }}>inventory_2</span>
-          </div>
-          <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '26px', color: 'var(--color-text)', marginBottom: '4px' }}>Team Box</h1>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Ingresa con tu número de empleado</p>
-        </div>
+<div style={{ textAlign: 'center', marginBottom: '32px' }}>
+  <div style={{
+    width: '64px', height: '64px',
+    background: 'var(--color-topbar-bg)',
+    borderRadius: 'var(--radius-md)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    margin: '0 auto 14px', padding: '8px',
+    boxShadow: 'var(--shadow-md)'
+  }}>
+    <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
+  </div>
+  <h1 style={{ fontFamily: 'var(--font-logo)', fontStyle: 'italic', fontWeight: 800, fontSize: '26px', color: 'var(--color-text)', marginBottom: '4px', letterSpacing: '-0.02em' }}>Team Box</h1>
+  <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Ingresa con tu número de empleado</p>
+</div>
 
         {/* Card */}
         <div style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', padding: '32px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--color-border)' }}>
