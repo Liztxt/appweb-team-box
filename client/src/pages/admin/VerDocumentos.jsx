@@ -23,7 +23,7 @@ export default function VerDocumentos() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       <div style={{
-        height: '128px', background: 'var(--color-topbar-bg)',
+        height: '92px', background: 'var(--color-topbar-bg)',
         borderBottom: '1px solid var(--color-topbar-border)',
         display: 'flex', alignItems: 'center',
         padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)'
@@ -46,7 +46,8 @@ export default function VerDocumentos() {
         />
       </div>
 
-<div style={{ padding: '28px 32px', maxWidth: '900px', margin: '0 auto' }}>        {loading ? (
+      <div style={{ padding: '28px 24px', maxWidth: '700px', margin: '0 auto' }}>
+        {loading ? (
           <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
         ) : documentosFiltrados.length === 0 ? (
           <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No se encontraron documentos</p>

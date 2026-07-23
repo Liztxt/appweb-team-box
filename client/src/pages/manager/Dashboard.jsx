@@ -43,15 +43,24 @@ export default function ManagerDashboard() {
 
       {/* Topbar */}
       <div style={{ height: '64px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
-        <div style={{ width: '32px', height: '32px', background: '#fff', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', flexShrink: 0 }}>
-          <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '3px' }} />
-        </div>
-        <span style={{ fontFamily: 'var(--font-logo)', fontStyle: 'italic', fontWeight: 800, fontSize: '15px', color: 'var(--color-topbar-text)', flex: 1 }}>Team Box — Manager</span>
+        <div style={{ width: '48px', height: '48px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}>
+  <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
+</div>
+<span style={{
+  fontFamily: 'var(--font-logo)',
+  fontStyle: 'italic',
+  fontWeight: 800,
+  fontSize: '22px',
+  letterSpacing: '-0.02em',
+  color: 'var(--color-topbar-text)'
+}}>Team Box</span>
         <ClimaWidget />
-        <span onClick={() => navigate('/perfil')}
-  style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
-  #{usuario?.numeroEmpleado}
-</span>
+        <span onClick={() => navigate('/perfil')} style={{
+          fontSize: '12px', fontWeight: 600, color: 'var(--color-topbar-bg)',
+          cursor: 'pointer', background: '#fff', padding: '6px 14px', borderRadius: '20px'
+        }}>
+          #{usuario?.numeroEmpleado}
+        </span>
         <button onClick={handleLogout} style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
           Cerrar sesión
         </button>

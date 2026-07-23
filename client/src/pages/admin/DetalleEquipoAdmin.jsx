@@ -22,7 +22,7 @@ export default function DetalleEquipoAdmin() {
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
 
       <div style={{
-        height: '128px', background: 'var(--color-topbar-bg)',
+        height: '92px', background: 'var(--color-topbar-bg)',
         borderBottom: '1px solid var(--color-topbar-border)',
         display: 'flex', alignItems: 'center',
         padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)'
