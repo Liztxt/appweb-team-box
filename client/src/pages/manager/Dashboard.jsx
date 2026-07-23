@@ -37,23 +37,16 @@ export default function ManagerDashboard() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       <style>{`
-        .manager-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 16px; align-items: start; }
+        .manager-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 28px; align-items: start; }
         @media (max-width: 720px) { .manager-grid { grid-template-columns: 1fr; } }
       `}</style>
 
       {/* Topbar */}
-      <div style={{ height: '64px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
-        <div style={{ width: '48px', height: '48px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}>
-  <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
-</div>
-<span style={{
-  fontFamily: 'var(--font-logo)',
-  fontStyle: 'italic',
-  fontWeight: 800,
-  fontSize: '22px',
-  letterSpacing: '-0.02em',
-  color: 'var(--color-topbar-text)'
-}}>Team Box</span>
+      <div style={{ height: '92px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ width: '48px', height: '48px', background: '#fff', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', flexShrink: 0 }}>
+          <img src="/logo-pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '3px' }} />
+        </div>
+        <span style={{ fontFamily: 'var(--font-logo)', fontStyle: 'italic', fontWeight: 800, fontSize: '20px', color: 'var(--color-topbar-text)', flex: 1 }}>Team Box — Manager</span>
         <ClimaWidget />
         <span onClick={() => navigate('/perfil')} style={{
           fontSize: '12px', fontWeight: 600, color: 'var(--color-topbar-bg)',
@@ -108,6 +101,7 @@ export default function ManagerDashboard() {
 
           {/* Acciones rápidas */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '4px' }}>Acciones rápidas</h2>
             <div onClick={() => navigate('/manager/equipos')}
               style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '20px', cursor: 'pointer', boxShadow: 'var(--shadow-sm)', transition: 'border-color 0.15s ease' }}
               onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-primary)'}

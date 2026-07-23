@@ -68,9 +68,10 @@ export default function Documentos() {
   color: 'var(--color-topbar-text)'
 }}>Team Box</span>
   </div>
-  <span onClick={() => navigate('/perfil')} style={{ fontSize: '12px', color: 'var(--color-topbar-text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
-    #{usuario?.numeroEmpleado}
-  </span>
+  <span onClick={() => navigate('/perfil')}
+  style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+  #{usuario?.numeroEmpleado}
+</span>
   <button onClick={handleLogout}
     style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
     Salir
