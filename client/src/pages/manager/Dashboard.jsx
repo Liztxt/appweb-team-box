@@ -44,7 +44,7 @@ export default function ManagerDashboard() {
       {/* Topbar */}
       <div style={{ height: '92px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ width: '48px', height: '48px', background: '#fff', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', flexShrink: 0 }}>
-          <img src="/logo-pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '3px' }} />
+          <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '3px' }} />
         </div>
         <span style={{ fontFamily: 'var(--font-logo)', fontStyle: 'italic', fontWeight: 800, fontSize: '20px', color: 'var(--color-topbar-text)', flex: 1 }}>Team Box — Manager</span>
         <ClimaWidget />
@@ -101,7 +101,7 @@ export default function ManagerDashboard() {
 
           {/* Acciones rápidas */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '4px' }}>Acciones rápidas</h2>
+            <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginTop: '21px', marginBottom: '4px' }}>Acciones rápidas</h2>
             <div onClick={() => navigate('/manager/equipos')}
               style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '20px', cursor: 'pointer', boxShadow: 'var(--shadow-sm)', transition: 'border-color 0.15s ease' }}
               onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-primary)'}
