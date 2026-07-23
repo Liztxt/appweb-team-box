@@ -1,7 +1,6 @@
 const Equipo = require('../models/Equipo')
 const Empleado = require('../models/Empleado')
 
-// Crear equipo (solo admin)
 const crearEquipo = async (req, res) => {
   try {
     if (req.user.rol !== 'admin') {
@@ -16,7 +15,7 @@ const crearEquipo = async (req, res) => {
       return res.status(400).json({ error: 'Ya existe un equipo con ese nombre' })
     }
 
-    const equipo = new Equipo({ nombre: nombre.trim(), descripcion })
+    const equipo = new Equipo({ nombre: nombre.trim(), descripcion, creadoPor: req.user.id })
     await equipo.save()
 
     res.status(201).json(equipo)
@@ -67,11 +66,15 @@ const misEquipos = async (req, res) => {
   }
 }
 
-// Ver un equipo específico (protegido por teamGuard)
 const verEquipo = async (req, res) => {
   try {
     const equipo = await Equipo.findById(req.params.teamId)
-    res.json(equipo)
+    if (!equipo) {
+      return res.status(404).json({ error: 'Equipo no encontrado' })
+    }
+
+    const miembros = await Empleado.find({ equipos: req.params.teamId }).select('-passwordHash')
+    res.json({ ...equipo.toObject(), miembros })
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener equipo' })
   }
@@ -82,11 +85,17 @@ const eliminarEquipo = async (req, res) => {
     if (req.user.rol !== 'admin') {
       return res.status(403).json({ error: 'Solo administradores pueden eliminar equipos' })
     }
-    await Equipo.findByIdAndDelete(req.params.equipoId)
+    const equipo = await Equipo.findByIdAndDelete(req.params.equipoId)
+    if (!equipo) {
+      return res.status(404).json({ error: 'Equipo no encontrado' })
+    }
+    await Empleado.updateMany(
+      { equipos: req.params.equipoId },
+      { $pull: { equipos: req.params.equipoId } }
+    )
     res.json({ message: 'Equipo eliminado' })
   } catch (err) {
     res.status(500).json({ error: 'Error al eliminar equipo' })
   }
 }
-
 module.exports = { crearEquipo, asignarEmpleado, misEquipos, verEquipo, eliminarEquipo }

@@ -103,7 +103,6 @@ router.post('/equipos/asignar', async (req, res) => {
   }
 })
 
-// Ver detalle de equipo con miembros
 // Ver detalle de equipo con miembros (accesible si es miembro o si lo creó)
 router.get('/equipos/:equipoId', async (req, res) => {
   try {
@@ -114,7 +113,7 @@ router.get('/equipos/:equipoId', async (req, res) => {
 
     if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado' })
 
-    const esCreador = equipo.creadoPor.toString() === req.user.id
+    const esCreador = equipo.creadoPor ? equipo.creadoPor.toString() === req.user.id : false
 
     if (!esMiembro && !esCreador) {
       return res.status(403).json({ error: 'No tienes acceso a este equipo' })
@@ -149,9 +148,9 @@ router.put('/equipos/:equipoId', async (req, res) => {
 // Quitar miembro de uno de sus equipos
 router.delete('/equipos/:equipoId/miembro/:empleadoId', async (req, res) => {
   try {
-    const manager = await Empleado.findById(req.user.id)
-    if (!manager.equipos.some(e => e.toString() === req.params.equipoId)) {
-      return res.status(403).json({ error: 'No tienes acceso a este equipo' })
+    const equipo = await Equipo.findOne({ _id: req.params.equipoId, creadoPor: req.user.id })
+    if (!equipo) {
+      return res.status(403).json({ error: 'No tienes permiso para modificar este equipo' })
     }
 
     const empleado = await Empleado.findByIdAndUpdate(
