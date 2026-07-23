@@ -104,13 +104,21 @@ router.post('/equipos/asignar', async (req, res) => {
 })
 
 // Ver detalle de equipo con miembros
+// Ver detalle de equipo con miembros (accesible si es miembro o si lo creó)
 router.get('/equipos/:equipoId', async (req, res) => {
   try {
-    const equipo = await Equipo.findOne({
-      _id: req.params.equipoId,
-      creadoPor: req.user.id
-    })
-    if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado o sin permisos' })
+    const manager = await Empleado.findById(req.user.id)
+
+    const esMiembro = manager.equipos.some(e => e.toString() === req.params.equipoId)
+    const equipo = await Equipo.findById(req.params.equipoId)
+
+    if (!equipo) return res.status(404).json({ error: 'Equipo no encontrado' })
+
+    const esCreador = equipo.creadoPor.toString() === req.user.id
+
+    if (!esMiembro && !esCreador) {
+      return res.status(403).json({ error: 'No tienes acceso a este equipo' })
+    }
 
     const miembros = await Empleado.find({ equipos: req.params.equipoId }).select('-passwordHash')
     res.json({ ...equipo.toObject(), miembros })
