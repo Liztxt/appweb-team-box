@@ -14,6 +14,9 @@ export default function ManagerEquipos() {
   const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState('')
   const [toast, setToast] = useState(null)
   const [confirmacion, setConfirmacion] = useState(null)
+  const [editando, setEditando] = useState(null)
+  const [nombreEditando, setNombreEditando] = useState('')
+  const [descEditando, setDescEditando] = useState('')
   const navigate = useNavigate()
 
   const fetchData = async () => {
@@ -67,7 +70,36 @@ export default function ManagerEquipos() {
           setToast({ mensaje: 'Miembro removido correctamente', tipo: 'exito' })
           fetchData()
         } catch (err) {
-          setToast({ mensaje: 'Error al remover miembro', tipo: 'error' })
+          setToast({ mensaje: err.response?.data?.error || 'Error al remover miembro', tipo: 'error' })
+        } finally {
+          setConfirmacion(null)
+        }
+      }
+    })
+  }
+
+  const handleGuardarEquipo = async (id) => {
+    if (!nombreEditando.trim()) { setToast({ mensaje: 'El nombre es obligatorio', tipo: 'error' }); return }
+    try {
+      await api.put(`/manager/equipos/${id}`, { nombre: nombreEditando, descripcion: descEditando })
+      setToast({ mensaje: 'Equipo actualizado correctamente', tipo: 'exito' })
+      setEditando(null); fetchData()
+    } catch (err) {
+      setToast({ mensaje: err.response?.data?.error || 'Error al actualizar', tipo: 'error' })
+    }
+  }
+
+  const pedirConfirmacionEliminar = (id, nombre) => {
+    setConfirmacion({
+      titulo: 'Eliminar equipo',
+      mensaje: `¿Seguro que quieres eliminar el equipo "${nombre}"? Se removerá de todos los empleados.`,
+      accion: async () => {
+        try {
+          await api.delete(`/manager/equipos/${id}`)
+          setToast({ mensaje: 'Equipo eliminado correctamente', tipo: 'exito' })
+          fetchData()
+        } catch (err) {
+          setToast({ mensaje: err.response?.data?.error || 'Error al eliminar', tipo: 'error' })
         } finally {
           setConfirmacion(null)
         }
@@ -102,7 +134,7 @@ export default function ManagerEquipos() {
         <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)' }}>Gestión de equipos</span>
       </div>
 
-      <div className='mgr-grid' style={{ padding: '24px 16px', maxWidth: '900px', margin: '0 auto' }}>
+      <div className='mgr-grid' style={{ padding: '24px 32px', maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* Panel izquierdo */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -158,36 +190,62 @@ export default function ManagerEquipos() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {equipos.map(eq => (
-                <div key={eq._id} onClick={() => navigate(`/manager/equipos/${eq._id}`)} style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '12px', cursor: 'pointer', transition: 'background 0.15s ease' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--color-primary-light)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'var(--color-bg)'}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                    <div style={{ width: '32px', height: '32px', background: 'var(--color-surface)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-primary-dark)' }}>group</span>
+                <div key={eq._id} style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
+                  {editando === eq._id ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <input value={nombreEditando} onChange={e => setNombreEditando(e.target.value)} style={{ ...inputStyle, background: 'var(--color-surface)' }} placeholder='Nombre del equipo' />
+                      <input value={descEditando} onChange={e => setDescEditando(e.target.value)} style={{ ...inputStyle, background: 'var(--color-surface)' }} placeholder='Descripción' />
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => handleGuardarEquipo(eq._id)}
+                          style={{ flex: 1, padding: '10px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '12px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+                          Guardar
+                        </button>
+                        <button onClick={() => setEditando(null)}
+                          style={{ flex: 1, padding: '10px', background: 'var(--color-surface)', color: 'var(--color-text-muted)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+                          Cancelar
+                        </button>
+                      </div>
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>{eq.nombre}</div>
-                      <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{eq.descripcion || 'Sin descripción'}</div>
-                    </div>
-                    <button onClick={e => { e.stopPropagation(); navigate(`/equipos/${eq._id}/docs`) }}
-                      style={{ padding: '6px 10px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: '6px', fontSize: '11px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)', flexShrink: 0 }}>
-                      Ver docs
-                    </button>
-                  </div>
-                  {miembrosDeEquipo(eq._id).length > 0 && (
-                    <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Miembros</div>
-                      {miembrosDeEquipo(eq._id).map(emp => (
-                        <div key={emp._id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} loading="lazy" alt='' style={{ width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0 }} />
-                          <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)', flex: 1 }}>#{emp.numeroEmpleado}</span>
-                          <button onClick={(e) => { e.stopPropagation(); handleQuitarMiembro(eq._id, emp._id) }}
-                            style={{ padding: '4px', background: 'transparent', color: 'var(--color-text-muted)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>close</span>
-                          </button>
+                  ) : (
+                    <>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                        <div onClick={() => navigate(`/manager/equipos/${eq._id}`)}
+                          style={{ width: '32px', height: '32px', background: 'var(--color-surface)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, cursor: 'pointer' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-primary-dark)' }}>group</span>
                         </div>
-                      ))}
-                    </div>
+                        <div onClick={() => navigate(`/manager/equipos/${eq._id}`)} style={{ flex: 1, minWidth: 0, cursor: 'pointer' }}>
+                          <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>{eq.nombre}</div>
+                          <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{eq.descripcion || 'Sin descripción'}</div>
+                        </div>
+                        <button onClick={() => { setEditando(eq._id); setNombreEditando(eq.nombre); setDescEditando(eq.descripcion || '') }}
+                          style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
+                        </button>
+                        <button onClick={() => pedirConfirmacionEliminar(eq._id, eq.nombre)}
+                          style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+                        </button>
+                        <button onClick={() => navigate(`/equipos/${eq._id}/docs`)}
+                          style={{ padding: '6px 10px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: '6px', fontSize: '11px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)', flexShrink: 0 }}>
+                          Ver docs
+                        </button>
+                      </div>
+                      {miembrosDeEquipo(eq._id).length > 0 && (
+                        <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Miembros</div>
+                          {miembrosDeEquipo(eq._id).map(emp => (
+                            <div key={emp._id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} loading="lazy" alt='' style={{ width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0 }} />
+                              <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)', flex: 1 }}>#{emp.numeroEmpleado}</span>
+                              <button onClick={() => handleQuitarMiembro(eq._id, emp._id)}
+                                style={{ padding: '4px', background: 'transparent', color: 'var(--color-text-muted)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>close</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               ))}

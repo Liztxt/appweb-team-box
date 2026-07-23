@@ -145,6 +145,25 @@ router.put('/equipos/:equipoId', async (req, res) => {
   }
 })
 
+// Eliminar equipo (solo si lo creó)
+router.delete('/equipos/:equipoId', async (req, res) => {
+  try {
+    const equipo = await Equipo.findOneAndDelete({ _id: req.params.equipoId, creadoPor: req.user.id })
+    if (!equipo) {
+      return res.status(403).json({ error: 'No tienes permiso para eliminar este equipo' })
+    }
+
+    await Empleado.updateMany(
+      { equipos: req.params.equipoId },
+      { $pull: { equipos: req.params.equipoId } }
+    )
+
+    res.json({ message: 'Equipo eliminado correctamente' })
+  } catch (err) {
+    res.status(500).json({ error: 'Error al eliminar equipo' })
+  }
+})
+
 // Quitar miembro de uno de sus equipos
 router.delete('/equipos/:equipoId/miembro/:empleadoId', async (req, res) => {
   try {
