@@ -76,23 +76,23 @@ export default function DetalleDocumento() {
   }, [teamId, docId])
 
   const handleDescargar = async () => {
-    setDescargando(true)
-    try {
-      const res = await api.get(`/teams/${teamId}/docs/${docId}/download`, { responseType: 'blob' })
-      const url = window.URL.createObjectURL(new Blob([res.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', doc.archivoNombre)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url)
-    } catch (err) {
-      console.log('Error al descargar:', err)
-    } finally {
-      setDescargando(false)
-    }
+  setDescargando(true)
+  try {
+    const res = await api.get(`/teams/${teamId}/docs/${docId}/download`, { responseType: 'blob' })
+    const url = window.URL.createObjectURL(new Blob([res.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', doc.archivoNombre)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+  } catch (err) {
+    setToast({ mensaje: 'Error al descargar el archivo', tipo: 'error' })
+  } finally {
+    setDescargando(false)
   }
+}
 
   const handleEliminar = () => {
     setConfirmacion({

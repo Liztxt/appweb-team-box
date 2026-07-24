@@ -11,6 +11,7 @@ export default function Empleados() {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [rol, setRol] = useState('empleado')
+  const [creando, setCreando] = useState(false)
   const [toast, setToast] = useState(null)
   const [editando, setEditando] = useState(null)
   const [rolEditando, setRolEditando] = useState('')
@@ -36,6 +37,7 @@ export default function Empleados() {
     if (!numeroEmpleado || !password) {
       setToast({ mensaje: 'Número de empleado y contraseña son obligatorios', tipo: 'error' }); return
     }
+    setCreando(true)
     try {
       await api.post('/auth/register', { numeroEmpleado, password, rol, email: email || undefined })
       setToast({ mensaje: 'Empleado creado correctamente', tipo: 'exito' })
@@ -43,6 +45,8 @@ export default function Empleados() {
       fetchEmpleados()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al crear empleado', tipo: 'error' })
+    } finally {
+      setCreando(false)
     }
   }
 
@@ -107,15 +111,16 @@ export default function Empleados() {
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
       {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
+      {/* Topbar */}
       <div style={{ height: '92px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
-  <button onClick={() => navigate('/admin')}
-    style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
-    <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
-  </button>
-  <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de empleados</span>
-</div>
+        <button onClick={() => navigate('/admin')}
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+        </button>
+        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de empleados</span>
+      </div>
 
-      <div className='emp-grid' style={{ padding: '24px 16px', maxWidth: '900px', margin: '0 auto' }}>
+      <div className='emp-grid' style={{ padding: '24px 32px', maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* Formulario crear */}
         <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
@@ -156,9 +161,9 @@ export default function Empleados() {
               ))}
             </div>
           </div>
-          <button onClick={handleCrear}
-            style={{ width: '100%', padding: '11px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-            Crear empleado
+          <button onClick={handleCrear} disabled={creando}
+            style={{ width: '100%', padding: '11px', background: creando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: creando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
+            {creando ? 'Creando...' : 'Crear empleado'}
           </button>
         </div>
 
@@ -168,11 +173,11 @@ export default function Empleados() {
           {loading ? (
             <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
           ) : empleados.length === 0 ? (
-  <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '32px', textAlign: 'center' }}>
-    <span className="material-symbols-outlined" style={{ fontSize: '36px', color: 'var(--color-gray)', marginBottom: '10px', display: 'block' }}>person_off</span>
-    <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No hay empleados registrados</p>
-  </div>
-) : (
+            <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '32px', textAlign: 'center' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '36px', color: 'var(--color-gray)', marginBottom: '10px', display: 'block' }}>person_off</span>
+              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No hay empleados registrados</p>
+            </div>
+          ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {empleados.map(emp => (
                 <div key={emp._id} style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--color-border)' }}>

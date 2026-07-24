@@ -9,24 +9,24 @@ export default function Perfil() {
   const [passwordActual, setPasswordActual] = useState('')
   const [passwordNueva, setPasswordNueva] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
-  const [error, setError] = useState('')
+  const [toast, setToast] = useState('')
   const [exito, setExito] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleCambiarPassword = async () => {
-    setError('')
+    setToast('')
     setExito('')
 
     if (!passwordActual || !passwordNueva || !passwordConfirm) {
-      setError('Todos los campos son obligatorios')
+      setToast('Todos los campos son obligatorios')
       return
     }
     if (passwordNueva !== passwordConfirm) {
-      setError('Las contraseñas nuevas no coinciden')
+      setToast('Las contraseñas nuevas no coinciden')
       return
     }
     if (passwordNueva.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres')
+      setToast('La contraseña debe tener al menos 8 caracteres')
       return
     }
 

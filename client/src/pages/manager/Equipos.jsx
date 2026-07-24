@@ -13,13 +13,15 @@ export default function ManagerEquipos() {
   const [descripcion, setDescripcion] = useState('')
   const [equipoSeleccionado, setEquipoSeleccionado] = useState('')
   const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState('')
+  const [creando, setCreando] = useState(false)
+  const [asignando, setAsignando] = useState(false)
   const [toast, setToast] = useState(null)
   const [confirmacion, setConfirmacion] = useState(null)
   const [editando, setEditando] = useState(null)
   const [nombreEditando, setNombreEditando] = useState('')
   const [descEditando, setDescEditando] = useState('')
-  const { usuario } = useAuth()
   const navigate = useNavigate()
+  const { usuario } = useAuth()
 
   const fetchData = async () => {
     try {
@@ -40,12 +42,15 @@ export default function ManagerEquipos() {
 
   const handleCrearEquipo = async () => {
     if (!nombre) { setToast({ mensaje: 'El nombre es obligatorio', tipo: 'error' }); return }
+    setCreando(true)
     try {
       await api.post('/manager/equipos', { nombre, descripcion })
       setToast({ mensaje: 'Equipo creado correctamente', tipo: 'exito' })
       setNombre(''); setDescripcion(''); fetchData()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al crear equipo', tipo: 'error' })
+    } finally {
+      setCreando(false)
     }
   }
 
@@ -53,12 +58,15 @@ export default function ManagerEquipos() {
     if (!equipoSeleccionado || !empleadoSeleccionado) {
       setToast({ mensaje: 'Selecciona un equipo y un empleado', tipo: 'error' }); return
     }
+    setAsignando(true)
     try {
       await api.post('/manager/equipos/asignar', { equipoId: equipoSeleccionado, numeroEmpleado: empleadoSeleccionado })
       setToast({ mensaje: 'Empleado asignado correctamente', tipo: 'exito' })
       setEquipoSeleccionado(''); setEmpleadoSeleccionado(''); fetchData()
     } catch (err) {
       setToast({ mensaje: err.response?.data?.error || 'Error al asignar', tipo: 'error' })
+    } finally {
+      setAsignando(false)
     }
   }
 
@@ -152,9 +160,9 @@ export default function ManagerEquipos() {
               <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '5px' }}>Descripción</label>
               <input value={descripcion} onChange={e => setDescripcion(e.target.value)} placeholder='Descripción opcional' style={inputStyle} />
             </div>
-            <button onClick={handleCrearEquipo}
-              style={{ width: '100%', padding: '11px', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-              Crear equipo
+            <button onClick={handleCrearEquipo} disabled={creando}
+              style={{ width: '100%', padding: '11px', background: creando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: creando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
+              {creando ? 'Creando...' : 'Crear equipo'}
             </button>
           </div>
 
@@ -175,9 +183,9 @@ export default function ManagerEquipos() {
                 {empleados.map(emp => <option key={emp._id} value={emp.numeroEmpleado}>#{emp.numeroEmpleado}</option>)}
               </select>
             </div>
-            <button onClick={handleAsignar}
-              style={{ width: '100%', padding: '11px', background: 'var(--color-primary-dark)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-              Asignar al equipo
+            <button onClick={handleAsignar} disabled={asignando}
+              style={{ width: '100%', padding: '11px', background: asignando ? 'var(--color-gray)' : 'var(--color-primary-dark)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: asignando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
+              {asignando ? 'Asignando...' : 'Asignar al equipo'}
             </button>
           </div>
         </div>
@@ -187,12 +195,12 @@ export default function ManagerEquipos() {
           <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '16px' }}>Mis equipos</h2>
           {loading ? (
             <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
-         ) : equipos.length === 0 ? (
-  <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '32px', textAlign: 'center' }}>
-    <span className="material-symbols-outlined" style={{ fontSize: '36px', color: 'var(--color-gray)', marginBottom: '10px', display: 'block' }}>group_off</span>
-    <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No tienes equipos creados</p>
-  </div>
-) : (
+          ) : equipos.length === 0 ? (
+            <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '32px', textAlign: 'center' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '36px', color: 'var(--color-gray)', marginBottom: '10px', display: 'block' }}>group_off</span>
+              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No tienes equipos creados</p>
+            </div>
+          ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {equipos.map(eq => (
                 <div key={eq._id} style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
@@ -223,17 +231,17 @@ export default function ManagerEquipos() {
                           <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{eq.descripcion || 'Sin descripción'}</div>
                         </div>
                         {eq.creadoPor === usuario?.id && (
-  <>
-    <button onClick={() => { setEditando(eq._id); setNombreEditando(eq.nombre); setDescEditando(eq.descripcion || '') }}
-      style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
-    </button>
-    <button onClick={() => pedirConfirmacionEliminar(eq._id, eq.nombre)}
-      style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
-    </button>
-  </>
-)}
+                          <>
+                            <button onClick={() => { setEditando(eq._id); setNombreEditando(eq.nombre); setDescEditando(eq.descripcion || '') }}
+                              style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
+                            </button>
+                            <button onClick={() => pedirConfirmacionEliminar(eq._id, eq.nombre)}
+                              style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+                            </button>
+                          </>
+                        )}
                         <button onClick={() => navigate(`/equipos/${eq._id}/docs`)}
                           style={{ padding: '6px 10px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: '6px', fontSize: '11px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)', flexShrink: 0 }}>
                           Ver docs

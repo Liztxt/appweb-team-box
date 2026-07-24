@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api/axios'
+import Toast from '../components/Toast'
 
 export default function SubirDocumento() {
   const [titulo, setTitulo] = useState('')
@@ -11,7 +12,7 @@ export default function SubirDocumento() {
   const [texto, setTexto] = useState('')
   const [fotos, setFotos] = useState([])
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [toast, setToast] = useState('')
   const { teamId } = useParams()
   const { usuario } = useAuth()
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ export default function SubirDocumento() {
   const handleFotos = (e) => {
     const archivos = Array.from(e.target.files)
     if (archivos.length > 4) {
-      setError('Máximo 4 fotos permitidas')
+      setToast('Máximo 4 fotos permitidas')
       return
     }
     setFotos(archivos)
@@ -52,7 +53,7 @@ export default function SubirDocumento() {
 
       navigate(`/equipos/${teamId}/docs`)
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al subir, intenta de nuevo')
+      setToast(err.response?.data?.error || 'Error al subir, intenta de nuevo')
     } finally {
       setLoading(false)
     }

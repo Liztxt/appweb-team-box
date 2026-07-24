@@ -38,7 +38,7 @@ export default function ClimaWidget() {
   if (loading) return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '6px',
-      padding: '6px 10px', background: 'rgba(255,255,255,0.1)',
+      padding: '6px 10px', background: 'transparent',
       borderRadius: 'var(--radius-sm)', fontSize: '12px', color: 'var(--color-topbar-text-muted)'
     }}>
       Cargando clima...
@@ -50,7 +50,7 @@ export default function ClimaWidget() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '8px',
-      padding: '6px 12px', background: 'rgba(255,255,255,0.1)',
+      padding: '6px 12px', background: 'transparent',
       borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-topbar-border)'
     }}>
       <span style={{ fontSize: '18px' }}>{clima.icono}</span>

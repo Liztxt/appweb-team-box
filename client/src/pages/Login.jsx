@@ -68,7 +68,7 @@ export default function Login() {
               value={numeroEmpleado}
               onChange={e => setNumeroEmpleado(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-              placeholder='Ej. 22789'
+              placeholder='Ej. 13560'
               style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', fontSize: '14px', background: 'var(--color-bg)', color: 'var(--color-text)', boxSizing: 'border-box' }}
             />
           </div>

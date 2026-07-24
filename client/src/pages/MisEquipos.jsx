@@ -50,20 +50,20 @@ export default function MisEquipos() {
 }}>Team Box</span>
   </div>
 
-  {usuario?.rol === 'admin' && (
-    <button onClick={() => navigate('/admin')}
-      style={{ background: 'rgba(255,255,255,0.12)', color: 'var(--color-topbar-text)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>settings</span>
-      Dashboard
-    </button>
-  )}
+ {usuario?.rol === 'admin' && (
+  <button onClick={() => navigate('/admin')}
+    style={{ background: 'transparent', color: 'var(--color-topbar-text)', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>settings</span>
+    Dashboard
+  </button>
+)}
   {usuario?.rol === 'manager' && (
-    <button onClick={() => navigate('/manager')}
-      style={{ background: 'rgba(255,255,255,0.12)', color: 'var(--color-topbar-text)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
-      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>dashboard</span>
-      Dashboard
-    </button>
-  )}
+  <button onClick={() => navigate('/manager')}
+    style={{ background: 'transparent', color: 'var(--color-topbar-text)', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>dashboard</span>
+    Dashboard
+  </button>
+)}
 
   <ClimaWidget />
 
