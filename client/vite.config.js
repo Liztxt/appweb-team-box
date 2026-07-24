@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import compression from 'vite-plugin-compression'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
@@ -12,7 +13,8 @@ export default defineConfig({
     compression({
       algorithm: 'brotliCompress',
       ext: '.br'
-    })
+    }),
+    tailwindcss()
   ],
   build: {
     rollupOptions: {
