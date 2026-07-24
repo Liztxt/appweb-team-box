@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import api from '../../api/axios'
 import Toast from '../../components/Toast'
 import ConfirmModal from '../../components/ConfirmModal'
+import { useAuth } from '../../context/AuthContext'
 
 export default function ManagerEquipos() {
   const [equipos, setEquipos] = useState([])
@@ -17,6 +18,7 @@ export default function ManagerEquipos() {
   const [editando, setEditando] = useState(null)
   const [nombreEditando, setNombreEditando] = useState('')
   const [descEditando, setDescEditando] = useState('')
+  const { usuario } = useAuth()
   const navigate = useNavigate()
 
   const fetchData = async () => {
@@ -185,9 +187,12 @@ export default function ManagerEquipos() {
           <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '16px' }}>Mis equipos</h2>
           {loading ? (
             <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
-          ) : equipos.length === 0 ? (
-            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No tienes equipos creados</p>
-          ) : (
+         ) : equipos.length === 0 ? (
+  <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '32px', textAlign: 'center' }}>
+    <span className="material-symbols-outlined" style={{ fontSize: '36px', color: 'var(--color-gray)', marginBottom: '10px', display: 'block' }}>group_off</span>
+    <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No tienes equipos creados</p>
+  </div>
+) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {equipos.map(eq => (
                 <div key={eq._id} style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
@@ -217,14 +222,18 @@ export default function ManagerEquipos() {
                           <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>{eq.nombre}</div>
                           <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{eq.descripcion || 'Sin descripción'}</div>
                         </div>
-                        <button onClick={() => { setEditando(eq._id); setNombreEditando(eq.nombre); setDescEditando(eq.descripcion || '') }}
-                          style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
-                        </button>
-                        <button onClick={() => pedirConfirmacionEliminar(eq._id, eq.nombre)}
-                          style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
-                        </button>
+                        {eq.creadoPor === usuario?.id && (
+  <>
+    <button onClick={() => { setEditando(eq._id); setNombreEditando(eq.nombre); setDescEditando(eq.descripcion || '') }}
+      style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
+    </button>
+    <button onClick={() => pedirConfirmacionEliminar(eq._id, eq.nombre)}
+      style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+    </button>
+  </>
+)}
                         <button onClick={() => navigate(`/equipos/${eq._id}/docs`)}
                           style={{ padding: '6px 10px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: '6px', fontSize: '11px', fontWeight: '600', cursor: 'pointer', fontFamily: 'var(--font-body)', flexShrink: 0 }}>
                           Ver docs

@@ -19,7 +19,7 @@ export default function Login() {
     setLoading(true)
     try {
       const res = await api.post('/auth/login', { numeroEmpleado, password })
-      login(res.data.token, { numeroEmpleado: res.data.numeroEmpleado, rol: res.data.rol })
+      login(res.data.token, { id: res.data.id, numeroEmpleado: res.data.numeroEmpleado, rol: res.data.rol })
       navigate(res.data.rol === 'admin' ? '/admin' : res.data.rol === 'manager' ? '/manager' : '/equipos')
     } catch (err) {
       setError('Número de empleado o contraseña incorrectos')

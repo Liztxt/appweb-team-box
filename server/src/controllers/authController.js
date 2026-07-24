@@ -82,7 +82,7 @@ const login = async (req, res) => {
       exitoso: true
     })
 
-    res.json({ token, rol: empleado.rol, numeroEmpleado: empleado.numeroEmpleado })
+    res.json({ token, id: empleado._id, rol: empleado.rol, numeroEmpleado: empleado.numeroEmpleado })
   } catch (err) {
     res.status(500).json({ error: 'Error al iniciar sesión' })
   }

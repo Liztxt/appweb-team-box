@@ -182,8 +182,11 @@ export default function Equipos() {
           {loading ? (
             <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>Cargando...</p>
           ) : equipos.length === 0 ? (
-            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No hay equipos creados</p>
-          ) : (
+  <div style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '32px', textAlign: 'center' }}>
+    <span className="material-symbols-outlined" style={{ fontSize: '36px', color: 'var(--color-gray)', marginBottom: '10px', display: 'block' }}>group_off</span>
+    <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>No hay equipos creados</p>
+  </div>
+) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {equipos.map(eq => (
                 <div key={eq._id} style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--color-border)' }}>
