@@ -18,6 +18,7 @@ export default function DetalleDocumento() {
   const [archivoNuevo, setArchivoNuevo] = useState(null)
   const [toast, setToast] = useState(null)
   const [confirmacion, setConfirmacion] = useState(null)
+  const [fotoAmpliada, setFotoAmpliada] = useState(null)
   const { teamId, docId } = useParams()
   const navigate = useNavigate()
 
@@ -41,9 +42,9 @@ export default function DetalleDocumento() {
     if (doc?.tipo === 'reporte' && doc?.fotos?.length > 0) {
       try {
         const urls = await Promise.all(
-          doc.fotos.map(async (_, i) => {
+          doc.fotos.map(async (foto, i) => {
             const res = await api.get(`/teams/${teamId}/docs/${docId}/foto/${i}`, { responseType: 'blob' })
-            return window.URL.createObjectURL(new Blob([res.data]))
+            return window.URL.createObjectURL(new Blob([res.data], { type: foto.tipo || 'image/jpeg' }))
           })
         )
         setFotoUrls(urls)
@@ -178,6 +179,35 @@ export default function DetalleDocumento() {
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
       {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
+      {fotoAmpliada && (
+        <div
+          onClick={() => setFotoAmpliada(null)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.85)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 1000, padding: '24px', cursor: 'pointer'
+          }}
+        >
+          <button
+            onClick={() => setFotoAmpliada(null)}
+            style={{
+              position: 'absolute', top: '20px', right: '20px',
+              background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '50%',
+              width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#fff'
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>close</span>
+          </button>
+          <img
+            src={fotoAmpliada}
+            alt='Foto ampliada'
+            onClick={e => e.stopPropagation()}
+            style={{ maxWidth: '100%', maxHeight: '90vh', borderRadius: 'var(--radius-md)', objectFit: 'contain', cursor: 'default' }}
+          />
+        </div>
+      )}
+
       <div style={{ height: '92px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
         <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
@@ -234,7 +264,7 @@ export default function DetalleDocumento() {
                   {fotoUrls.map((url, i) => (
                     <img key={i} src={url} alt={`Foto ${i + 1}`} loading="lazy"
                       style={{ width: '100%', borderRadius: 'var(--radius-sm)', objectFit: 'cover', aspectRatio: '1', cursor: 'pointer' }}
-                      onClick={() => window.open(url, '_blank')} />
+                      onClick={() => setFotoAmpliada(url)} />
                   ))}
                 </div>
               </div>

@@ -39,14 +39,14 @@ export default function Dashboard() {
   const handleLogout = () => { logout(); navigate('/login') }
 
   const cards = [
-    { label: 'Equipos', value: stats.equipos, icon: 'group', ruta: '/admin/ver/equipos' },
-    { label: 'Empleados', value: stats.empleados, icon: 'person', ruta: '/admin/ver/empleados' },
-    { label: 'Documentos', value: stats.documentos, icon: 'description', ruta: '/admin/ver/documentos' }
+    { label: 'Equipos', value: stats.equipos, icon: 'group', ruta: '/admin/ver/equipos', bg: 'rgba(75, 67, 176, 0.08)', border: 'rgba(75, 67, 176, 0.18)', color: '#4B43B0' },
+    { label: 'Empleados', value: stats.empleados, icon: 'person', ruta: '/admin/ver/empleados', bg: 'rgba(46, 125, 50, 0.08)', border: 'rgba(46, 125, 50, 0.18)', color: 'var(--color-success)' },
+    { label: 'Documentos', value: stats.documentos, icon: 'description', ruta: '/admin/ver/documentos', bg: 'rgba(176, 101, 12, 0.08)', border: 'rgba(176, 101, 12, 0.18)', color: '#B0650C' }
   ]
 
   const acciones = [
-    { label: 'Gestionar empleados', desc: 'Registrar nuevos empleados y ver los existentes', icon: 'manage_accounts', ruta: '/admin/empleados' },
-    { label: 'Gestionar equipos', desc: 'Crear equipos y asignar miembros', icon: 'group_add', ruta: '/admin/equipos' }
+    { label: 'Gestionar empleados', desc: 'Registrar nuevos empleados y ver los existentes', icon: 'manage_accounts', ruta: '/admin/empleados', bg: 'rgba(46, 125, 50, 0.08)', border: 'rgba(46, 125, 50, 0.18)', color: 'var(--color-success)' },
+    { label: 'Gestionar equipos', desc: 'Crear equipos y asignar miembros', icon: 'group_add', ruta: '/admin/equipos', bg: 'rgba(75, 67, 176, 0.08)', border: 'rgba(75, 67, 176, 0.18)', color: '#4B43B0' }
   ]
 
   const logIcon = (accion) => {
@@ -64,8 +64,16 @@ export default function Dashboard() {
         .dash-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
         .dash-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 4px; }
         .dash-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; align-items: start; }
-        .dash-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px; cursor: pointer; transition: box-shadow 0.15s ease, border-color 0.15s ease; }
-        .dash-card:hover { border-color: var(--color-primary); box-shadow: var(--shadow-md); }
+        .dash-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px; cursor: pointer; transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease; position: relative; overflow: hidden; animation: dash-fade-in 0.35s ease backwards; }
+        .dash-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--accent-color, transparent); }
+        .dash-card:hover { border-color: var(--color-primary); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .dash-grid-3 .dash-card:nth-child(1) { animation-delay: 0.03s; }
+        .dash-grid-3 .dash-card:nth-child(2) { animation-delay: 0.08s; }
+        .dash-grid-3 .dash-card:nth-child(3) { animation-delay: 0.13s; }
+        @keyframes dash-fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .log-row { transition: background 0.15s ease; }
+        .log-row:hover { background: var(--color-bg); }
+        .dash-topbar-btn-label { display: inline; }
         @media (max-width: 900px) {
           .dash-main-grid { grid-template-columns: 1fr; }
         }
@@ -73,41 +81,49 @@ export default function Dashboard() {
           .dash-grid-3 { grid-template-columns: repeat(3, 1fr); gap: 8px; }
           .dash-grid-2 { grid-template-columns: 1fr; }
           .clima-hide { display: none; }
+          .dash-topbar-btn-label { display: none; }
         }
       `}</style>
 
       {/* Topbar */}
-      <div style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', padding: '0 32px', height: '92px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
-        <div onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}>
-          <div style={{ width: '48px', height: '48px', background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}>
+      <div
+        className="h-[72px] md:h-[92px] flex items-center gap-2 sm:gap-3 px-4 sm:px-6 md:px-8"
+        style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', boxShadow: 'var(--shadow-sm)' }}
+      >
+        <div onClick={() => navigate('/admin')} className="flex items-center gap-2 sm:gap-2.5 cursor-pointer flex-1 min-w-0">
+          <div className="w-9 h-9 sm:w-12 sm:h-12 shrink-0" style={{ background: 'var(--color-accent)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}>
             <img src="/logo_pyasa.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
           </div>
-          <span style={{
+          <span className="text-[17px] sm:text-[22px] truncate" style={{
             fontFamily: 'var(--font-logo)',
             fontStyle: 'italic',
             fontWeight: 800,
-            fontSize: '22px',
             letterSpacing: '-0.02em',
             color: 'var(--color-topbar-text)'
           }}>Team Box</span>
-          <span style={{ fontSize: '12px', color: 'var(--color-topbar-text)', background: 'rgba(255,255,255,0.12)', padding: '2px 8px', borderRadius: '20px' }}>Admin</span>
+          <span className="hidden sm:inline shrink-0" style={{ fontSize: '12px', color: 'var(--color-topbar-text)', background: 'rgba(255,255,255,0.12)', padding: '2px 8px', borderRadius: '20px' }}>Admin</span>
         </div>
         <span className='clima-hide'><ClimaWidget /></span>
         <span onClick={() => navigate('/perfil')}
-          style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+          className="shrink-0"
+          style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
           #{usuario?.numeroEmpleado}
         </span>
         <button onClick={() => navigate('/equipos')}
-          style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
-          Mis equipos
+          className="shrink-0 flex items-center gap-1"
+          style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>groups</span>
+          <span className='dash-topbar-btn-label'>Mis equipos</span>
         </button>
         <button onClick={handleLogout}
-          style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
-          Salir
+          className="shrink-0 flex items-center gap-1"
+          style={{ background: 'transparent', border: '1px solid var(--color-topbar-border)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>logout</span>
+          <span className='dash-topbar-btn-label'>Salir</span>
         </button>
       </div>
 
-      <div style={{ padding: '28px 32px', maxWidth: '1180px', margin: '0 auto' }}>
+      <div className="px-4 sm:px-6 md:px-8 pb-6 md:pb-7" style={{ maxWidth: '1180px', margin: '0 auto', paddingTop: '48px' }}>
         {error ? (
           <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '40px', textAlign: 'center' }}>
             <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--color-gray)', marginBottom: '12px', display: 'block' }}>wifi_off</span>
@@ -128,9 +144,9 @@ export default function Dashboard() {
               {/* Stats */}
               <div className='dash-grid-3'>
                 {cards.map(card => (
-                  <div key={card.label} className='dash-card' onClick={() => navigate(card.ruta)}>
-                    <div style={{ width: '36px', height: '36px', background: 'var(--color-primary-light)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                      <span className="material-symbols-outlined" style={{ color: 'var(--color-primary-dark)', fontSize: '20px' }}>{card.icon}</span>
+                  <div key={card.label} className='dash-card' style={{ '--accent-color': card.color }} onClick={() => navigate(card.ruta)}>
+                    <div style={{ width: '36px', height: '36px', background: card.bg, border: `1px solid ${card.border}`, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
+                      <span className="material-symbols-outlined" style={{ color: card.color, fontSize: '20px' }}>{card.icon}</span>
                     </div>
                     <div style={{ fontSize: '26px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '2px' }}>
                       {loading ? <Skeleton width='40px' height='28px' borderRadius='6px' /> : card.value}
@@ -144,9 +160,9 @@ export default function Dashboard() {
               <h2 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '12px' }}>Acciones rápidas</h2>
               <div className='dash-grid-2'>
                 {acciones.map(a => (
-                  <div key={a.label} className='dash-card' onClick={() => navigate(a.ruta)}>
-                    <div style={{ width: '36px', height: '36px', background: 'var(--color-primary-light)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px' }}>
-                      <span className="material-symbols-outlined" style={{ color: 'var(--color-primary-dark)', fontSize: '20px' }}>{a.icon}</span>
+                  <div key={a.label} className='dash-card' style={{ '--accent-color': a.color }} onClick={() => navigate(a.ruta)}>
+                    <div style={{ width: '36px', height: '36px', background: a.bg, border: `1px solid ${a.border}`, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px' }}>
+                      <span className="material-symbols-outlined" style={{ color: a.color, fontSize: '20px' }}>{a.icon}</span>
                     </div>
                     <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '4px' }}>{a.label}</div>
                     <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{a.desc}</div>
@@ -177,8 +193,8 @@ export default function Dashboard() {
                   <p style={{ padding: '20px', fontSize: '13px', color: 'var(--color-text-muted)' }}>Sin actividad registrada</p>
                 ) : (
                   logs.slice(0, 8).map((log, i) => (
-                    <div key={log._id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', borderBottom: i < 7 ? '1px solid var(--color-bg)' : 'none' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', flexShrink: 0, background: log.exitoso ? '#E8F5E9' : '#FFEBEE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div key={log._id} className="log-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', borderBottom: i < 7 ? '1px solid var(--color-bg)' : 'none' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0, background: log.exitoso ? '#E8F5E9' : '#FFEBEE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '16px', color: log.exitoso ? 'var(--color-success)' : 'var(--color-error)' }}>{logIcon(log.accion)}</span>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
