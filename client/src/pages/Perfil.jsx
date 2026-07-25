@@ -93,7 +93,7 @@ export default function Perfil() {
         >Cerrar sesión</button>
       </div>
 
-      <div className="px-6 sm:px-8 md:px-8" style={{ paddingTop: '32px', paddingBottom: '32px', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="px-8 sm:px-8 md:px-8" style={{ paddingTop: '32px', paddingBottom: '32px', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* Card datos */}
         <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
@@ -181,7 +181,8 @@ export default function Perfil() {
               color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)',
               fontSize: '13px', fontWeight: '600',
               cursor: loading ? 'not-allowed' : 'pointer',
-              fontFamily: 'var(--font-body)'
+              fontFamily: 'var(--font-body)',
+              boxSizing: 'border-box'
             }}
           >
             {loading ? 'Guardando...' : 'Actualizar contraseña'}

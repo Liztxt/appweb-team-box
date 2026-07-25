@@ -126,7 +126,7 @@ export default function Empleados() {
         <span className="text-[13px] sm:text-[14px] font-bold truncate" style={{ color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de empleados</span>
       </div>
 
-      <div className='emp-grid px-6 sm:px-8 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div className='emp-grid px-8 sm:px-8 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* Formulario crear */}
         <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
@@ -168,7 +168,7 @@ export default function Empleados() {
             </div>
           </div>
           <button onClick={handleCrear} disabled={creando}
-            style={{ width: '100%', padding: '11px', background: creando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: creando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
+            style={{ width: '100%', padding: '11px', background: creando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: creando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }}>
             {creando ? 'Creando...' : 'Crear empleado'}
           </button>
         </div>

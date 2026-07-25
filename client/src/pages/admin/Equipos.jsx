@@ -144,7 +144,7 @@ export default function Equipos() {
         <span className="text-[13px] sm:text-[14px] font-bold truncate" style={{ color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de equipos</span>
       </div>
 
-      <div className='eq-grid px-6 sm:px-8 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div className='eq-grid px-8 sm:px-8 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* Panel izquierdo */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -161,7 +161,7 @@ export default function Equipos() {
               <input value={descripcion} onChange={e => setDescripcion(e.target.value)} placeholder='Descripción opcional' style={inputStyle} />
             </div>
             <button onClick={handleCrearEquipo} disabled={creando}
-              style={{ width: '100%', padding: '11px', background: creando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: creando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
+              style={{ width: '100%', padding: '11px', background: creando ? 'var(--color-gray)' : 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: creando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }}>
               {creando ? 'Creando...' : 'Crear equipo'}
             </button>
           </div>
@@ -184,7 +184,7 @@ export default function Equipos() {
               </select>
             </div>
             <button onClick={handleAsignar} disabled={asignando}
-              style={{ width: '100%', padding: '11px', background: asignando ? 'var(--color-gray)' : 'var(--color-primary-dark)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: asignando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
+              style={{ width: '100%', padding: '11px', background: asignando ? 'var(--color-gray)' : 'var(--color-primary-dark)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: '600', cursor: asignando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }}>
               {asignando ? 'Asignando...' : 'Asignar al equipo'}
             </button>
           </div>
