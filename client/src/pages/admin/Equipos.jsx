@@ -122,8 +122,9 @@ export default function Equipos() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       <style>{`
-        .eq-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 20px; align-items: start; }
-        @media (max-width: 640px) { .eq-grid { grid-template-columns: 1fr; } }
+        .eq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 20px; align-items: start; }
+        .eq-grid > * { min-width: 0; }
+        @media (max-width: 640px) { .eq-grid { grid-template-columns: minmax(0, 1fr); } }
         .eq-row { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
         .eq-row:hover { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
       `}</style>

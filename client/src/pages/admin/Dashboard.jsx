@@ -61,9 +61,10 @@ export default function Dashboard() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
       <style>{`
-        .dash-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-        .dash-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 4px; }
-        .dash-main-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; align-items: start; }
+        .dash-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .dash-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 4px; }
+        .dash-main-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+        .dash-grid-3 > *, .dash-grid-2 > *, .dash-main-grid > * { min-width: 0; }
         .dash-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px; cursor: pointer; transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease; position: relative; overflow: hidden; animation: dash-fade-in 0.35s ease backwards; }
         .dash-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--accent-color, transparent); }
         .dash-card:hover { border-color: var(--color-primary); box-shadow: var(--shadow-md); transform: translateY(-2px); }
@@ -75,11 +76,11 @@ export default function Dashboard() {
         .log-row:hover { background: var(--color-bg); }
         .dash-topbar-btn-label { display: inline; }
         @media (max-width: 900px) {
-          .dash-main-grid { grid-template-columns: 1fr; }
+          .dash-main-grid { grid-template-columns: minmax(0, 1fr); }
         }
         @media (max-width: 640px) {
-          .dash-grid-3 { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-          .dash-grid-2 { grid-template-columns: 1fr; }
+          .dash-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+          .dash-grid-2 { grid-template-columns: minmax(0, 1fr); }
           .clima-hide { display: none; }
           .dash-topbar-btn-label { display: none; }
         }
