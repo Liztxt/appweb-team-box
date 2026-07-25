@@ -96,8 +96,8 @@ export default function Empleados() {
   }
 
   const rolConfig = {
-    admin: { bg: 'var(--color-primary-light)', color: 'var(--color-primary-dark)' },
-    manager: { bg: '#E8F5E9', color: '#2E7D32' },
+    admin: { bg: 'rgba(75, 67, 176, 0.1)', color: '#4B43B0' },
+    manager: { bg: 'rgba(46, 125, 50, 0.1)', color: '#2E7D32' },
     empleado: { bg: 'var(--color-bg)', color: 'var(--color-text-muted)' }
   }
 
@@ -106,21 +106,27 @@ export default function Empleados() {
       <style>{`
         .emp-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; align-items: start; }
         @media (max-width: 640px) { .emp-grid { grid-template-columns: 1fr; } }
+        .emp-row { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+        .emp-row:hover { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
       `}</style>
 
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
       {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
       {/* Topbar */}
-      <div style={{ height: '92px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+      <div
+        className="h-[72px] md:h-[92px] flex items-center gap-3 px-4 sm:px-6 md:px-8"
+        style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', boxShadow: 'var(--shadow-sm)' }}
+      >
         <button onClick={() => navigate('/admin')}
-          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+          className="flex items-center bg-transparent border-none cursor-pointer shrink-0"
+          style={{ color: 'var(--color-topbar-text)' }}>
+          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
         </button>
-        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de empleados</span>
+        <span className="text-[13px] sm:text-[14px] font-bold truncate" style={{ color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de empleados</span>
       </div>
 
-      <div className='emp-grid' style={{ padding: '24px 32px', maxWidth: '1100px', margin: '0 auto' }}>
+      <div className='emp-grid px-4 sm:px-6 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* Formulario crear */}
         <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
@@ -180,7 +186,7 @@ export default function Empleados() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {empleados.map(emp => (
-                <div key={emp._id} style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--color-border)' }}>
+                <div key={emp._id} className='emp-row' style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--color-border)' }}>
                   {editando === emp._id ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>#{emp.numeroEmpleado}</div>
@@ -208,7 +214,7 @@ export default function Empleados() {
                         style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: 'var(--color-bg)' }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>#{emp.numeroEmpleado}</div>
-                        <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{emp.email || 'Sin email'} · {emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.email || 'Sin email'} · {emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
                       </div>
                       <span style={{
                         background: rolConfig[emp.rol]?.bg || 'var(--color-bg)',
@@ -218,7 +224,7 @@ export default function Empleados() {
                         {emp.rol}
                       </span>
                       <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol); setEmailEditando(emp.email || '') }}
-                        style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                        style={{ padding: '7px', background: 'rgba(75, 67, 176, 0.1)', color: '#4B43B0', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
                       </button>
                       <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)}

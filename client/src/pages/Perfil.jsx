@@ -38,7 +38,7 @@ export default function Perfil() {
       setPasswordNueva('')
       setPasswordConfirm('')
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al cambiar contraseña')
+      setToast(err.response?.data?.error || 'Error al cambiar contraseña')
     } finally {
       setLoading(false)
     }
@@ -68,32 +68,32 @@ export default function Perfil() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
 
       {/* Topbar */}
-      <div style={{
-        height: '92px', background: 'var(--color-topbar-bg)',
-        borderBottom: '1px solid var(--color-topbar-border)',
-        display: 'flex', alignItems: 'center',
-        padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)'
-      }}>
+      <div
+        className="h-[72px] md:h-[92px] flex items-center gap-3 px-4 sm:px-6 md:px-8"
+        style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', boxShadow: 'var(--shadow-sm)' }}
+      >
         <button
           onClick={() => navigate(-1)}
-          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}
+          className="flex items-center bg-transparent border-none cursor-pointer shrink-0"
+          style={{ color: 'var(--color-topbar-text)' }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
         </button>
-        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)', flex: 1 }}>
+        <span className="text-[13px] sm:text-[14px] font-bold truncate flex-1" style={{ color: 'var(--color-topbar-text)' }}>
           Mi perfil
         </span>
         <button
           onClick={handleLogout}
+          className="shrink-0"
           style={{
             background: 'transparent', border: '1px solid var(--color-topbar-border)',
-            borderRadius: 'var(--radius-sm)', padding: '6px 12px',
+            borderRadius: 'var(--radius-sm)', padding: '6px 10px',
             fontSize: '12px', color: 'var(--color-topbar-text)', cursor: 'pointer'
           }}
         >Cerrar sesión</button>
       </div>
 
-      <div style={{ padding: '32px 24px', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="px-4 sm:px-6 md:px-8" style={{ paddingTop: '32px', paddingBottom: '32px', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* Card datos */}
         <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
@@ -161,9 +161,9 @@ export default function Perfil() {
             <input type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} placeholder='Repite la nueva contraseña' style={inputStyle} />
           </div>
 
-          {error && (
+          {toast && (
             <div style={{ background: 'var(--color-error-bg)', border: '1px solid var(--color-error-bg)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', fontSize: '12px', color: 'var(--color-error)', marginBottom: '12px' }}>
-              {error}
+              {toast}
             </div>
           )}
           {exito && (

@@ -124,21 +124,27 @@ export default function Equipos() {
       <style>{`
         .eq-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 20px; align-items: start; }
         @media (max-width: 640px) { .eq-grid { grid-template-columns: 1fr; } }
+        .eq-row { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+        .eq-row:hover { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
       `}</style>
 
       {toast && <Toast mensaje={toast.mensaje} tipo={toast.tipo} onClose={() => setToast(null)} />}
       {confirmacion && <ConfirmModal titulo={confirmacion.titulo} mensaje={confirmacion.mensaje} onConfirmar={confirmacion.accion} onCancelar={() => setConfirmacion(null)} />}
 
       {/* Topbar */}
-      <div style={{ height: '92px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
+      <div
+        className="h-[72px] md:h-[92px] flex items-center gap-3 px-4 sm:px-6 md:px-8"
+        style={{ background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', boxShadow: 'var(--shadow-sm)' }}
+      >
         <button onClick={() => navigate('/admin')}
-          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+          className="flex items-center bg-transparent border-none cursor-pointer shrink-0"
+          style={{ color: 'var(--color-topbar-text)' }}>
+          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
         </button>
-        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de equipos</span>
+        <span className="text-[13px] sm:text-[14px] font-bold truncate" style={{ color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de equipos</span>
       </div>
 
-      <div className='eq-grid' style={{ padding: '24px 32px', maxWidth: '1100px', margin: '0 auto' }}>
+      <div className='eq-grid px-4 sm:px-6 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* Panel izquierdo */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -197,7 +203,7 @@ export default function Equipos() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {equipos.map(eq => (
-                <div key={eq._id} style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--color-border)' }}>
+                <div key={eq._id} className='eq-row' style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--color-border)' }}>
                   {editando === eq._id ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <input value={nombreEditando} onChange={e => setNombreEditando(e.target.value)} style={{ ...inputStyle, background: 'var(--color-surface)' }} placeholder='Nombre del equipo' />
@@ -216,15 +222,15 @@ export default function Equipos() {
                   ) : (
                     <>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                        <div style={{ width: '32px', height: '32px', background: 'var(--color-primary-light)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <span className="material-symbols-outlined" style={{ color: 'var(--color-primary-dark)', fontSize: '18px' }}>group</span>
+                        <div style={{ width: '32px', height: '32px', background: 'rgba(75, 67, 176, 0.08)', border: '1px solid rgba(75, 67, 176, 0.18)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <span className="material-symbols-outlined" style={{ color: '#4B43B0', fontSize: '18px' }}>group</span>
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{eq.nombre}</div>
-                          <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{eq.descripcion || 'Sin descripción'}</div>
+                          <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{eq.descripcion || 'Sin descripción'}</div>
                         </div>
                         <button onClick={() => { setEditando(eq._id); setNombreEditando(eq.nombre); setDescEditando(eq.descripcion || '') }}
-                          style={{ padding: '7px', background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                          style={{ padding: '7px', background: 'rgba(75, 67, 176, 0.1)', color: '#4B43B0', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
                           <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
                         </button>
                         <button onClick={() => pedirConfirmacionEliminar(eq._id, eq.nombre)}
