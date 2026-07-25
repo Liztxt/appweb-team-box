@@ -209,28 +209,30 @@ export default function Empleados() {
                       </div>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                       <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${emp.numeroEmpleado}`} loading="lazy" alt={`Avatar ${emp.numeroEmpleado}`}
                         style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: 'var(--color-bg)' }} />
-                      <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ flex: '1 1 140px', minWidth: 0 }}>
                         <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text)' }}>#{emp.numeroEmpleado}</div>
                         <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.email || 'Sin email'} · {emp.equipos.length} equipo{emp.equipos.length !== 1 ? 's' : ''}</div>
                       </div>
-                      <span style={{
-                        background: rolConfig[emp.rol]?.bg || 'var(--color-bg)',
-                        color: rolConfig[emp.rol]?.color || 'var(--color-text-muted)',
-                        borderRadius: '20px', padding: '2px 10px', fontSize: '10px', fontWeight: '600', flexShrink: 0
-                      }}>
-                        {emp.rol}
-                      </span>
-                      <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol); setEmailEditando(emp.email || '') }}
-                        style={{ padding: '7px', background: 'rgba(75, 67, 176, 0.1)', color: '#4B43B0', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
-                      </button>
-                      <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)}
-                        style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
-                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto' }}>
+                        <span style={{
+                          background: rolConfig[emp.rol]?.bg || 'var(--color-bg)',
+                          color: rolConfig[emp.rol]?.color || 'var(--color-text-muted)',
+                          borderRadius: '20px', padding: '2px 10px', fontSize: '10px', fontWeight: '600', flexShrink: 0
+                        }}>
+                          {emp.rol}
+                        </span>
+                        <button onClick={() => { setEditando(emp._id); setRolEditando(emp.rol); setEmailEditando(emp.email || '') }}
+                          style={{ padding: '7px', background: 'rgba(75, 67, 176, 0.1)', color: '#4B43B0', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
+                        </button>
+                        <button onClick={() => pedirConfirmacionEliminar(emp._id, emp.numeroEmpleado)}
+                          style={{ padding: '7px', background: 'var(--color-error-bg)', color: 'var(--color-error)', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
