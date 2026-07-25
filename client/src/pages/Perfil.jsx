@@ -93,7 +93,7 @@ export default function Perfil() {
         >Cerrar sesión</button>
       </div>
 
-      <div className="px-5 sm:px-6 md:px-8" style={{ paddingTop: '32px', paddingBottom: '32px', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="px-6 sm:px-8 md:px-8" style={{ paddingTop: '32px', paddingBottom: '32px', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* Card datos */}
         <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>

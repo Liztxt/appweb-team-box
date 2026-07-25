@@ -144,7 +144,7 @@ export default function Equipos() {
         <span className="text-[13px] sm:text-[14px] font-bold truncate" style={{ color: 'var(--color-topbar-text)', flex: 1 }}>Gestión de equipos</span>
       </div>
 
-      <div className='eq-grid px-4 sm:px-6 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div className='eq-grid px-6 sm:px-8 md:px-8 py-6 md:py-7' style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* Panel izquierdo */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
