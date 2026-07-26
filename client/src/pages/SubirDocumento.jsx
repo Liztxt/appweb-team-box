@@ -13,25 +13,31 @@ export default function SubirDocumento() {
   const [fotos, setFotos] = useState([])
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState('')
+  const [tipoToast, setTipoToast] = useState('error')
   const { teamId } = useParams()
   const { usuario } = useAuth()
   const navigate = useNavigate()
 
+  const mostrarError = (msg) => {
+    setTipoToast('error')
+    setToast(msg)
+  }
+
   const handleFotos = (e) => {
     const archivos = Array.from(e.target.files)
     if (archivos.length > 4) {
-      setToast('Máximo 4 fotos permitidas')
+      mostrarError('Máximo 4 fotos permitidas')
       return
     }
     setFotos(archivos)
-    setError('')
+    setToast('')
   }
 
   const handleSubmit = async () => {
-    if (!titulo) { setError('El título es obligatorio'); return }
-    if (tipo === 'documento' && !archivo) { setError('El archivo es obligatorio'); return }
+    if (!titulo) { mostrarError('El título es obligatorio'); return }
+    if (tipo === 'documento' && !archivo) { mostrarError('El archivo es obligatorio'); return }
 
-    setError('')
+    setToast('')
     setLoading(true)
 
     try {
@@ -53,7 +59,7 @@ export default function SubirDocumento() {
 
       navigate(`/equipos/${teamId}/docs`)
     } catch (err) {
-      setToast(err.response?.data?.error || 'Error al subir, intenta de nuevo')
+      mostrarError(err.response?.data?.error || 'Error al subir, intenta de nuevo')
     } finally {
       setLoading(false)
     }
@@ -69,6 +75,8 @@ export default function SubirDocumento() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
+      {toast && <Toast mensaje={toast} tipo={tipoToast} onClose={() => setToast('')} />}
+
       <div style={{ height: '92px', background: 'var(--color-topbar-bg)', borderBottom: '1px solid var(--color-topbar-border)', display: 'flex', alignItems: 'center', padding: '0 32px', gap: '12px', boxShadow: 'var(--shadow-sm)' }}>
         <button onClick={() => navigate(`/equipos/${teamId}/docs`)}
           style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-topbar-text)', display: 'flex', alignItems: 'center' }}>
@@ -173,12 +181,6 @@ export default function SubirDocumento() {
                 </div>
               </div>
             </>
-          )}
-
-          {error && (
-            <div style={{ background: 'var(--color-error-bg)', border: '1px solid var(--color-error-bg)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', fontSize: '13px', color: 'var(--color-error)', marginBottom: '16px' }}>
-              {error}
-            </div>
           )}
 
           <button onClick={handleSubmit} disabled={loading}
